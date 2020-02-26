@@ -1,1 +1,1 @@
-# Polarad
+# Polarad Image Sharing App

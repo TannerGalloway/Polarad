@@ -1,0 +1,90 @@
+/* center rectangle margin-left and right  are height and width divided by 2 because the center of the rectange is the top left corner and it needs 
+to be the center of the rectange, thats why */
+
+.LogSignform{
+    background-color: #FFFFFF;
+    width:336px;
+    height:365px;
+    margin:0 auto;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-left:-168px;
+    margin-top:-250px;
+    border-style: groove;
+  }
+
+  .LogformLink{
+    background-color: #FFFFFF;
+    width:336px;
+    height:60px;
+    margin:0 auto;
+    position:absolute;
+    left:50%;
+    bottom:10%;
+    margin-left:-168px;
+    margin-top:-250px;
+    border-style: groove;
+  }
+  
+  .title{
+    font-family: 'Pacifico';
+    text-align: center;
+    font-size: 45px;
+    margin: 15px;
+    margin-bottom: 10px;
+  }
+
+  .LSQuestion{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 5%;
+  }
+
+  /* .LoginText{
+    color: blue;
+  } */
+  
+  .subTitle{
+    display: block;
+    font-family: 'Open Sans';
+    text-align: center;
+    color: #999999;
+    font-size: 20px;
+  }
+
+  .form-control{
+    position: relative;
+    left: 15%;
+    width: 70%;
+  }
+
+  .btn{
+    position: relative;
+    left: 15%;
+    width: 70%;
+  }
+
+  .btn-link{
+    padding: 0;
+    border: 0;
+    width: fit-content;
+  }
+  
+  /* start of desktop styles */
+  
+  @media screen and (min-width: 991px) {
+    /* start of large tablet styles */
+    }
+    
+    @media screen and (min-width: 767px) {
+    /* start of medium tablet styles */
+      .LogformLink{
+        bottom:25%;
+      }
+    
+    }
+    
+    @media screen and (min-width: 479px) {
+    /* start of phone styles */
+    }
