@@ -21,7 +21,7 @@ class LogSignform extends Component {
 
     render() {
             return (
-                <div>
+                <>
                     <div className="LogSignform">
                         <h1 className="title">Polarad</h1>
                         <h3 className="subTitle">{this.props.action} to see photos from your friends.</h3>
@@ -41,7 +41,7 @@ class LogSignform extends Component {
                     <div className="LogformLink">
                 <p className="LSQuestion">{this.props.message}<Link to={this.props.link}>{this.props.LinkAction}</Link></p>
                     </div>
-                </div>
+                </>
             )
     }
 }

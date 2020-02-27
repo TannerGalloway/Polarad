@@ -1,0 +1,46 @@
+#NavbarTitle{
+    font-family: 'Pacifico';
+    font-size: 35px;
+}
+
+#row{
+    width: 100%;
+}
+
+.navbar-nav{
+    width: 50%;
+    position: relative;
+    right: 20%;
+}
+.navbar-nav, .form-control{
+    margin-top: 3%;
+}
+
+@media screen and (min-width: 992px) {
+    
+    .btn{
+        width: 50%;
+    }
+
+    .btn-link{
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 992px) {
+
+    .navbar-nav{
+        width: 120%;
+        margin-top: 10%;
+    }
+
+    #hamburgermenu{
+        margin-top: 5%;
+        position: relative;
+        left: 9%;
+    }
+
+    .btn-link{
+        margin-top: 10%;
+    }
+}
