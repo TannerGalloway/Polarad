@@ -17,16 +17,6 @@ class navbar extends Component {
   render() {
     var viewportSize = window.screen.width;
     var searchbar;
-    // var logo;
-    // viewportSize > 0 ? logo = 
-    //   <img
-    //     alt="Polarad"
-    //     src={Icon}
-    //     width="60"
-    //     height="60"
-    //     className="d-inline-block align-top"
-    //   />
-    // : logo = null;
 
     viewportSize > 768 ? searchbar = 
     <Col>
@@ -56,10 +46,10 @@ class navbar extends Component {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav>
-                  <Button variant="primary" href="/Login" className="style">
+                  <Button variant="primary" href="/Login" className="btnSize">
                     Login
                   </Button>
-                  <Button variant="link" href="/">
+                  <Button variant="link" href="/" className="btnSize">
                     Sign Up
                   </Button>
                 </Nav>

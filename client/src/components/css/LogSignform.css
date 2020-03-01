@@ -40,10 +40,6 @@ to be the center of the rectange, thats why */
     text-align: center;
     margin-top: 5%;
   }
-
-  /* .LoginText{
-    color: blue;
-  } */
   
   .subTitle{
     display: block;
@@ -70,21 +66,3 @@ to be the center of the rectange, thats why */
     border: 0;
     width: fit-content;
   }
-  
-  /* start of desktop styles */
-  
-  @media screen and (min-width: 991px) {
-    /* start of large tablet styles */
-    }
-    
-    @media screen and (min-width: 767px) {
-    /* start of medium tablet styles */
-      .LogformLink{
-        bottom:25%;
-      }
-    
-    }
-    
-    @media screen and (min-width: 479px) {
-    /* start of phone styles */
-    }
