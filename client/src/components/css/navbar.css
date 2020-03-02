@@ -16,14 +16,18 @@
     margin-top: 3%;
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 768px) {
     
     .btnSize{
-        width: 50%;
+        width: 20%;
     }
 
     .btn-link{
         padding: 5px;
+    }
+
+    #hamburgermenu{
+        margin-top: 1%;
     }
 }
 
@@ -36,11 +40,13 @@
 
     #hamburgermenu{
         margin-top: 5%;
-        position: relative;
-        left: 9%;
     }
 
     .btn-link{
-        margin-top: 10%;
+        margin-left: 10%;
+    }
+
+    .btnSize{
+        width: 45%;
     }
 }

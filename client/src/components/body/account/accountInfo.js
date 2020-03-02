@@ -11,18 +11,6 @@ import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
 
-// var postsIcon = postsIconInactive;
-// var bookmarkIcon = bookmarkIconInactive;
-// var taggedIcon = taggedIconInactive;
-
-const iconImages = {
-  posts: postsIconInactive,
-  postsActive: postsIconActive,
-  bookmark: bookmarkIconInactive,
-  bookmarkActive: bookmarkIconActive,
-  tagged: taggedIconInactive,
-  taggedActive: taggedIconActive
-}
 class accountInfo extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +36,6 @@ class accountInfo extends Component {
           this.setState(({taggedActive: false})); 
         }
         
-      // !this.state.postsActive ? this.setState((prevState)  => ({postsActive: !prevState.postsActive})) : this.setState((prevState)  => ({postsActive: !prevState.postsActive})); 
       break;
 
       case "bookmarkIcon":
@@ -74,6 +61,10 @@ class accountInfo extends Component {
           this.setState(({postsActive: false}));
           this.setState(({bookmarkActive: false}));
         }
+      break;
+
+      default:
+
       break;
     }
   }
@@ -123,6 +114,7 @@ class accountInfo extends Component {
               src={postsIcon}
               onClick={this.toggleIcon}
             />
+            <h6 className="iconTitle">POSTS</h6>
           </Col>
           <Col>
             <Image
@@ -130,6 +122,7 @@ class accountInfo extends Component {
               src={bookmarkIcon}
               onClick={this.toggleIcon}
             />
+            <h6 className="iconTitle">BOOKMARKED</h6>
           </Col>
           <Col>
             <Image
@@ -137,6 +130,7 @@ class accountInfo extends Component {
               src={taggedIcon}
               onClick={this.toggleIcon}
             />
+            <h6 className="iconTitle">TAGGED</h6>
           </Col>
         </Row>
       </Container>

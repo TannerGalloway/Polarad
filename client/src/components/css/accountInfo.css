@@ -13,6 +13,11 @@
     padding-left: 0;
 }
 
+.iconTitle{
+    display: none;
+}
+
+
 @media screen and (min-width: 768px){
     #profilepic{
         height: 150px;
@@ -22,6 +27,11 @@
     #accountIcons{
         position: relative;
         left: 10%;
+    }
+
+    .iconTitle{
+        display: inline;
+        margin-left: 3%;
     }
 
     #postsIcon, #bookmarkIcon, #taggedIcon{
