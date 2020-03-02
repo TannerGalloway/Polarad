@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "../../css/desktopMobileView.css";
 import { Row, Col, Button } from "react-bootstrap";
 

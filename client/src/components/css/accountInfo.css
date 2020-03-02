@@ -13,10 +13,15 @@
     padding-left: 0;
 }
 
-@media screen and (min-width: 769px){
+@media screen and (min-width: 768px){
     #profilepic{
         height: 150px;
         width: 150px;
+    }
+
+    #accountIcons{
+        position: relative;
+        left: 10%;
     }
 
     #postsIcon, #bookmarkIcon, #taggedIcon{
