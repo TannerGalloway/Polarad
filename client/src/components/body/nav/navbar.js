@@ -43,7 +43,7 @@ class navbar extends Component {
               type="text"
               placeholder="Search"
               onChange={this.onChange}
-              className="mr-sm-2"
+              className="mr-sm-2, searchbar"
             />
           </Form>
         </Col>

@@ -49,7 +49,7 @@ to be the center of the rectange, thats why */
     font-size: 20px;
   }
 
-  .form-control{
+  .userPasstextbox{
     position: relative;
     left: 15%;
     width: 70%;

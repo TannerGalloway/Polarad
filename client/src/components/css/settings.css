@@ -1,0 +1,24 @@
+.settingsEdit{
+    height: 65px;
+}
+
+.inputSettings{
+    margin-top: 75px;
+}
+
+#textaddon{
+    white-space: pre-wrap;
+}
+
+
+@media screen and (min-width: 768px){
+    .inputSettings{
+        margin-left: 315px;
+        width: 400px;
+    }
+
+    .saveChanges{
+        width: 300px;
+        margin-left: 190px;
+    }
+}

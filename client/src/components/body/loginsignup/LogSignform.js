@@ -27,11 +27,11 @@ class LogSignform extends Component {
                         <h3 className="subTitle">{this.props.action} to see photos from your friends.</h3>
                         <Form>
                             <Form.Group controlId="formUsername">
-                                <Form.Control type="text" placeholder="Username" onChange={this.userInput} />
+                                <Form.Control className="userPasstextbox" type="text" placeholder="Username" onChange={this.userInput}/>
                             </Form.Group>
     
                             <Form.Group controlId="formPassword">
-                                <Form.Control type="password" placeholder="Password" onChange={this.passwordInput} />
+                                <Form.Control className="userPasstextbox" type="password" placeholder="Password" onChange={this.passwordInput}/>
                             </Form.Group>
                             <Button variant="primary" type="submit">
                                 {this.props.action}

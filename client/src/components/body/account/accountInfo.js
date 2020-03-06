@@ -82,15 +82,12 @@ class accountInfo extends Component {
     var accountView,
       viewportSize = window.screen.width;
 
-    if (viewportSize > 768) {
-      accountView = (
+      viewportSize > 768 ?   accountView = (
         <Desktopview displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
+      ) : accountView = (
+        <Mobileview displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
       );
-    } else {
-      accountView = (
-          <Mobileview displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
-        );
-    }
+      
     var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
     var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
     var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
