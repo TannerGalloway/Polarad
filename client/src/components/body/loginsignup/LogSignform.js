@@ -7,15 +7,13 @@ class LogSignform extends Component {
     constructor(props){
         super(props);
         this.state = {username: "", password: ""};
-        this.userInput = this.userInput.bind(this);
-        this.passwordInput = this.passwordInput.bind(this);
     }
 
-    userInput(event){
+    userInput = (event) => {
         this.setState({username: event.target.value});
     }
 
-    passwordInput(event){
+    passwordInput = (event) => {
         this.setState({password: event.target.value});
     }
 
