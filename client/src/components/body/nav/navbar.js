@@ -13,6 +13,7 @@ import {
 import Logo from "../../../Images/Polarad.png";
 import Heart from "../../../Images/heart.png";
 import User from "../../../Images/usericon.png";
+import Gear from "../../../Images/settingsicon.png";
 
 class navbar extends Component {
   constructor(props) {
@@ -42,30 +43,21 @@ class navbar extends Component {
   handleClickOutside = event => {
     if (event.target.id === "userIcon") {
       return;
-    } else if (
-      this.dropdown.current
-    ) {
+    } else if (this.dropdown.current) {
       this.setState({ open: false });
     }
   };
 
   render() {
     var navmenu,
-      logo,
       searchbar,
+      webpageName = "Polarad",
+      displayNameStyle,
+      settingsicon,
       viewportSize = window.screen.width;
-    var { loggedin } = this.props;
+    var { loggedin, displayName } = this.props;
 
     if (viewportSize > 768) {
-      logo = (
-        <img
-          alt="Polarad"
-          src={Logo}
-          width="60"
-          height="60"
-          className="d-inline-block align-top"
-        />
-      );
       searchbar = (
         <Col>
           <Form inline>
@@ -95,7 +87,23 @@ class navbar extends Component {
           )}
         </Col>
       );
-    } else {
+    } else if (loggedin && viewportSize < 768) {
+      webpageName = "";
+      displayNameStyle = (
+        <Col>
+          <h4 id="navdisplayName">{displayName}</h4>
+        </Col>
+      );
+      settingsicon = (
+          <img
+          id = "settingsGear"
+          alt="settings"
+          src={Gear}
+          width="42"
+          height="42"
+        />
+      );
+    }else if(!loggedin){
       navmenu = (
         <Col className="btnmenu">
           <Button variant="primary" href="/Login" className="btnSize">
@@ -113,10 +121,18 @@ class navbar extends Component {
         <Row id="row">
           <Col xs={4}>
             <Navbar.Brand id="NavbarTitle">
-              {logo}
-              Polarad
+              <img
+                alt="Polarad"
+                src={Logo}
+                width="60"
+                height="60"
+                className="d-inline-block align-top"
+              />
+              {webpageName}
             </Navbar.Brand>
           </Col>
+          {displayNameStyle}
+          {settingsicon}
           {searchbar}
           {navmenu}
         </Row>

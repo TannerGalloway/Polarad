@@ -15,7 +15,6 @@ class accountInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayName: "John Smith",
       posts: 0,
       followers: 0,
       following: 0,
@@ -71,13 +70,12 @@ class accountInfo extends Component {
 
   render() {
     const {
-      displayName,
       posts,
       followers,
       following,
       bio,
     } = this.state;
-    var {loggedin} = this.props;
+    var {loggedin, displayName} = this.props;
     var accountView,
       viewportSize = window.screen.width;
 

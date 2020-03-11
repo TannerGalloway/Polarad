@@ -48,6 +48,16 @@
     cursor: pointer; 
 }
 
+#navdisplayName{
+    text-align: center;
+    margin: 13% 13% 0% 0%;
+}
+
+#settingsGear{
+    margin-top: 3%;
+
+}
+
 @media screen and (min-width: 768px) {
     
     .btnSize{

@@ -6,14 +6,14 @@ import Accountinfo from "../account/accountInfo";
 class accountPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { loggedin: false };
+    this.state = { loggedin: false, displayName: "John Smith" };
   }
   render() {
-      var {loggedin} = this.state;
+      var {loggedin, displayName} = this.state;
     return (
       <>
-        <Navbar loggedin={loggedin}/>
-        <Accountinfo loggedin={loggedin}/>
+        <Navbar loggedin={loggedin} displayName={displayName}/>
+        <Accountinfo loggedin={loggedin} displayName={displayName}/>
       </>
     );
   }
