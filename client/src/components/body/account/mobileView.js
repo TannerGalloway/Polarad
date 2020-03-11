@@ -1,37 +1,45 @@
 import React from "react";
 import "../../css/desktopMobileView.css";
-import { Row, Col, Button } from "react-bootstrap";
+import { Col, Button } from "react-bootstrap";
 
-function mobileView(props){
-    const {displayName, posts, followers, following, bio} = props;
-    return(
-      <>
+function mobileView(props) {
+  var { displayName, posts, followers, following, bio, loggedin } = props;
+  var loggedBtn;
+  loggedin
+    ? (loggedBtn = (
+        <Button className="nameBtn" variant="light">
+          Edit Profile
+        </Button>
+      ))
+    : (loggedBtn = (
+        <Button className="nameBtn" variant="primary">
+          Follow
+        </Button>
+      ));
+  return (
+    <>
       <Col>
         <div id="nameBtnCol">
           <p id="displayname">{`${displayName}`}</p>
-          <Button id="nameBtn" variant="primary">
-            Follow
-          </Button>
+          {loggedBtn}
         </div>
-        </Col>
-        <Row>
-          <h6 id="biotext">{`${bio}`}</h6>
-          <hr className="line"/>
-          <ul id="accountNumsList">
-            <li className="accountNums">
-              <span className="bold">{`${posts}`}</span> posts
-            </li>
-            <li className="accountNums">
-              <span className="bold">{`${followers}`}</span> followers
-            </li>
-            <li className="accountNums">
-              <span className="bold">{`${following}`}</span> following
-            </li>
-          </ul>
-          <hr className="line"/>
-        </Row>
-        </>
-    )
+      </Col>
+        <h6 id="biotext">{`${bio}`}</h6>
+        <hr className="line" />
+        <ul id="accountNumsList">
+          <li className="accountNums">
+            <span className="bold">{`${posts}`}</span> posts
+          </li>
+          <li className="accountNums">
+            <span className="bold">{`${followers}`}</span> followers
+          </li>
+          <li className="accountNums">
+            <span className="bold">{`${following}`}</span> following
+          </li>
+        </ul>
+        <hr className="line"/>
+    </>
+  );
 }
 
 export default mobileView;

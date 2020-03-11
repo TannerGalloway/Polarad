@@ -6,25 +6,55 @@ import {
   Form,
   FormControl,
   Row,
-  Col
+  Col,
+  Image
 } from "react-bootstrap";
+
 import Logo from "../../../Images/Polarad.png";
+import Heart from "../../../Images/heart.png";
+import User from "../../../Images/usericon.png";
 
 class navbar extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchTerm: "" };
-    this.onChange = this.onChange.bind(this);
+    this.dropdown = React.createRef();
+    this.state = { searchTerm: "", open: false };
   }
 
-  onChange(event) {
-    this.setState({ searchTerm: event.target.value });
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  onChange = event => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
+  handleButtonClick = () => {
+    this.setState(prevState => {
+      return { open: !prevState.open };
+    });
+  };
+
+  handleClickOutside = event => {
+    if (event.target.id === "userIcon") {
+      return;
+    } else if (
+      this.dropdown.current
+    ) {
+      this.setState({ open: false });
+    }
+  };
 
   render() {
-    var viewportSize = window.screen.width;
-    var searchbar;
-    var logo;
+    var navmenu,
+      logo,
+      searchbar,
+      viewportSize = window.screen.width;
+    var { loggedin } = this.props;
 
     if (viewportSize > 768) {
       logo = (
@@ -50,6 +80,34 @@ class navbar extends Component {
       );
     }
 
+    if (loggedin && viewportSize > 768) {
+      navmenu = (
+        <Col className="logmenu">
+          <Image id="heartIcon" src={Heart} />
+          <Image id="userIcon" src={User} onClick={this.handleButtonClick} />
+          {this.state.open && (
+            <div className="dropdown" ref={this.dropdown}>
+              <ul id="ContentContainer">
+                <li className="dropdownContent">Settings</li>
+                <li className="dropdownContent">Logoff</li>
+              </ul>
+            </div>
+          )}
+        </Col>
+      );
+    } else {
+      navmenu = (
+        <Col className="btnmenu">
+          <Button variant="primary" href="/Login" className="btnSize">
+            Login
+          </Button>
+          <Button variant="link" href="/" className="btnSize">
+            Sign Up
+          </Button>
+        </Col>
+      );
+    }
+
     return (
       <Navbar expand="lg" bg="light" variant="light">
         <Row id="row">
@@ -60,14 +118,7 @@ class navbar extends Component {
             </Navbar.Brand>
           </Col>
           {searchbar}
-          <Col id="hamburgermenu">
-            <Button variant="primary" href="/Login" className="btnSize">
-              Login
-            </Button>
-            <Button variant="link" href="/" className="btnSize">
-              Sign Up
-            </Button>
-          </Col>
+          {navmenu}
         </Row>
       </Navbar>
     );

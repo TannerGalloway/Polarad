@@ -20,7 +20,6 @@ class accountInfo extends Component {
       followers: 0,
       following: 0,
       bio: "Hello, I am here to show you pics of my adventures across america.",
-      loggedin: false,
       postsActive: true,
       bookmarkActive: false,
       taggedActive: false
@@ -77,15 +76,15 @@ class accountInfo extends Component {
       followers,
       following,
       bio,
-      loggedin
     } = this.state;
+    var {loggedin} = this.props;
     var accountView,
       viewportSize = window.screen.width;
 
       viewportSize > 768 ?   accountView = (
-        <Desktopview displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
+        <Desktopview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
       ) : accountView = (
-        <Mobileview displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
+        <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
       );
       
     var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
