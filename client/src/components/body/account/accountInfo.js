@@ -3,6 +3,7 @@ import "../../css/accountInfo.css";
 import { Container, Row, Col, Image} from "react-bootstrap";
 import Desktopview from "../account/desktopView";
 import Mobileview from "../account/mobileView";
+import Bottomnav from "../account/accountNavbar";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -76,20 +77,26 @@ class accountInfo extends Component {
       bio,
     } = this.state;
     var {loggedin, displayName} = this.props;
-    var accountView,
+    var accountView, mobleNavBottom,
       viewportSize = window.screen.width;
 
-      viewportSize > 768 ?   accountView = (
-        <Desktopview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
-      ) : accountView = (
-        <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
-      );
+      if(viewportSize > 768){
+        accountView = (
+          <Desktopview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
+        );
+      }else{
+        accountView = (
+          <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
+        );
+        mobleNavBottom = (<Bottomnav/>);
+      }
       
     var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
     var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
     var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
 
     return (
+      <>
       <Container>
         <Row>
           <Col xs={3}>
@@ -128,6 +135,8 @@ class accountInfo extends Component {
           </Col>
         </Row>
       </Container>
+      {mobleNavBottom}
+      </>
     );
   }
 }

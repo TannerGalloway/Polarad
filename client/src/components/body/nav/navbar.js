@@ -54,10 +54,20 @@ class navbar extends Component {
       webpageName = "Polarad",
       displayNameStyle,
       settingsicon,
-      viewportSize = window.screen.width;
+      viewportSize = window.screen.width,
+      logo;
     var { loggedin, displayName } = this.props;
 
     if (viewportSize > 768) {
+      logo = (
+        <img
+          alt="Polarad"
+          src={Logo}
+          width="60"
+          height="60"
+          className="d-inline-block align-top"
+        />
+      );
       searchbar = (
         <Col>
           <Form inline>
@@ -75,7 +85,7 @@ class navbar extends Component {
     if (loggedin && viewportSize > 768) {
       navmenu = (
         <Col className="logmenu">
-          <Image id="heartIcon" src={Heart} />
+          <Image id="heartIconTop" src={Heart} />
           <Image id="userIcon" src={User} onClick={this.handleButtonClick} />
           {this.state.open && (
             <div className="dropdown" ref={this.dropdown}>
@@ -89,21 +99,30 @@ class navbar extends Component {
       );
     } else if (loggedin && viewportSize < 768) {
       webpageName = "";
+      logo = (
+        <img
+          alt="Polarad"
+          src={Logo}
+          width="60"
+          height="60"
+          className="d-inline-block align-top"
+        />
+      );
       displayNameStyle = (
         <Col>
           <h4 id="navdisplayName">{displayName}</h4>
         </Col>
       );
       settingsicon = (
-          <img
-          id = "settingsGear"
+        <img
+          id="settingsGear"
           alt="settings"
           src={Gear}
           width="42"
           height="42"
         />
       );
-    }else if(!loggedin){
+    } else if (!loggedin) {
       navmenu = (
         <Col className="btnmenu">
           <Button variant="primary" href="/Login" className="btnSize">
@@ -121,13 +140,7 @@ class navbar extends Component {
         <Row id="row">
           <Col xs={4}>
             <Navbar.Brand id="NavbarTitle">
-              <img
-                alt="Polarad"
-                src={Logo}
-                width="60"
-                height="60"
-                className="d-inline-block align-top"
-              />
+              {logo}
               {webpageName}
             </Navbar.Brand>
           </Col>

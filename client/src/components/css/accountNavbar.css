@@ -1,0 +1,11 @@
+#accountlinks{
+    background-color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#homeIcon, #searchIcon, #addPhotoIcon, #heartIconBottom, #logoutIcon{
+    padding: 3%;
+    margin-left: 3%;
+}

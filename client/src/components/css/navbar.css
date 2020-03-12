@@ -23,7 +23,7 @@
 
 .dropdown { 
     position: absolute;
-    top: 115%; 
+    top: 113%; 
     left: 90px; 
     width: 160px; 
     z-index: 2; 
@@ -76,7 +76,7 @@
         margin-left: 6%;
     }
 
-    #userIcon, #heartIcon{
+    #userIcon, #heartIconTop{
         cursor: pointer;
     }
     
