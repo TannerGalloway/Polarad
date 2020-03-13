@@ -1,27 +1,34 @@
 import React, { Component } from "react";
 import "../../css/settings.css";
 import Navbar from "../nav/navbar";
+import Bottomnav from "../account/accountNavbar";
 import { Container, Button, InputGroup, FormControl } from "react-bootstrap";
 
 class settingsEdit extends Component {
   constructor(props) {
     super(props);
-    this.state = {password: ""};
+    this.state = {newPassword: ""};
   }
 
   NewpasswordInput = (event) => {
-    this.setState({password: event.target.value});
+    this.setState({newPassword: event.target.value});
 }
 
   render() {
-    var viewportSize = window.screen.width,
+    var viewportSize = window.screen.width, mobileNavBottom,
       textboxAddonStyle;
-    viewportSize > 768
-      ? (textboxAddonStyle = "Change Password")
-      : (textboxAddonStyle = "Change\nPassword");
+
+    if(viewportSize > 768){
+      textboxAddonStyle = "Change Password";
+    }
+    else{
+      textboxAddonStyle = "Change\nPassword";
+      mobileNavBottom = (<Bottomnav/>);
+    }
+
     return (
       <>
-        <Navbar />
+        <Navbar loggedin={this.props.loggedin} displayName={this.props.displayName}/>
         <Container>
           <InputGroup className="mb-3 inputSettings">
             <InputGroup.Prepend>
@@ -35,6 +42,7 @@ class settingsEdit extends Component {
             Save Changes
           </Button>
         </Container>
+        {mobileNavBottom};
       </>
     );
   }

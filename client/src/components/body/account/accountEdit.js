@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../../css/accountEdit.css";
 import Navbar from "../nav/navbar";
+import Bottomnav from "../account/accountNavbar";
 import { Container, Button, InputGroup, FormControl } from "react-bootstrap";
 
 class accountEdit extends Component {
@@ -18,14 +19,20 @@ class accountEdit extends Component {
   }
 
   render() {
-    var viewportSize = window.screen.width,
+    var viewportSize = window.screen.width, mobileNavBottom,
     textboxAddonStyle;
-  viewportSize > 768
-    ? (textboxAddonStyle = "Change Display Name")
-    : (textboxAddonStyle = "Change\nDisplay\nName");
+
+    if(viewportSize > 768){
+      (textboxAddonStyle = "Change Display Name")
+    }
+    else{
+      (textboxAddonStyle = "Change\nDisplay\nName");
+      mobileNavBottom = (<Bottomnav/>);
+    }
+
     return (
       <>
-        <Navbar />
+        <Navbar loggedin={this.props.loggedin} displayName={this.props.displayName}/>
         <Container>
           <InputGroup className="inputSettings">
             <InputGroup.Prepend>
@@ -43,6 +50,7 @@ class accountEdit extends Component {
             Save Changes
           </Button>
         </Container>
+        {mobileNavBottom};
       </>
     );
   }

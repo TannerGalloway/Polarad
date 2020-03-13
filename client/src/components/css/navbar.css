@@ -58,6 +58,15 @@
 
 }
 
+.accountDropdown{
+    color: black;
+}
+
+.accountDropdown:hover{
+    text-decoration: none;
+    color: black;
+}
+
 @media screen and (min-width: 768px) {
     
     .btnSize{

@@ -7,7 +7,7 @@ function desktopView(props) {
   var loggedBtn;
   if (loggedin) {
     loggedBtn = (
-      <Button className="nameBtn" variant="light">
+      <Button className="nameBtn" variant="light" href={`/profile/${displayName}/edit`}>
         Edit Profile
       </Button>
     );

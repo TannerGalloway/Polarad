@@ -77,7 +77,7 @@ class accountInfo extends Component {
       bio,
     } = this.state;
     var {loggedin, displayName} = this.props;
-    var accountView, mobleNavBottom,
+    var accountView, mobileNavBottom,
       viewportSize = window.screen.width;
 
       if(viewportSize > 768){
@@ -88,7 +88,7 @@ class accountInfo extends Component {
         accountView = (
           <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
         );
-        mobleNavBottom = (<Bottomnav/>);
+        mobileNavBottom = (<Bottomnav displayName={displayName}/>);
       }
       
     var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
@@ -135,7 +135,7 @@ class accountInfo extends Component {
           </Col>
         </Row>
       </Container>
-      {mobleNavBottom}
+      {mobileNavBottom}
       </>
     );
   }

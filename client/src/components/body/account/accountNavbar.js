@@ -15,12 +15,24 @@ class accountnavbar extends Component {
     this.state = { homeActive: true, favorites: false };
   }
 
+  componentDidMount(){
+    var url = window.location.pathname.replace(/%20/g, " ");
+    if(url !== `/profile/${this.props.displayName}`){
+      this.setState({homeActive: false});
+    }
+    else{
+      this.setState({homeActive: true});
+    }
+  }
+
   toggleIcon = (event) => {
     switch(event.target.id){
       case "homeIcon":
         if(!this.state.homeActive){
           this.setState((prevState)  => ({homeActive: !prevState.homeActive}));
           this.setState(({favorites: false}));
+          var url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/"));
+          window.location.pathname = url;
         }
       break;
 
@@ -33,15 +45,17 @@ class accountnavbar extends Component {
           this.setState(({homeActive: false}));
         }
        break;
+      
+      case "logoutIcon":
+        window.location.pathname = "/";
+        break;
 
       default:
-
       break;
     }
   }
 
   render() {
-
     var Home = this.state.homeActive ? HomeActive : HomeInactive;
     var Heart = this.state.favorites ? HeartActive : HeartInactive;
     
@@ -86,6 +100,7 @@ class accountnavbar extends Component {
           src={Logout}
           width="60"
           height="60"
+          onClick={this.toggleIcon}
         />
       </div>
     );

@@ -7,7 +7,7 @@ function mobileView(props) {
   var loggedBtn;
   loggedin
     ? (loggedBtn = (
-        <Button className="nameBtn" variant="light">
+        <Button className="nameBtn" variant="light" href={`/profile/${displayName}/edit`}>
           Edit Profile
         </Button>
       ))

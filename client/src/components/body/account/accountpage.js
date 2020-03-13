@@ -1,22 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import "../../css/accountpage.css";
 import Navbar from "../nav/navbar";
 import Accountinfo from "../account/accountInfo";
 
-class accountPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { loggedin: false, displayName: "John Smith" };
-  }
-  render() {
-      var {loggedin, displayName} = this.state;
+ function accountPage(props) {
     return (
       <>
-        <Navbar loggedin={loggedin} displayName={displayName}/>
-        <Accountinfo loggedin={loggedin} displayName={displayName}/>
+        <Navbar loggedin={props.loggedin} displayName={props.displayName}/>
+        <Accountinfo loggedin={props.loggedin} displayName={props.displayName}/>
       </>
     );
   }
-}
 
 export default accountPage;

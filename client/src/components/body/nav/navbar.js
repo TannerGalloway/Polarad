@@ -41,12 +41,16 @@ class navbar extends Component {
   };
 
   handleClickOutside = event => {
-    if (event.target.id === "userIcon") {
+    if (event.target.id === "userIcon" || event.target.className === "accountDropdown" || event.target.className === "dropdownContent") {
       return;
     } else if (this.dropdown.current) {
       this.setState({ open: false });
     }
   };
+
+  settingslink = () =>{
+    window.location.pathname = `/profile/${this.props.displayName}/settings`;
+  }
 
   render() {
     var navmenu,
@@ -90,8 +94,9 @@ class navbar extends Component {
           {this.state.open && (
             <div className="dropdown" ref={this.dropdown}>
               <ul id="ContentContainer">
-                <li className="dropdownContent">Settings</li>
-                <li className="dropdownContent">Logoff</li>
+                <li className="dropdownContent"><a  className="accountDropdown" href={`/profile/${displayName}`}>My Profile</a></li>
+                <li className="dropdownContent"><a  className="accountDropdown" href={`/profile/${displayName}/settings`}>Settings</a></li>
+                <li className="dropdownContent"><a  className="accountDropdown" href="/">Logoff</a></li>
               </ul>
             </div>
           )}
@@ -120,6 +125,7 @@ class navbar extends Component {
           src={Gear}
           width="42"
           height="42"
+          onClick={this.settingslink}
         />
       );
     } else if (!loggedin) {
