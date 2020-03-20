@@ -3,7 +3,7 @@ import "../../css/accountInfo.css";
 import { Container, Row, Col, Image} from "react-bootstrap";
 import Desktopview from "../account/desktopView";
 import Mobileview from "../account/mobileView";
-import Bottomnav from "../account/accountNavbar";
+import Bottomnav from "../nav/accountNavbar";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -12,6 +12,7 @@ import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
 
+var favClick = false;
 class accountInfo extends Component {
   constructor(props) {
     super(props);
@@ -22,8 +23,24 @@ class accountInfo extends Component {
       bio: "Hello, I am here to show you pics of my adventures across america.",
       postsActive: true,
       bookmarkActive: false,
-      taggedActive: false
+      taggedActive: false,
     };
+  }
+
+  componentDidMount() {
+    if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` && sessionStorage.getItem("userMenuClicked")){
+      sessionStorage.removeItem("prevURL");
+      sessionStorage.removeItem("userMenuClicked");
+    }
+    else if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit` && sessionStorage.getItem("userMenuClicked")){
+      sessionStorage.removeItem("prevURL");
+      sessionStorage.removeItem("userMenuClicked");
+    }
+    else if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` || sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit`){
+      favClick = true;
+      sessionStorage.removeItem("prevURL");
+      this.favsClickedOtherPage(favClick);
+    }
   }
   
   toggleIcon = (event) => {
@@ -67,19 +84,21 @@ class accountInfo extends Component {
       break;
     }
   }
+ 
+  favsClickedOtherPage = (favoriteValue) => {   
+      this.props.favClickAccountInfo(favoriteValue);
+  }
   
-
   render() {
     const {
       posts,
       followers,
       following,
-      bio,
+      bio
     } = this.state;
-    var {loggedin, displayName} = this.props;
-    var accountView, mobileNavBottom,
+    var {loggedin, displayName, favoritesPage} = this.props;
+    var accountView, mobileNavBottom, favoritesPageContent,
       viewportSize = window.screen.width;
-
       if(viewportSize > 768){
         accountView = (
           <Desktopview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
@@ -88,12 +107,44 @@ class accountInfo extends Component {
         accountView = (
           <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
         );
-        mobileNavBottom = (<Bottomnav displayName={displayName}/>);
+          mobileNavBottom = loggedin ? <Bottomnav displayName={displayName} favoritesLink={this.favsClickedOtherPage} favoritesLinkReturn={favoritesPage}/> : null;
       }
-      
-    var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
-    var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
-    var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
+
+      if(!favoritesPage){
+        var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
+        var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
+        var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
+
+        favoritesPageContent = 
+      (
+        <Row id="accountIcons">
+          <Col>
+            <Image
+              id="postsIcon"
+              src={postsIcon}
+              onClick={this.toggleIcon}
+            />
+            <h6 className="iconTitle">POSTS</h6>
+          </Col>
+          <Col>
+          <Image
+            id="bookmarkIcon"
+            src={bookmarkIcon}
+            onClick={this.toggleIcon}
+          />
+          <h6 className="iconTitle">BOOKMARKED</h6>
+        </Col>
+        <Col>
+          <Image
+            id="taggedIcon"
+            src={taggedIcon}
+            onClick={this.toggleIcon}
+          />
+          <h6 className="iconTitle">TAGGED</h6>
+        </Col>
+      </Row>
+      )
+      };
 
     return (
       <>
@@ -108,32 +159,7 @@ class accountInfo extends Component {
           </Col>
             {accountView}
         </Row>
-        <Row id="accountIcons">
-          <Col>
-            <Image
-              id="postsIcon"
-              src={postsIcon}
-              onClick={this.toggleIcon}
-            />
-            <h6 className="iconTitle">POSTS</h6>
-          </Col>
-          <Col>
-            <Image
-              id="bookmarkIcon"
-              src={bookmarkIcon}
-              onClick={this.toggleIcon}
-            />
-            <h6 className="iconTitle">BOOKMARKED</h6>
-          </Col>
-          <Col>
-            <Image
-              id="taggedIcon"
-              src={taggedIcon}
-              onClick={this.toggleIcon}
-            />
-            <h6 className="iconTitle">TAGGED</h6>
-          </Col>
-        </Row>
+        {favoritesPageContent}
       </Container>
       {mobileNavBottom}
       </>

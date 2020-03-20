@@ -1,25 +1,20 @@
 import React, { Component } from "react";
 import "../../css/navbar.css";
-import {
-  Navbar,
-  Button,
-  Form,
-  FormControl,
-  Row,
-  Col,
-  Image
-} from "react-bootstrap";
+import {Navbar, Button, Form, FormControl, Row, Col, Image} from "react-bootstrap";
 
 import Logo from "../../../Images/Polarad.png";
-import Heart from "../../../Images/heart.png";
+import HeartInactive from "../../../Images/heart.png";
+import HeartActive from "../../../Images/heart_active.png";
 import User from "../../../Images/usericon.png";
 import Gear from "../../../Images/settingsicon.png";
 
+var url = window.location.pathname.replace(/%20/g, " ");
+var favoritesActive = false;
 class navbar extends Component {
   constructor(props) {
     super(props);
     this.dropdown = React.createRef();
-    this.state = { searchTerm: "", open: false };
+    this.state = { searchTerm: "", open: false};
   }
 
   componentDidMount() {
@@ -30,7 +25,7 @@ class navbar extends Component {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  onChange = event => {
+  onChange = (event) => {
     this.setState({ searchTerm: event.target.value });
   };
 
@@ -42,14 +37,26 @@ class navbar extends Component {
 
   handleClickOutside = event => {
     if (event.target.id === "userIcon" || event.target.className === "accountDropdown" || event.target.className === "dropdownContent") {
+      sessionStorage.setItem("userMenuClicked", true);
       return;
     } else if (this.dropdown.current) {
       this.setState({ open: false });
+      sessionStorage.removeItem("userMenuClicked");
     }
   };
 
   settingslink = () =>{
     window.location.pathname = `/profile/${this.props.displayName}/settings`;
+  }
+
+  favoritesClick = (event) => {
+    if(url === `/profile/${this.props.displayName}` && sessionStorage.getItem("prevURL") === null){
+      favoritesActive = !favoritesActive;
+        this.props.favClick(favoritesActive);
+    }
+    else{
+      window.location.pathname = `/profile/${this.props.displayName}`;
+    }
   }
 
   render() {
@@ -60,7 +67,10 @@ class navbar extends Component {
       settingsicon,
       viewportSize = window.screen.width,
       logo;
-    var { loggedin, displayName } = this.props;
+
+    var { loggedin, displayName, favClickReturn} = this.props;
+    favoritesActive = favClickReturn;
+    var Heart = favoritesActive ? HeartActive : HeartInactive;
 
     if (viewportSize > 768) {
       logo = (
@@ -89,7 +99,7 @@ class navbar extends Component {
     if (loggedin && viewportSize > 768) {
       navmenu = (
         <Col className="logmenu">
-          <Image id="heartIconTop" src={Heart} />
+          <Image id="heartIconTop" src={Heart} onClick={this.favoritesClick}/>
           <Image id="userIcon" src={User} onClick={this.handleButtonClick} />
           {this.state.open && (
             <div className="dropdown" ref={this.dropdown}>

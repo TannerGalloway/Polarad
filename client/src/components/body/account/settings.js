@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "../../css/settings.css";
 import Navbar from "../nav/navbar";
-import Bottomnav from "../account/accountNavbar";
+import Bottomnav from "../nav/accountNavbar";
 import { Container, Button, InputGroup, FormControl } from "react-bootstrap";
 
+var url = window.location.pathname.replace(/%20/g, " ");
 class settingsEdit extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +16,8 @@ class settingsEdit extends Component {
 }
 
   render() {
+    sessionStorage.setItem("prevURL", url);
+    sessionStorage.removeItem("userMenuClicked");
     var viewportSize = window.screen.width, mobileNavBottom,
       textboxAddonStyle;
 
@@ -23,7 +26,7 @@ class settingsEdit extends Component {
     }
     else{
       textboxAddonStyle = "Change\nPassword";
-      mobileNavBottom = (<Bottomnav/>);
+      mobileNavBottom = this.props.loggedin ? <Bottomnav displayName={this.props.displayName} favoritesLink={this.handlefavoritesClicked}/> : null;
     }
 
     return (

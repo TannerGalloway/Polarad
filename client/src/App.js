@@ -9,7 +9,7 @@ import AccountEdit from "./components/body/account/accountEdit";
 class App extends Component {
   constructor(props){
     super(props)
-    this.state = { loggedin: true, displayName: "John Smith" };
+    this.state = { loggedin: false, displayName: "John Smith" };
   }
 
   render(){
