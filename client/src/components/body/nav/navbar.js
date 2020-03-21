@@ -49,7 +49,7 @@ class navbar extends Component {
     window.location.pathname = `/profile/${this.props.displayName}/settings`;
   }
 
-  favoritesClick = (event) => {
+  favoritesClick = () => {
     if(url === `/profile/${this.props.displayName}` && sessionStorage.getItem("prevURL") === null){
       favoritesActive = !favoritesActive;
         this.props.favClick(favoritesActive);
