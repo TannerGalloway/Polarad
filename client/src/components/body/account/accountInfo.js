@@ -3,7 +3,7 @@ import "../../css/accountInfo.css";
 import { Container, Row, Col, Image} from "react-bootstrap";
 import Desktopview from "../account/desktopView";
 import Mobileview from "../account/mobileView";
-import Bottomnav from "../nav/accountNavbar";
+import MobileNav from "../nav/accountNavbar";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -107,7 +107,7 @@ class accountInfo extends Component {
         accountView = (
           <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
         );
-          mobileNavBottom = loggedin ? <Bottomnav displayName={displayName} favoritesLink={this.favsClickedOtherPage} favoritesLinkReturn={favoritesPage}/> : null;
+          mobileNavBottom = loggedin ? <MobileNav displayName={displayName} favoritesLink={this.favsClickedOtherPage} favoritesLinkReturn={favoritesPage}/> : null;
       }
 
       if(!favoritesPage){
