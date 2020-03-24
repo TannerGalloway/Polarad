@@ -1,5 +1,3 @@
-/* center rectangle margin-left and right  are height and width divided by 2 because the center of the rectange is the top left corner and it needs 
-to be the center of the rectange, thats why */
 
 .LogSignform{
     background-color: #FFFFFF;
@@ -7,10 +5,10 @@ to be the center of the rectange, thats why */
     height:365px;
     margin:0 auto;
     position:absolute;
-    left:50%;
+    left:63%;
     top:50%;
     margin-left:-168px;
-    margin-top:-250px;
+    margin-top:-265px;
     border-style: groove;
   }
 
@@ -20,10 +18,9 @@ to be the center of the rectange, thats why */
     height:60px;
     margin:0 auto;
     position:absolute;
-    left:50%;
-    bottom:25%;
+    left:63%;
+    bottom:23%;
     margin-left:-168px;
-    margin-top:-250px;
     border-style: groove;
   }
   
@@ -67,8 +64,90 @@ to be the center of the rectange, thats why */
     width: fit-content;
   }
 
+  .homephones{
+    position: absolute;
+    top: 15%;
+    left: 30%;
+  }
+
+  #image-slide1, #image-slide2, #image-slide3, #image-slide4, #image-slide5 {
+    display: block;
+    position: absolute;
+    left: 151px;
+    top: 100px;
+  }
+
+  #image-slide1{
+    animation: fade1 20s infinite;
+  }
+
+  #image-slide2{
+    animation: fade2 20s infinite;
+  }
+
+  #image-slide3{
+    animation: fade3 20s infinite;
+  }
+  
+  #image-slide4{
+    animation: fade4 20s infinite;
+  }
+
+  #image-slide5{
+    animation: fade5 20s infinite;
+  }
+
+  @keyframes fade1{
+    0%{opacity: 1;}
+    20%{opacity: 0;}
+    40%{opacity: 0;}
+    60%{opacity: 0;}
+    80%{opacity: 0;}
+    100%{opacity: 1;}
+  }
+
+  @keyframes fade2{
+    0%{opacity: 0;}
+    20%{opacity: 1;}
+    40%{opacity: 0;}
+    60%{opacity: 0;}
+    80%{opacity: 0;}
+    100%{opacity: 0;}
+  }
+
+  @keyframes fade3{
+    0%{opacity: 0;}
+    20%{opacity: 0;}
+    40%{opacity: 1;}
+    60%{opacity: 0;}
+    80%{opacity: 0;}
+    100%{opacity: 0;}
+  }
+
+  @keyframes fade4{
+    0%{opacity: 0;}
+    20%{opacity: 0;}
+    40%{opacity: 0;}
+    60%{opacity: 1;}
+    80%{opacity: 0;}
+    100%{opacity: 0;}
+  }
+
+  @keyframes fade5{
+    0%{opacity: 0;}
+    20%{opacity: 0;}
+    40%{opacity: 0;}
+    60%{opacity: 0;}
+    80%{opacity: 1;}
+    100%{opacity: 0;}
+  }
+
   @media screen and (max-width: 768px){
+    .LogSignform{
+      left:50%;
+    }
     .LogformLink{
+      left:50%;
       bottom:10%;
     }
   }
