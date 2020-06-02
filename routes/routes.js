@@ -65,23 +65,4 @@ const genhash = require("../utils/passwordUtils").genpassword;
         res.send("/login");
     });
     
-    // function checkAuthentication(req,res,next){
-    //     if(req.isAuthenticated()){
-    //         next();
-    //     } else{
-    //         res.redirect("/login");
-    //     }
-    // }
-
-
-
-// function isLoggedIn (req, res, next){
-//     if(req.isAuthenticated()){
-//         return next();
-//     }else{
-//         res.redirect("/login");
-//     }
-// };
-
-
 module.exports = router;
