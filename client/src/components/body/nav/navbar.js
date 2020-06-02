@@ -7,6 +7,7 @@ import HeartInactive from "../../../Images/heart.png";
 import HeartActive from "../../../Images/heart_active.png";
 import User from "../../../Images/usericon.png";
 import Gear from "../../../Images/settingsicon.png";
+import Axios from "axios";
 
 var url = window.location.pathname.replace(/%20/g, " ");
 var favoritesActive = false;
@@ -27,6 +28,10 @@ class navbar extends Component {
 
   onChange = (event) => {
     this.setState({ searchTerm: event.target.value });
+  };
+
+  logout = () => {
+    Axios.get("/logout").then((redirect) => {window.location.pathname = redirect.data}).catch((err) => {console.log(err.response)});
   };
 
   handleButtonClick = () => {
@@ -104,9 +109,9 @@ class navbar extends Component {
           {this.state.open && (
             <div className="dropdown" ref={this.dropdown}>
               <ul id="ContentContainer">
-                <li className="dropdownContent"><a  className="accountDropdown" href={`/profile/${displayName}`}>My Profile</a></li>
-                <li className="dropdownContent"><a  className="accountDropdown" href={`/profile/${displayName}/settings`}>Settings</a></li>
-                <li className="dropdownContent"><a  className="accountDropdown" href="/">Logoff</a></li>
+                <li className="dropdownContent"><a className="accountDropdown" href={`/profile/${displayName}`}>My Profile</a></li>
+                <li className="dropdownContent"><a className="accountDropdown" href={`/profile/${displayName}/settings`}>Settings</a></li>
+                <li  onClick={this.logout} className="dropdownContent">logout</li>
               </ul>
             </div>
           )}

@@ -51,10 +51,12 @@ class accountInfo extends Component {
           this.setState(({bookmarkActive: false}));
           this.setState(({taggedActive: false})); 
         }
-        
       break;
 
       case "bookmarkIcon":
+        if(!this.props.loggedin){
+          window.location.pathname = "/login";
+        }
         if(this.state.bookmarkActive){
           this.setState(({postsActive: false}));
           this.setState(({taggedActive: false}));
@@ -64,10 +66,13 @@ class accountInfo extends Component {
           this.setState(({postsActive: false}));
           this.setState(({taggedActive: false}));
         }
-        
+
        break;
 
       case "taggedIcon":
+        if(!this.props.loggedin){
+          window.location.pathname = "/login";
+        }
         if(this.state.taggedActive){
           this.setState(({postsActive: false}));
           this.setState(({bookmarkActive: false}));
@@ -144,7 +149,7 @@ class accountInfo extends Component {
         </Col>
       </Row>
       )
-      };
+      }
 
     return (
       <>

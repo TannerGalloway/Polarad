@@ -1,9 +1,0 @@
-.profileEdit{
-    height: 87px;
-}
-
-@media screen and (min-width: 768px){
-    .profileEdit{
-        height: 50px;
-    }
-}

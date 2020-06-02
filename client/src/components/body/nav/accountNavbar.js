@@ -8,6 +8,7 @@ import AddPhoto from "../../../Images/addphoto.png";
 import HeartInactive from "../../../Images/heart.png";
 import HeartActive from "../../../Images/heart_active.png";
 import Logout from "../../../Images/logout.png";
+import Axios from "axios";
 
 var url = window.location.pathname.replace(/%20/g, " ");
 var clickFavorites = false;
@@ -69,7 +70,7 @@ class accountnavbar extends Component {
        break;
       
       case "logoutIcon":
-        window.location.pathname = "/";
+        Axios.get("/logout").then((redirect) => {window.location.pathname = redirect.data}).catch((err) => {console.log(err.response)});
         break;
 
       default:

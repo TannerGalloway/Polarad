@@ -64,6 +64,11 @@
     width: fit-content;
   }
 
+  .logsignError{
+    display: none;
+    text-align: center;
+  }
+
   .homephones{
     position: absolute;
     top: 15%;
@@ -78,23 +83,23 @@
   }
 
   #image-slide1{
-    animation: fade1 20s infinite;
+    animation: fade1 22s infinite;
   }
 
   #image-slide2{
-    animation: fade2 20s infinite;
+    animation: fade2 22s infinite;
   }
 
   #image-slide3{
-    animation: fade3 20s infinite;
+    animation: fade3 22s infinite;
   }
   
   #image-slide4{
-    animation: fade4 20s infinite;
+    animation: fade4 22s infinite;
   }
 
   #image-slide5{
-    animation: fade5 20s infinite;
+    animation: fade5 22s infinite;
   }
 
   @keyframes fade1{
