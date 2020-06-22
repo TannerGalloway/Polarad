@@ -31,7 +31,11 @@ class navbar extends Component {
   };
 
   logout = () => {
-    Axios.get("/logout").then((redirect) => {window.location.pathname = redirect.data}).catch((err) => {console.log(err.response)});
+    Axios.get("/logout").then((redirect) => {
+      var userAuth = {"status": false};
+      localStorage.setItem("userAuth", JSON.stringify(userAuth));
+      window.location.pathname = redirect.data;
+    }).catch((err) => {console.log(err.response)});
   };
 
   handleButtonClick = () => {

@@ -6,6 +6,7 @@ import AccountPage from "./components/body/account/accountpage";
 import Settings from "./components/body/account/settings";
 import AccountEdit from "./components/body/account/accountEdit";
 import NotFound from "./components/body/NotFound/PageNotFound";
+import ProtectedRoute from "./components/body/ProtectedRoute";
 import Axios from "axios";
 
 class App extends Component {
@@ -16,7 +17,16 @@ class App extends Component {
 
 componentDidMount(){
   // delete session cookie when user logs out.
-  document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  if(!this.state.loggedin){
+    document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
+
+  // check user's login session
+  Axios.get("/userSession").then((user) => {
+    this.setState({loggedin: user.data});
+    var userAuth = {"status": user.data, "user": this.state.displayName};
+    localStorage.setItem("userAuth", JSON.stringify(userAuth));
+  }).catch((err) => {console.log(err.response)});
 
   // get username from url
   if(window.location.pathname !== "/" || window.location.pathname !== "/login" || window.location.pathname !== "/profile/"){
@@ -32,11 +42,6 @@ componentDidMount(){
         userpagename = window.location.pathname.slice(namepostion, window.location.pathname.lastIndexOf("/")).replace(/%20/g, " ");
         this.setState({displayName: this.capital_letter(userpagename)});
       };
-
-      // check if user's login session is not expired
-      Axios.get("/userSession").then((user) => {
-        this.setState({loggedin: user.data});
-      }).catch((err) => {console.log(err.response)});
       
   }else{
     return;
@@ -60,11 +65,11 @@ componentDidMount(){
       <>
       <Router>
         <Switch>
-          <Route exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} />} />
-          <Route exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} />} />
-          <Route exact path="/profile/:username" component={() => <AccountPage loggedin={loggedin} displayName={displayName}/>} />
-          <Route exact path="/profile/:username/settings" component={() => <Settings loggedin={loggedin} displayName={displayName} />} />
-          <Route exact path="/profile/:username/edit" component={() => <AccountEdit loggedin={loggedin} displayName={displayName}/>} />
+          <ProtectedRoute exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} />}/>
+          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} />}/>
+          <Route exact path="/profile/:username" component={() => <AccountPage loggedin={loggedin} displayName={displayName}/>}/>
+          <ProtectedRoute exact path="/profile/:username/settings" component={() => <Settings loggedin={loggedin} displayName={displayName} />}/>
+          <ProtectedRoute exact path="/profile/:username/edit" component={() => <AccountEdit loggedin={loggedin} displayName={displayName}/>}/>
           <Route path="*" component={() => <NotFound loggedin={loggedin} displayName={displayName}/>}/>
         </Switch>
       </Router>

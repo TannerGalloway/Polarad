@@ -59,6 +59,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
            res.json(false);
         }
     });
+    
     router.get("/logout", (req, res) => {
         req.logout();
         req.session.destroy();
