@@ -12,10 +12,10 @@ import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
 
-var favClick = false;
 class accountInfo extends Component {
   constructor(props) {
     super(props);
+    this.favClick = false;
     this.state = {
       posts: 0,
       followers: 0,
@@ -37,9 +37,12 @@ class accountInfo extends Component {
       sessionStorage.removeItem("userMenuClicked");
     }
     else if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` || sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit`){
-      favClick = true;
-      sessionStorage.removeItem("prevURL");
-      this.favsClickedOtherPage(favClick);
+      this.favClick = !this.favClick;
+      this.favsClickedOtherPage(this.favClick);
+      setTimeout(() => {
+        sessionStorage.removeItem("prevURL");
+        sessionStorage.removeItem("userMenuClicked");
+      }, 250);
     }
   }
   

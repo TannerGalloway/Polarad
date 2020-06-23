@@ -66,7 +66,7 @@ componentDidMount(){
       <Router>
         <Switch>
           <ProtectedRoute exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} />}/>
-          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} />}/>
+          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} capitalL={this.capital_letter}/>}/>
           <Route exact path="/profile/:username" component={() => <AccountPage loggedin={loggedin} displayName={displayName}/>}/>
           <ProtectedRoute exact path="/profile/:username/settings" component={() => <Settings loggedin={loggedin} displayName={displayName} />}/>
           <ProtectedRoute exact path="/profile/:username/edit" component={() => <AccountEdit loggedin={loggedin} displayName={displayName}/>}/>

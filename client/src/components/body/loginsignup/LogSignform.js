@@ -32,7 +32,7 @@ class LogSignform extends Component {
                 }).then((res) => {if(res.data === "success" && res.config.url === "/"){
                         window.location.pathname = "/login"
                 }else if(res.config.url === "/login"){
-                    window.location.pathname = `/profile/${res.data}`;
+                    window.location.pathname = `/profile/${this.props.capitalL(res.data)}`;
                 }
                 else{
                     this.errorhandle(res.data)

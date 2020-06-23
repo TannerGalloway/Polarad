@@ -9,11 +9,11 @@ import User from "../../../Images/usericon.png";
 import Gear from "../../../Images/settingsicon.png";
 import Axios from "axios";
 
-var url = window.location.pathname.replace(/%20/g, " ");
-var favoritesActive = false;
 class navbar extends Component {
   constructor(props) {
     super(props);
+    this.url = window.location.pathname.replace(/%20/g, " ");
+    this.favoritesActive = false;
     this.dropdown = React.createRef();
     this.state = { searchTerm: "", open: false};
   }
@@ -35,6 +35,7 @@ class navbar extends Component {
       var userAuth = {"status": false};
       localStorage.setItem("userAuth", JSON.stringify(userAuth));
       window.location.pathname = redirect.data;
+      sessionStorage.removeItem("userMenuClicked");
     }).catch((err) => {console.log(err.response)});
   };
 
@@ -59,9 +60,9 @@ class navbar extends Component {
   }
 
   favoritesClick = () => {
-    if(url === `/profile/${this.props.displayName}` && sessionStorage.getItem("prevURL") === null){
-      favoritesActive = !favoritesActive;
-        this.props.favClick(favoritesActive);
+    if(this.url === `/profile/${this.props.displayName}` && sessionStorage.getItem("prevURL") === null){
+      this.favoritesActive = !this.favoritesActive;
+        this.props.favClick(this.favoritesActive);
     }
     else{
       window.location.pathname = `/profile/${this.props.displayName}`;
@@ -78,8 +79,8 @@ class navbar extends Component {
       logo;
 
     var { loggedin, displayName, favClickReturn} = this.props;
-    favoritesActive = favClickReturn;
-    var Heart = favoritesActive ? HeartActive : HeartInactive;
+    this.favoritesActive = favClickReturn;
+    var Heart = this.favoritesActive ? HeartActive : HeartInactive;
 
     if (viewportSize > 768) {
       logo = (

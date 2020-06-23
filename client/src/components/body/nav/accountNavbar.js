@@ -19,6 +19,7 @@ class accountnavbar extends Component {
   }
 
   componentDidMount(){
+    // butons clicked to be  manage active state and where they were clicked.
     if(url !== `/profile/${this.props.displayName}`){
       this.setState({homeActive: false});
     }
@@ -70,7 +71,12 @@ class accountnavbar extends Component {
        break;
       
       case "logoutIcon":
-        Axios.get("/logout").then((redirect) => {window.location.pathname = redirect.data}).catch((err) => {console.log(err.response)});
+        Axios.get("/logout").then((redirect) => {
+          var userAuth = {"status": false};
+          localStorage.setItem("userAuth", JSON.stringify(userAuth));
+          sessionStorage.removeItem("homeClicked");
+          window.location.pathname = redirect.data;
+        }).catch((err) => {console.log(err.response)});
         break;
 
       default:

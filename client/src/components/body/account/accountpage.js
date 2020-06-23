@@ -11,7 +11,6 @@ class accountpage extends Component {
 
   handleFavClick = (favValue) => {
     if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` || sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit`){
-      sessionStorage.removeItem("prevURL");
       this.setState({favoritesClicked: true});
     }
     else{
