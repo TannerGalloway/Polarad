@@ -14,16 +14,24 @@
     margin-top: 20%;
 }
 
+.passwordError{
+    display: none;
+    position: relative;
+    top: 75px;
+    text-align: center;
+
+}
+
 
 @media screen and (min-width: 768px){
-    .inputSettings{
+    .inputSettings, .passwordError{
         margin-left: 315px;
         width: 400px;
     }
 
     .saveChanges{
         width: 300px;
-        margin-left: 190px;
+        margin-left: 230px;
         margin-top: 3%;
     }
 }
