@@ -61,12 +61,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     router.post("/updatePassword", (req, res) => {
-        User.findOneAndUpdate({username: req.body.username}, {password: genhash(req.body.Password)}).then((err) => {
-            if(err){
-                res.send(err);
-            }else{
-                res.send("Password Update Successful");
-            }
+        User.findOneAndUpdate({username: req.body.username}, {password: genhash(req.body.Password)}).then(() => {
+            res.send("Password Update Successful");
         });
     });
     
