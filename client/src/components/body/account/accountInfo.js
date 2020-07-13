@@ -11,16 +11,18 @@ import bookmarkIconInactive from "../../../Images/bookmark.png";
 import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
+import Axios from "axios";
 
 class accountInfo extends Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
     this.favClick = false;
     this.state = {
       posts: 0,
       followers: 0,
       following: 0,
-      bio: "Hello, I am here to show you pics of my adventures across america.",
+      bio: "",
       postsActive: true,
       bookmarkActive: false,
       taggedActive: false,
@@ -28,6 +30,22 @@ class accountInfo extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
+    // get user from url
+    var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
+    urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
+    if(slashCount === 2){
+      namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
+      userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
+    }
+
+    Axios.get(`/bio/${userpagename}`).then((res) => {
+      if(this._isMounted){
+        this.setState({bio: res.data.bio});
+      }
+    });
+
     if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` && sessionStorage.getItem("userMenuClicked")){
       sessionStorage.removeItem("prevURL");
       sessionStorage.removeItem("userMenuClicked");
@@ -96,6 +114,10 @@ class accountInfo extends Component {
   favsClickedOtherPage = (favoriteValue) => {   
       this.props.favClickAccountInfo(favoriteValue);
   }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   
   render() {
     const {
@@ -161,7 +183,7 @@ class accountInfo extends Component {
           <Col xs={3}>
             <Image
               id="profilepic"
-              src="https://via.placeholder.com/92"
+              src="https://via.placeholder.com/132"
               roundedCircle
             />
           </Col>

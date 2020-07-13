@@ -35,28 +35,17 @@ componentDidMount(){
       if(slashCount === 2){
         namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
         userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
-        this.setState({displayName: this.capital_letter(userpagename)});
+        this.setState({displayName: userpagename});
 
       }else if(slashCount === 3){
         namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
         userpagename = window.location.pathname.slice(namepostion, window.location.pathname.lastIndexOf("/")).replace(/%20/g, " ");
-        this.setState({displayName: this.capital_letter(userpagename)});
+        this.setState({displayName: userpagename});
       };
       
   }else{
     return;
   }
-}
-
-    // set the first letter of each word in a sentence to a capital letter.
-  capital_letter = (name) => {
-    name = name.split(" ");
-
-    for (var i = 0, nameLength = name.length; i < nameLength; i++) {
-        name[i] = name[i][0].toUpperCase() + name[i].substr(1);
-    }
-
-    return name.join(" ");
 }
 
   render(){
@@ -65,8 +54,8 @@ componentDidMount(){
       <>
       <Router>
         <Switch>
-          <ProtectedRoute exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} />}/>
-          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} capitalL={this.capital_letter}/>}/>
+          <ProtectedRoute exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} displayName={displayName} />}/>
+          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} displayName={displayName}/>}/>
           <Route exact path="/profile/:username" component={() => <AccountPage loggedin={loggedin} displayName={displayName}/>}/>
           <ProtectedRoute exact path="/profile/:username/settings" component={() => <Settings loggedin={loggedin} displayName={displayName} />}/>
           <ProtectedRoute exact path="/profile/:username/edit" component={() => <AccountEdit loggedin={loggedin} displayName={displayName}/>}/>

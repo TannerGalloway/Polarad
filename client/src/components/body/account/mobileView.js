@@ -22,9 +22,9 @@ function mobileView(props) {
         <div id="nameBtnCol">
           <p id="displayname">{`${displayName}`}</p>
           {loggedBtn}
+          <h6 id="biotext">{`${bio}`}</h6>
         </div>
       </Col>
-        <h6 id="biotext">{`${bio}`}</h6>
         <hr className="line" />
         <ul id="accountNumsList">
           <li className="accountNums">

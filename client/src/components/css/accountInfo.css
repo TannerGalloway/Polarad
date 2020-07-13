@@ -1,6 +1,6 @@
 #profilepic{
-    height: 92px;
-    width: 92px;
+    height: 132px;
+    width: 132px;
     margin-top: 10%;
 }
 
@@ -24,17 +24,11 @@
 #postsIcon, #bookmarkIcon, #taggedIcon{
     cursor: pointer;
 }
-
-
+    
 @media screen and (min-width: 768px){
     #profilepic{
         height: 150px;
         width: 150px;
-    }
-
-    #accountIcons{
-        position: relative;
-        left: 10%;
     }
 
     .iconTitle{

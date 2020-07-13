@@ -4,6 +4,8 @@ const router = express.Router();
 const User = require("../config/database").model;
 const passport = require("passport");
 const genhash = require("../utils/passwordUtils").genpassword;
+// const session = require("express-session");
+// const MongoStore = require("connect-mongo")(session);
 
     router.post("/", (req, res) => {
         var username  = req.body.username.replace(/\s/g, "");
@@ -16,7 +18,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
             if(usernameQuary === null){
                 const user = new User({
                     username: username,
-                    password: genhash(password)
+                    password: genhash(password),
+                    bio: ""
                 });
     
                 user.save();
@@ -55,14 +58,29 @@ const genhash = require("../utils/passwordUtils").genpassword;
             res.json(true);
         }
        else{
-           req.session.destroy();
-           res.json(false);
+           req.session.destroy(() => {
+               res.json(false);
+           });
         }
     });
 
     router.post("/updatePassword", (req, res) => {
         User.findOneAndUpdate({username: req.body.username}, {password: genhash(req.body.Password)}).then(() => {
             res.send("Password Update Successful");
+        });
+    });
+
+    router.get("/bio/:user", (req, res, next) => {
+        var query = User.findOne({username: req.params.user}).select("bio");
+        query.exec((err, userBio) => {
+            if (err) return next(err);
+            res.send(userBio);
+        });
+    });
+
+    router.post("/updateBio", (req, res) => {
+        User.findOneAndUpdate({username: req.body.username}, {bio: req.body.newBio}).then((bio) => {
+            res.send("Bio Update Successful");
         });
     });
     

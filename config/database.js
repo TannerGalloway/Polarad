@@ -14,7 +14,8 @@ db.once("open", function() {
 // schema for users
 const UserSchema = mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    bio: String
 });
 
 // export schema and db connection
