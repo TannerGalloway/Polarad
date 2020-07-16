@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form, Button, Alert} from 'react-bootstrap';
+import {Form, Button, Alert, Container, Row, Col} from 'react-bootstrap';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import "../../css/LogSignform.css";
@@ -91,40 +91,46 @@ class LogSignform extends Component {
         var phones;
         if(window.screen.width > 768){
             phones =  ( 
-            <div className="homephones">
-                <img src={homephone} alt="phone display"></img>
-                    <img id="image-slide1" src={screenShot1} alt="screenShot1"></img>
-                    <img id="image-slide2" src={screenShot2} alt="screenShot2"></img>
-                    <img id="image-slide3" src={screenShot3} alt="screenShot3"></img>
-                    <img id="image-slide4" src={screenShot4} alt="screenShot4"></img>
-                    <img id="image-slide5" src={screenShot5} alt="screenShot5"></img>
-            </div>
+                <Col id="phonesCol">
+                    <div className="homephones">
+                        <img src={homephone} alt="phone display"></img>
+                        <img id="image-slide1" src={screenShot1} alt="screenShot1"></img>
+                        <img id="image-slide2" src={screenShot2} alt="screenShot2"></img>
+                        <img id="image-slide3" src={screenShot3} alt="screenShot3"></img>
+                        <img id="image-slide4" src={screenShot4} alt="screenShot4"></img>
+                        <img id="image-slide5" src={screenShot5} alt="screenShot5"></img>
+                    </div>
+                </Col>
             )
         }
             return (
-                <>
-                    {phones}
-                    <div className="LogSignform">
-                        <h1 className="title">Polarad</h1>
-                        <h3 className="subTitle">{this.props.action} to see photos from your friends.</h3>
-                        <Alert className="logsignError" variant="danger">{this.state.error}</Alert>
-                        <Form>
-                            <Form.Group controlId="formUsername">
-                                <Form.Control className="userPasstextbox" type="text" placeholder="Username"  name="username" required onChange={this.userInput}/>
-                            </Form.Group>
+                <Container>
+                    <Row>
+                            {phones}
+                        <Col>
+                            <div className="LogSignform">
+                                <h1 className="title">Polarad</h1>
+                                <h3 className="subTitle">{this.props.action} to see photos from your friends.</h3>
+                                <Alert className="logsignError" variant="danger">{this.state.error}</Alert>
+                                <Form>
+                                    <Form.Group controlId="formUsername">
+                                        <Form.Control className="userPasstextbox" type="text" placeholder="Username"  name="username" required onChange={this.userInput}/>
+                                    </Form.Group>
     
-                            <Form.Group controlId="formPassword">
-                                <Form.Control className="userPasstextbox" type="password" placeholder="Password" name="password" required onChange={this.passwordInput}/>
-                            </Form.Group>
-                            <Button variant="primary" onClick={this.loginSignup}>
-                                {this.props.action}
-                            </Button>
-                        </Form>
-                    </div>
-                    <div className="LogformLink">
-                <p className="LSQuestion">{this.props.message}<Link to={this.props.link}>{this.props.LinkAction}</Link></p>
-                    </div>
-                </>
+                                    <Form.Group controlId="formPassword">
+                                        <Form.Control className="userPasstextbox" type="password" placeholder="Password" name="password" required onChange={this.passwordInput}/>
+                                    </Form.Group>
+                                    <Button variant="primary" onClick={this.loginSignup}>
+                                        {this.props.action}
+                                    </Button>
+                                </Form>
+                            </div>
+                            <div className="LogformLink">
+                                <p className="LSQuestion">{this.props.message}<Link to={this.props.link}>{this.props.LinkAction}</Link></p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
             )
     }
 }

@@ -1,26 +1,25 @@
-
 .LogSignform{
     background-color: #FFFFFF;
-    width:336px;
-    height:365px;
-    margin:0 auto;
-    position:absolute;
-    left:63%;
-    top:50%;
-    margin-left:-168px;
-    margin-top:-265px;
+    width: 336px;
+    height: 365px;
+    margin: 0 auto;
+    position: relative;
+    left: 15%;
+    top: 300%;
+    margin-left: 100px;
+    margin-top: -265px;
     border-style: groove;
   }
 
   .LogformLink{
     background-color: #FFFFFF;
-    width:336px;
-    height:60px;
-    margin:0 auto;
-    position:absolute;
-    left:63%;
-    bottom:23%;
-    margin-left:-168px;
+    width: 336px;
+    height: 60px;
+    margin: 0 auto;
+    position: relative;;
+    left: 15%;
+    top: 315%;
+    margin-left: 100px;
     border-style: groove;
   }
   
@@ -71,8 +70,11 @@
 
   .homephones{
     position: absolute;
-    top: 15%;
-    left: 30%;
+    top: 75%;
+  }
+
+  #phonesCol{
+    display: none;
   }
 
   #image-slide1, #image-slide2, #image-slide3, #image-slide4, #image-slide5 {
@@ -149,10 +151,27 @@
 
   @media screen and (max-width: 768px){
     .LogSignform{
-      left:50%;
+      left: -15%;
     }
+    
     .LogformLink{
-      left:50%;
-      bottom:10%;
+      left: -15%;
+      bottom: 10%;
+    }
+  }
+
+  @media screen and (min-width: 830px){
+    #phonesCol{
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 992px){
+    .LogSignform{
+      left: -30%;
+    }
+
+    .LogformLink{
+      left: -30%;
     }
   }
