@@ -1,6 +1,10 @@
 #NavbarTitle{
-    font-family: 'Pacifico';
+    font-family: "Pacifico";
     font-size: 35px;
+}
+
+.navbar{
+    border-bottom: 1px solid rgba(204, 204, 204, 1); 
 }
 
 #row{
@@ -21,30 +25,56 @@
     margin-left: 110px;
 }
 
-.dropdown { 
+#searchPic{
+    height: 34px;
+    width: 34px;
+    margin-top: 13%;
+    margin-bottom: 20%;
+}
+
+#user{
+    margin-top: 5px;
+    margin-bottom: 0%;
+    font-size: 16px;
+}
+
+#userError{
+    color: #8e8e8e;
+    text-align: center;
+    padding: 5px 15px 5px 15px;
+    margin: 0px;
+}
+
+.dropdown, #searchResultsContainer { 
     position: absolute;
     top: 113%; 
-    left: 90px; 
+    left: 70px; 
     width: 160px; 
     z-index: 2; 
     border: 1px solid rgba(0, 0, 0, 0.04); 
     box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14); 
-} 
+}
 
-#ContentContainer { 
+#searchResultsContainer{
+    top: 117%;
+    left: 190px;
+    width: 200px;
+}
+
+#ContentContainer, #searchResultsList { 
     list-style: none; 
     padding: 0; 
     margin: 0; 
 } 
 
-.dropdownContent { 
+.dropdownContent, #searchContent { 
     background-color: #ffffff; 
     padding: 8px 12px;
 
 } 
 
-.dropdownContent:hover { 
-    background-color: rgba(0, 0, 0, 0.14); 
+.dropdownContent:hover, #searchContent:hover, .resultsRow:hover{ 
+    background-color: rgb(245, 245, 245); 
     cursor: pointer; 
 }
 
@@ -65,6 +95,30 @@
 .accountDropdown:hover{
     text-decoration: none;
     color: black;
+}
+
+#SearchProfilePic{
+    padding: 5%;
+}
+
+#usernameSearchResult{
+    padding-top: 8%;
+    padding-left: 5%;
+
+}
+
+.popover-body{
+    padding: 0.5rem 1rem 0rem;
+}
+
+.resultsRow{
+    border-bottom: 1px solid #d8d8d8;
+    color: black;
+}
+
+.resultsRow:hover{
+    color: black;
+    text-decoration: none;
 }
 
 @media screen and (min-width: 768px) {

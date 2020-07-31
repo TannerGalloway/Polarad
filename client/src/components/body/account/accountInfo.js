@@ -40,12 +40,21 @@ class accountInfo extends Component {
       userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
     }
 
+    // check if user is in database
+    Axios.get(`/validUser/${userpagename}`).then((res) => {
+        if(!res){
+          window.location.pathname = "/404";
+        }
+    });
+
+    // get user bio
     Axios.get(`/bio/${userpagename}`).then((res) => {
       if(this._isMounted){
         this.setState({bio: res.data.bio});
       }
     });
 
+    // check if account menu buttons have been clicked from a user editing page.
     if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` && sessionStorage.getItem("userMenuClicked")){
       sessionStorage.removeItem("prevURL");
       sessionStorage.removeItem("userMenuClicked");

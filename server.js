@@ -26,7 +26,7 @@ var sessionMW = session({
   resave: false,
   saveUninitialized: true,
   unset: "destroy", 
-  store: new MongoStore({ mongooseConnection: dbConnection.connection, collection: "sessions" }),
+  store: new MongoStore({ mongooseConnection: dbConnection.connection, collection: "sessions", autoRemove: "native" }),
   cookie: {
     maxAge: 1000 * (60 *60),
     httpOnly: false,

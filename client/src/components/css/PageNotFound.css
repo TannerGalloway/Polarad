@@ -1,11 +1,8 @@
 .NotFoundPage{
     width:545px;
     margin:0 auto;
-    position:absolute;
-    left:44%;
-    top:50%;
-    margin-left:-168px;
-    margin-top:-250px;
+    position: relative;;
+    top:255px;
     text-align: center;
 }
 
@@ -17,6 +14,6 @@
 @media screen and (max-width: 768px){
     .NotFoundPage{
         width: 350px;
-        top: 75%
+        top: 160px;
     }
   }

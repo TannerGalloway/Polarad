@@ -4,10 +4,7 @@
     height: 365px;
     margin: 0 auto;
     position: relative;
-    left: 15%;
-    top: 300%;
-    margin-left: 100px;
-    margin-top: -265px;
+    top: 205px;
     border-style: groove;
   }
 
@@ -17,9 +14,7 @@
     height: 60px;
     margin: 0 auto;
     position: relative;;
-    left: 15%;
-    top: 315%;
-    margin-left: 100px;
+    top: 225px;
     border-style: groove;
   }
   
@@ -51,6 +46,21 @@
     width: 70%;
   }
 
+  .helpCircle{
+    height: 25px;
+    width: 25px;
+    background-color: #eceaea;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: 61%;
+    right: 4%;
+    text-align: center;
+    font-weight: bold;
+    cursor: default;
+    box-shadow: 0px 1px 6px 3px #c5c5c5;
+  }
+  
   .btn{
     position: relative;
     left: 15%;
@@ -68,13 +78,13 @@
     text-align: center;
   }
 
-  .homephones{
-    position: absolute;
-    top: 75%;
-  }
-
   #phonesCol{
     display: none;
+  }
+
+   .homephones{
+    position: absolute;
+    top: 25%;
   }
 
   #image-slide1, #image-slide2, #image-slide3, #image-slide4, #image-slide5 {

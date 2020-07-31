@@ -4,13 +4,11 @@ const router = express.Router();
 const User = require("../config/database").model;
 const passport = require("passport");
 const genhash = require("../utils/passwordUtils").genpassword;
-// const session = require("express-session");
-// const MongoStore = require("connect-mongo")(session);
 
     router.post("/", (req, res) => {
         var username  = req.body.username.replace(/\s/g, "");
         var password = req.body.password.replace(/\s/g, "");
-        User.findOne({"username": username}, (err, usernameQuary) => {
+        User.findOne({username: username}, (err, usernameQuary) => {
             if(err){
                 return handleError(err);
             }
@@ -64,6 +62,22 @@ const genhash = require("../utils/passwordUtils").genpassword;
         }
     });
 
+    router.get("/validUser/:user", (req, res) => {
+        User.findOne({username: req.params.user}, (err, usernameQuary) => {
+            if(err){
+                return handleError(err);
+            }
+            if(usernameQuary === null){
+                // send to 404 page.
+                res.send(usernameQuary);
+            }
+            else{
+                // continue to user profile.
+                res.send(true);
+            }
+        });
+    });
+
     router.post("/updatePassword", (req, res) => {
         User.findOneAndUpdate({username: req.body.username}, {password: genhash(req.body.Password)}).then(() => {
             res.send("Password Update Successful");
@@ -88,6 +102,13 @@ const genhash = require("../utils/passwordUtils").genpassword;
         req.logout();
         req.session.destroy();
         res.send("/login");
+    });
+
+    router.get("/userSearch/:user", (req, res) =>{
+        User.find({"username": {"$regex": req.params.user, "$options": "i"}}).then((user) => {
+            var userSearch = user.map((userdata, index ) => {return user[index].username});
+            res.send(userSearch);
+        });
     });
     
 module.exports = router;

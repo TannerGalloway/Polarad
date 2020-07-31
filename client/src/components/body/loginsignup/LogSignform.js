@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form, Button, Alert, Container, Row, Col} from 'react-bootstrap';
+import {Form, Button, Alert, Container, Row, Col, Popover, OverlayTrigger} from 'react-bootstrap';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import "../../css/LogSignform.css";
@@ -18,10 +18,14 @@ class LogSignform extends Component {
     }
 
     loginSignup = () => {
-        // check for incorrect data in username or password
-        if(this.state.username === "") {
+        var usernameChecker = this.state.username.search(/^[a-zA-Z0-9_-]{3,20}$/);
+        var passwordChecker = this.state.password.search(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{6,32})$/);
+
+        // check for incorrect data in username or password field
+        if(usernameChecker === -1){
             this.errorhandle("username")
-        }else if(this.state.password === ""){
+        }
+        else if(passwordChecker === -1){
             this.errorhandle("password")
         }
         else {
@@ -63,12 +67,12 @@ class LogSignform extends Component {
     errorhandle = (errorStatus) => {
         switch(errorStatus){
             case "username":
-            this.setState({error: "Please enter a username", username: ""});
+            this.setState({error: "Please enter a valid username", username: ""});
             this.errorstyle();
             break;
 
             case "password":
-            this.setState({error: "Please enter a password", password: ""});
+            this.setState({error: "Please enter a valid password", password: ""});
             this.errorstyle();
             break;
 
@@ -84,11 +88,11 @@ class LogSignform extends Component {
     // style the errors
     errorstyle = () => {
         document.querySelector(".logsignError").style.display = "block";
-        setTimeout(() => {this.resetError()}, 2000);
+        setTimeout(() => {this.resetError()}, 2500);
     };
 
     render() {
-        var phones;
+        var phones, usernameTips, passwordTips, passwordHelp
         if(window.screen.width > 768){
             phones =  ( 
                 <Col id="phonesCol">
@@ -103,6 +107,30 @@ class LogSignform extends Component {
                 </Col>
             )
         }
+
+        if(window.location.pathname === "/"){
+            usernameTips = (<Form.Text className="text-muted userPasstextbox">Must contain between 3-20 characters.</Form.Text>);
+            passwordTips = (<Form.Text className="text-muted userPasstextbox">Passwords must be at least 6 characters.</Form.Text>);
+            passwordHelp = (
+                <OverlayTrigger
+                    trigger="click"
+                    key={"top"}
+                    placement={"top"}
+                    overlay={
+                    <Popover id={"popover-positioned-top"}>
+                        <Popover.Title as="h3">{"Password Requirments"}</Popover.Title>
+                        <Popover.Content>
+                            <li>Contains at least 6 characters.</li>
+                            <li>Contains at least 1 upercase letter.</li>
+                            <li>Contains at least 1 lowercase letter.</li>
+                            <li>Contains at least 1 number.</li>
+                            <li>Contains at least 1 special character.</li>
+                        </Popover.Content>
+                    </Popover>}>
+                    <span className="helpCircle">?</span>
+                    </OverlayTrigger>
+                );
+        }
             return (
                 <Container>
                     <Row>
@@ -115,10 +143,13 @@ class LogSignform extends Component {
                                 <Form>
                                     <Form.Group controlId="formUsername">
                                         <Form.Control className="userPasstextbox" type="text" placeholder="Username"  name="username" required onChange={this.userInput}/>
+                                        {usernameTips}
                                     </Form.Group>
     
                                     <Form.Group controlId="formPassword">
                                         <Form.Control className="userPasstextbox" type="password" placeholder="Password" name="password" required onChange={this.passwordInput}/>
+                                        {passwordTips}
+                                        {passwordHelp}
                                     </Form.Group>
                                     <Button variant="primary" onClick={this.loginSignup}>
                                         {this.props.action}
