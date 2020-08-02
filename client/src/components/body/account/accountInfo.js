@@ -50,7 +50,11 @@ class accountInfo extends Component {
     // get user bio
     Axios.get(`/bio/${userpagename}`).then((res) => {
       if(this._isMounted){
-        this.setState({bio: res.data.bio});
+        if(res.data.bio === undefined){
+          this.setState({bio: ""});
+        }else{
+          this.setState({bio: res.data.bio});
+        }
       }
     });
 
@@ -192,7 +196,7 @@ class accountInfo extends Component {
           <Col xs={3}>
             <Image
               id="profilepic"
-              src="https://via.placeholder.com/132"
+              src="https://via.placeholder.com/120"
               roundedCircle
             />
           </Col>
