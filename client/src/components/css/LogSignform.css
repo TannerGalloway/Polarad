@@ -159,23 +159,6 @@
     100%{opacity: 0;}
   }
 
-  @media screen and (max-width: 768px){
-    .LogSignform{
-      left: -15%;
-    }
-    
-    .LogformLink{
-      left: -15%;
-      bottom: 10%;
-    }
-  }
-
-  @media screen and (min-width: 830px){
-    #phonesCol{
-      display: block;
-    }
-  }
-
   @media screen and (min-width: 992px){
     .LogSignform{
       left: -30%;
@@ -183,5 +166,9 @@
 
     .LogformLink{
       left: -30%;
+    }
+
+    #phonesCol{
+      display: block;
     }
   }
