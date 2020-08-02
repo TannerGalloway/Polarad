@@ -19,7 +19,7 @@ class accountnavbar extends Component {
   }
 
   componentDidMount(){
-    // butons clicked to be  manage active state and where they were clicked.
+    // buttons clicked to manage active state and where they were clicked.
     if(url !== `/profile/${this.props.displayName}`){
       this.setState({homeActive: false});
     }
