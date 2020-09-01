@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const cookieParams = {
+    httpOnly: false,
+    signed: true
+  }
 
 const User = require("../config/database").model;
 const passport = require("passport");
@@ -17,7 +21,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
                 const user = new User({
                     username: username,
                     password: genhash(password),
-                    bio: ""
+                    bio: "",
+                    login: false
                 });
     
                 user.save();
@@ -46,20 +51,36 @@ const genhash = require("../utils/passwordUtils").genpassword;
             //Authentication successful
             req.logIn(user, function(err) {
                 if (err) { return next(err); }
-                res.send(req.user.username,);
+                User.findOneAndUpdate({username: req.user.username}, {loggedin: true}).then(() => {
+                    res.cookie("userSession", {"status": true, "user": req.user.username});
+                    res.send(req.user.username);
+                });
               });
         })(req, res, next);
     });
 
+    // create/update cookie for user auth
     router.get("/userSession", (req, res) => {
-        if(req.user){
-            res.json(true);
+        if(!req.user){
+            req.session.destroy(() => {
+                res.cookie("userSession", {"status": false, "user": ""});
+                res.json(req.cookies);
+            });
         }
-       else{
-           req.session.destroy(() => {
-               res.json(false);
-           });
+           else{
+            res.json(req.cookies);
         }
+    });
+
+    // set prevURL Cookie
+    router.get("/SetPrevURL", (req, res) => {
+                res.cookie("prevURL", req.headers.referer);
+                res.json(req.cookies);
+    });
+
+    // get PrevURL Cookie
+    router.get("/PrevURL", (req, res) => {
+        res.json(req.cookies);
     });
 
     router.get("/validUser/:user", (req, res) => {
@@ -93,15 +114,20 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     router.post("/updateBio", (req, res) => {
-        User.findOneAndUpdate({username: req.body.username}, {bio: req.body.newBio}).then((bio) => {
+        User.findOneAndUpdate({username: req.body.username}, {bio: req.body.newBio}).then(() => {
             res.send("Bio Update Successful");
         });
     });
     
     router.get("/logout", (req, res) => {
+        var loggedUser = req.user.username;
+        res.cookie("userSession", {"status": false, "user": ""});
         req.logout();
-        req.session.destroy();
-        res.send("/login");
+        req.session.destroy(() => {
+            User.findOneAndUpdate({username: loggedUser}, {loggedin: false}).then(() => {
+                res.json({"status": false, "user": "", redirect: "/login"});
+            });
+           });
     });
 
     router.get("/userSearch/:user", (req, res) =>{

@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 import "../../css/settings.css";
+import LoginContext from "../../../loginContext";
 import Navbar from "../nav/navbar";
-import Bottomnav from "../nav/accountNavbar";
+import Bottomnav from "../nav/mobileNavbar";
 import { Container, Button, InputGroup, FormControl, Alert } from "react-bootstrap";
 import Axios from "axios";
 
 class settingsEdit extends Component {
   constructor(props) {
     super(props);
-    this.url = window.location.pathname.replace(/%20/g, " ");
     this.state = {newPassword: ""};
   }
 
   NewpasswordInput = (event) => {
     this.setState({newPassword: event.target.value});
+};
+
+componentDidMount(){
+  Axios.get("/SetPrevURL");
 };
 
   // update password
@@ -22,9 +26,10 @@ class settingsEdit extends Component {
       this.msgStyle("error");
       document.querySelector(".passwordError").innerHTML = "Please Enter a Password";
 
-    }else{
+    }
+    else{
       Axios.post("/updatePassword", {
-        username: this.lowercase_letter(this.props.displayName),
+        username: this.context.loginUser.user,
         Password: this.state.newPassword
       }).then((res) => {
         this.msgStyle("success");
@@ -71,34 +76,22 @@ class settingsEdit extends Component {
     document.querySelector(".passwordError").style.display = "none";
 }
 
-// used to make the displayname equal the name in the db.
-  lowercase_letter = (name) => {
-    name = name.split(" ");
-
-    for (var i = 0, nameLength = name.length; i < nameLength; i++) {
-        name[i] = name[i][0].toLowerCase() + name[i].substr(1);
-    }
-
-    return name.join(" ");
-}
-
   render() {
-    sessionStorage.setItem("prevURL", this.url);
     sessionStorage.removeItem("userMenuClicked");
     var viewportSize = window.screen.width, mobileNavBottom,
       textboxAddonStyle;
-
+    
     if(viewportSize > 768){
       textboxAddonStyle = "Change Password";
     }
     else{
       textboxAddonStyle = "Change\nPassword";
-      mobileNavBottom = this.props.loggedin ? <Bottomnav displayName={this.props.displayName} favoritesLink={this.handlefavoritesClicked}/> : null;
+      mobileNavBottom = this.context.loginUser.status ? <Bottomnav favoritesLink={(favoriteValue) => {this.props.favhandle(favoriteValue)}}/> : null;
     }
 
     return (
       <>
-        <Navbar loggedin={this.props.loggedin} displayName={this.props.displayName}/>
+        <Navbar favClick={this.props.favhandle}/>
         <Container>
           <div>
           <Alert className="passwordError" variant="success">{this.state.error}</Alert>
@@ -120,5 +113,5 @@ class settingsEdit extends Component {
     );
   }
 }
-
+settingsEdit.contextType = LoginContext;
 export default settingsEdit;

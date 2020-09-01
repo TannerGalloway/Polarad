@@ -5,6 +5,8 @@ const session = require("express-session");
 const passport = require("passport");
 const MongoStore = require("connect-mongo")(session);
 const dbConnection = require("./config/database");
+const cookieParser = require("cookie-parser");
+const cookieEncrypter = require("cookie-encrypter");
 
 var PORT = process.env.PORT || 8080;
 var routes = require("./routes/routes.js"); 
@@ -24,12 +26,11 @@ app.set("trust proxy", true);
 var sessionMW = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
-  unset: "destroy", 
+  saveUninitialized: false, 
   store: new MongoStore({ mongooseConnection: dbConnection.connection, collection: "sessions", autoRemove: "native" }),
   cookie: {
     maxAge: 1000 * (60 *60),
-    httpOnly: false,
+    httpOnly: false
   },
 });
 
@@ -39,6 +40,9 @@ app.all(["/", "/login", "/logout", "/userSession"], sessionMW);
 // passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cookieParser());
+app.use(cookieEncrypter(process.env.COOKIE_SECRET));
 
 // Import routes and give the server access to them.
 app.use(routes);

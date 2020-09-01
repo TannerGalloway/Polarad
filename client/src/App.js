@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import './App.css';
+import LoginContext from "./loginContext";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import LogSignform from "./components/body/loginsignup/LogSignform";
 import AccountPage from "./components/body/account/accountpage";
-import Settings from "./components/body/account/settings";
-import AccountEdit from "./components/body/account/accountEdit";
+import Settings from "./components/body/account/accountSettings";
+import Edit from "./components/body/account/accountEdit";
 import NotFound from "./components/body/NotFound/PageNotFound";
 import ProtectedRoute from "./components/body/ProtectedRoute";
 import Axios from "axios";
@@ -12,57 +13,58 @@ import Axios from "axios";
 class App extends Component {
   constructor(props){
     super(props)
-    this.state = { loggedin: false, displayName: ""};
+    this.state = {
+      loginUser: {
+        status: null,
+        user: ""
+      },
+      favoritesClicked: false,
+      prevURL: ""
+    };
   }
 
 componentDidMount(){
-  // delete session cookie when user logs out.
-  if(!this.state.loggedin){
-    document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  }
-
-  // check user's login session
-  Axios.get("/userSession").then((user) => {
-    this.setState({loggedin: user.data});
-    var userAuth = {"status": user.data, "user": this.state.displayName};
-    localStorage.setItem("userAuth", JSON.stringify(userAuth));
+  // updates state based on user login and  deletes cookies when user logs out.
+  Axios.get("/userSession").then((session) => {
+    if(!session.data.userSession.status){
+        document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "userSession=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "prevURL=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      }
+        this.setState({loginUser: session.data.userSession});
   }).catch((err) => {console.log(err.response)});
 
-  // get username from url
-  if(window.location.pathname !== "/" || window.location.pathname !== "/login" || window.location.pathname !== "/profile/"){
-    var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
-      urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
-      if(slashCount === 2){
-        namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
-        userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
-        this.setState({displayName: userpagename});
-
-      }else if(slashCount === 3){
-        namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
-        userpagename = window.location.pathname.slice(namepostion, window.location.pathname.lastIndexOf("/")).replace(/%20/g, " ");
-        this.setState({displayName: userpagename});
-      };
-      
-  }else{
-    return;
-  }
+  // sets the previous url the user was at in context.
+  Axios.get("/prevURL").then((url) => {
+    var prevUrlArr = url.data.prevURL.split(""), slashCount = 0, pathNamePostion, PrevPathName;
+    prevUrlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
+    pathNamePostion = url.data.prevURL.indexOf("/", 7);
+    PrevPathName = url.data.prevURL.slice(pathNamePostion);
+    this.setState({prevURL: PrevPathName});
+  }).catch((err) => {console.log(err.response)});
 }
 
+handleFavClick = (favValue) => {
+  this.setState({favoritesClicked: favValue});
+  
+};
+
   render(){
-    var {loggedin, displayName} = this.state;
-    return (  
-      <>
-      <Router>
-        <Switch>
-          <ProtectedRoute exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"} displayName={displayName} />}/>
-          <ProtectedRoute exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"} displayName={displayName}/>}/>
-          <Route exact path="/profile/:username" component={() => <AccountPage loggedin={loggedin} displayName={displayName}/>}/>
-          <ProtectedRoute exact path="/profile/:username/settings" component={() => <Settings loggedin={loggedin} displayName={displayName} />}/>
-          <ProtectedRoute exact path="/profile/:username/edit" component={() => <AccountEdit loggedin={loggedin} displayName={displayName}/>}/>
-          <Route path="*" component={() => <NotFound loggedin={loggedin} displayName={displayName}/>}/>
-        </Switch>
-      </Router>
-      </>
+    return (
+      <LoginContext.Provider value={this.state}>
+        <>
+        <Router>
+          <Switch>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"}/>}/>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/login" component={() => <LogSignform message={"Don't have an account? "} link={"/"} LinkAction={"Sign up"} action={"Login"}/>}/>
+            <Route exact path="/profile/:username" component={() => <AccountPage returnfavclick={this.state.favoritesClicked} favhandle={this.handleFavClick}/>}/>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/settings" component={() => <Settings favhandle={this.handleFavClick}/>}/>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/edit" component={() => <Edit favhandle={this.handleFavClick}/>}/>
+            <Route path="*" component={() => <NotFound/>}/>
+          </Switch>
+        </Router>
+        </>
+      </LoginContext.Provider>  
     );
   }
 }

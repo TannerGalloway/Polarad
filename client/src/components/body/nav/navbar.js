@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../../css/navbar.css";
 import {Navbar, Button, Form, FormControl, Row, Col, Image, OverlayTrigger, Popover} from "react-bootstrap";
+import LoginContext from "../../../loginContext";
+import {Link} from "react-router-dom";
 
 import Logo from "../../../Images/Polarad.png";
 import HeartInactive from "../../../Images/heart.png";
@@ -15,12 +17,13 @@ class navbar extends Component {
     this.url = window.location.pathname.replace(/%20/g, " ");
     this.favoritesActive = false;
     this.dropdown = React.createRef();
-    this.state = { open: false };
+    this.state = { dropdownOpen: false};
   }
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutsideUser);
     document.addEventListener("mousedown", this.handleClickOutsideSearch);
+    setTimeout(() => {sessionStorage.setItem("userMenuClicked", false);}, 1000);
   }
 
   componentWillUnmount() {
@@ -30,7 +33,7 @@ class navbar extends Component {
 
   // searchbar error
   userSearchError = () => {
-    for(var e = 0; e<document.getElementsByClassName("popover-body")[0].childNodes.length; e++){
+    for(var e = 0; e < document.getElementsByClassName("popover-body")[0].childNodes.length; e++){
       document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[e]);
     }
       var searchError = document.createElement("div");
@@ -59,7 +62,7 @@ class navbar extends Component {
           var rowContainer = document.createElement("div");
           rowContainer.setAttribute("class", "resultsContainer");
           
-          for(var s = 0; s<document.getElementsByClassName("popover-body")[0].childNodes.length; s++){
+          for(var s = 0; s < document.getElementsByClassName("popover-body")[0].childNodes.length; s++){
             document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[s]);
           }
   
@@ -103,21 +106,19 @@ class navbar extends Component {
   // logout function
   logout = () => {
     Axios.get("/logout")
-      .then((redirect) => {
-        var userAuth = { status: false };
-        localStorage.setItem("userAuth", JSON.stringify(userAuth));
-        window.location.pathname = redirect.data;
-        sessionStorage.removeItem("userMenuClicked");
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    .then((logoutRes) => {
+      sessionStorage.removeItem("userMenuClicked");
+      window.location.pathname = logoutRes.data.redirect;
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
   };
 
-  // open/close account dropdown
+  // dropdown Open/close account dropdown
   handleButtonClick = () => {
     this.setState((prevState) => {
-      return { open: !prevState.open };
+      return { dropdownOpen: !prevState.dropdownOpen };
     });
   };
 
@@ -131,164 +132,151 @@ class navbar extends Component {
       sessionStorage.setItem("userMenuClicked", true);
       return;
     } else if (this.dropdown.current) {
-      this.setState({ open: false });
+      this.setState({ dropdownOpen: false });
       sessionStorage.removeItem("userMenuClicked");
     }
   };
 
-  settingslink = () => {
-    window.location.pathname = `/profile/${this.props.displayName}/settings`;
-  };
-
   // user clicked on favorites button
   favoritesClick = () => {
-    if (
-      this.url === `/profile/${this.props.displayName}` &&
-      sessionStorage.getItem("prevURL") === null
-    ) {
-      this.favoritesActive = !this.favoritesActive;
-      this.props.favClick(this.favoritesActive);
-    } else {
-      window.location.pathname = `/profile/${this.props.displayName}`;
+    this.favoritesActive = !this.favoritesActive;
+    this.props.favClick(this.favoritesActive);
+    if(this.url !== `/profile/${this.context.loginUser.user}`){
+      window.location.pathname = `/profile/${this.context.loginUser.user}`;  
     }
   };
 
   render() {
-    var navmenu,
-      searchbar,
-      webpageName = "Polarad",
-      displayNameStyle,
-      settingsicon,
-      viewportSize = window.screen.width,
-      logo;
+            var navmenu,
+            searchbar,
+            webpageName = "Polarad",
+            displayNameStyle,
+            settingsicon,
+            viewportSize = window.screen.width,
+            logo;
 
-    var { loggedin, displayName, favClickReturn } = this.props;
-    this.favoritesActive = favClickReturn;
-    var Heart = this.favoritesActive ? HeartActive : HeartInactive;
+          var { favClickReturn } = this.props;
+          this.favoritesActive = favClickReturn;
+          var Heart = this.favoritesActive ? HeartActive : HeartInactive;
 
-    if (viewportSize > 768) {
-      logo = (
-        <img
-          alt="Polarad"
-          src={Logo}
-          width="60"
-          height="60"
-          className="d-inline-block align-top"
-        />
-      );
-
-      searchbar = (
-        <Col>
-          <OverlayTrigger
-            trigger="focus"
-            key={"bottom"}
-            placement={"bottom"}
-            overlay={
-              <Popover id={"popover-positioned-bottom"}>
-                <Popover.Content>
-                 <div className="row resultsRow">
-                   <p id="userError">No results found.</p>
-                 </div>
-                </Popover.Content>
-              </Popover>
-            }
-          >
-            <Form inline>
-              <FormControl
-                id="search"
-                type="text"
-                placeholder="Search"
-                onChange={this.userSearch}
-                className="mr-sm-2, searchbar"
+          if (viewportSize > 768) {
+            logo = (
+              <img
+                alt="Polarad"
+                src={Logo}
+                width="60"
+                height="60"
+                className="d-inline-block align-top"
               />
-            </Form>
-          </OverlayTrigger>
-        </Col>
-      );
-    }
+            );
+      
+            searchbar = (
+              <Col>
+                <OverlayTrigger
+                  trigger="focus"
+                  key={"bottom"}
+                  placement={"bottom"}
+                  overlay={
+                    <Popover id={"popover-positioned-bottom"}>
+                      <Popover.Content>
+                       <div className="row resultsRow">
+                         <p id="userError">No results found.</p>
+                       </div>
+                      </Popover.Content>
+                    </Popover>
+                  }
+                >
+                  <Form inline>
+                    <FormControl
+                      id="search"
+                      type="text"
+                      placeholder="Search"
+                      onChange={this.userSearch}
+                      className="mr-sm-2, searchbar"
+                    />
+                  </Form>
+                </OverlayTrigger>
+              </Col>
+            );
+          }
+      
+          if (this.context.loginUser.status && viewportSize > 768) {
+            navmenu = (
+              <Col className="logmenu">
+                <Image id="heartIconTop" src={Heart} onClick={this.favoritesClick} />
+                <Image id="userIcon" src={User} onClick={this.handleButtonClick} />
+                {this.state.dropdownOpen && (
+                  <div className="dropdown" ref={this.dropdown}>
+                    <ul id="ContentContainer">
+                      <li className="dropdownContent">
+                        <Link to={`/profile/${this.context.loginUser.user}`} className="accountDropdown">My Profile</Link>
+                      </li>
+                      <li className="dropdownContent">
+                        <Link to={`/profile/${this.context.loginUser.user}/settings`} className="accountDropdown">Settings</Link>
+                      </li>
+                      <li onClick={this.logout} className="dropdownContent">logout</li>
+                    </ul>
+                  </div>
+                )}
+              </Col>
+            );
+          } else if (this.context.loginUser.status && viewportSize < 768) {
+            webpageName = "";
+            logo = (
+              <img
+                alt="Polarad"
+                src={Logo}
+                width="60"
+                height="60"
+                className="d-inline-block align-top"
+              />
+            );
+            displayNameStyle = (
+              <Col>
+                <h4 id="navdisplayName">{this.context.loginUser.user}</h4>
+              </Col>
+            );
+            settingsicon = (
+              <Link to={`/profile/${this.context.loginUser.user}/settings`}>
+                <img
+                id="settingsGear"
+                alt="settings"
+                src={Gear}
+                width="42"
+                height="42"
+              />
+              </Link>
+            );
+          } else if (!this.context.loginUser.status) {
+            navmenu = (
+              <Col className="btnmenu">
+                <Button variant="primary" href="/login" className="btnSize">
+                  Login
+                </Button>
+                <Button variant="link" href="/" className="btnSize">
+                  Sign Up
+                </Button>
+              </Col>
+            );
+          }
 
-    if (loggedin && viewportSize > 768) {
-      navmenu = (
-        <Col className="logmenu">
-          <Image id="heartIconTop" src={Heart} onClick={this.favoritesClick} />
-          <Image id="userIcon" src={User} onClick={this.handleButtonClick} />
-          {this.state.open && (
-            <div className="dropdown" ref={this.dropdown}>
-              <ul id="ContentContainer">
-                <li className="dropdownContent">
-                  <a className="accountDropdown" href={`/profile/${displayName}`}>
-                    My Profile
-                  </a>
-                </li>
-                <li className="dropdownContent">
-                  <a className="accountDropdown" href={`/profile/${displayName}/settings`}>
-                    Settings
-                  </a>
-                </li>
-                <li onClick={this.logout} className="dropdownContent">
-                  logout
-                </li>
-              </ul>
-            </div>
-          )}
-        </Col>
-      );
-    } else if (loggedin && viewportSize < 768) {
-      webpageName = "";
-      logo = (
-        <img
-          alt="Polarad"
-          src={Logo}
-          width="60"
-          height="60"
-          className="d-inline-block align-top"
-        />
-      );
-      displayNameStyle = (
-        <Col>
-          <h4 id="navdisplayName">{displayName}</h4>
-        </Col>
-      );
-      settingsicon = (
-        <img
-          id="settingsGear"
-          alt="settings"
-          src={Gear}
-          width="42"
-          height="42"
-          onClick={this.settingslink}
-        />
-      );
-    } else if (!loggedin) {
-      navmenu = (
-        <Col className="btnmenu">
-          <Button variant="primary" href="/Login" className="btnSize">
-            Login
-          </Button>
-          <Button variant="link" href="/" className="btnSize">
-            Sign Up
-          </Button>
-        </Col>
-      );
-    }
-
-    return (
-      <Navbar expand="lg" bg="light" variant="light">
-        <Row id="row">
-          <Col xs={4}>
-            <Navbar.Brand id="NavbarTitle">
-              {logo}
-              {webpageName}
-            </Navbar.Brand>
-          </Col>
-          {displayNameStyle}
-          {settingsicon}
-          {searchbar}
-          {navmenu}
-        </Row>
-      </Navbar>
-    );
+          return (
+            <Navbar expand="lg" bg="light" variant="light">
+              <Row id="row">
+                <Col xs={4}>
+                  <Navbar.Brand id="NavbarTitle">
+                    {logo}
+                    {webpageName}
+                  </Navbar.Brand>
+                </Col>
+                {displayNameStyle}
+                {settingsicon}
+                {searchbar}
+                {navmenu}
+              </Row>
+            </Navbar>
+          );
   }
 }
-
+navbar.contextType = LoginContext;
 export default navbar;

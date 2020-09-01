@@ -33,17 +33,20 @@ class LogSignform extends Component {
                 axios.post(window.location.pathname, {
                     username: this.state.username,
                     password: this.state.password
-                }).then((res) => {if(res.data === "success" && res.config.url === "/"){
+                }).then((res) => {
+                    if(res.data === "success" && res.config.url === "/"){
                         window.location.pathname = "/login"
-                }else if(res.config.url === "/login"){
-                    window.location.pathname = `/profile/${res.data}`;
-                }
-                else{
-                    this.errorhandle(res.data)
-                }
-                }).catch(err => {if(err.response.status === 401){
-                    this.errorhandle("Invalid Username or Password");
-                }else {console.log(err.response)}});
+                    }else if(res.config.url === "/login"){
+                        window.location.pathname = `/profile/${res.data}`;
+                    }
+                    else{
+                        this.errorhandle(res.data)
+                    }
+                }).catch(err => {
+                    if(err.response.status === 401){
+                        this.errorhandle("Invalid Username or Password");
+                    }else {console.log(err.response)}
+                });
         }
     }
 
@@ -120,11 +123,12 @@ class LogSignform extends Component {
                     <Popover id={"popover-positioned-top"}>
                         <Popover.Title as="h3">{"Password Requirments"}</Popover.Title>
                         <Popover.Content>
-                            <li>Contains at least 6 characters.</li>
-                            <li>Contains at least 1 upercase letter.</li>
-                            <li>Contains at least 1 lowercase letter.</li>
-                            <li>Contains at least 1 number.</li>
-                            <li>Contains at least 1 special character.</li>
+                            <li>At least 6 characters</li>
+                            <li>At least 1 upercase letter</li>
+                            <li>At least 1 lowercase letter</li>
+                            <li>At least 1 number</li>
+                            <li>At least 1 special character</li>
+                            <br/>
                         </Popover.Content>
                     </Popover>}>
                     <span className="helpCircle">?</span>

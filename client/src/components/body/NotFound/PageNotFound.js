@@ -3,11 +3,10 @@ import Navbar from "../nav/navbar";
 import { Container, Button } from "react-bootstrap";
 import "../../css/PageNotFound.css";
 
-function PageNotFound(props) {
-    var {loggedin, displayName } = props;
+function PageNotFound() {
     return (
         <>
-        <Navbar loggedin={loggedin} displayName={displayName}/>
+        <Navbar/>
         <Container>
         <div className="NotFoundPage">
             <h2 className="bold">Sorry, this page isn't available.</h2>

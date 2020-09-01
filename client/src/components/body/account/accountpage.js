@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../../css/accountpage.css";
+import LoginContext from "../../../loginContext";
 import Navbar from "../nav/navbar";
 import Accountinfo from "../account/accountInfo";
 
@@ -9,23 +10,22 @@ class accountpage extends Component {
     this.state = {favoritesClicked: false};
   }
 
-  handleFavClick = (favValue) => {
-    if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` || sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit`){
-      this.setState({favoritesClicked: true});
+  componentDidMount(){
+    if(this.context.prevURL === `/profile/${this.context.loginUser.user}/settings` || this.context.prevURL === `/profile/${this.context.loginUser.user}/edit`){
+      if(sessionStorage.getItem("userMenuClicked") !== "true"){
+        this.setState({favoritesClicked: true});
+      }
     }
-    else{
-      this.setState({favoritesClicked: favValue});
-    }
-  }
-  
+  };
+
   render() {
     return (
       <>
-        <Navbar loggedin={this.props.loggedin} displayName={this.props.displayName} favClick={this.handleFavClick} favClickReturn={this.state.favoritesClicked}/>
-        <Accountinfo loggedin={this.props.loggedin} displayName={this.props.displayName} favClickAccountInfo={this.handleFavClick} favoritesPage={this.state.favoritesClicked}/>
+        <Navbar favClick={(favValue) => {this.setState({favoritesClicked: favValue})}} favClickReturn={this.state.favoritesClicked}/>
+        <Accountinfo favClick={(favValue) => {this.setState({favoritesClicked: favValue})}} favClickReturn={this.state.favoritesClicked}/>
        </>
     )
   }
 }
-
+accountpage.contextType = LoginContext;
 export default accountpage;

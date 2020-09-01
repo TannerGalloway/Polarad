@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import LoginContext from "../../../loginContext";
 import Navbar from "../nav/navbar";
-import Bottomnav from "../nav/accountNavbar";
+import Bottomnav from "../nav/mobileNavbar";
 import "../../css/accountEdit.css";
 import { Container, Button, InputGroup, FormControl, Alert } from "react-bootstrap";
 import Axios from "axios";
@@ -8,12 +9,13 @@ import Axios from "axios";
 class accountEdit extends Component {
   constructor(props) {
     super(props);
-    this.url = window.location.pathname.replace(/%20/g, " ");
     this.state = {newBio: ""};
   }
   
 
   componentDidMount(){
+    Axios.get("/SetPrevURL");
+    
     Axios.get(`/bio/${this.getUser()}`).then((res) => {
        document.querySelector("#bioTextArea").value = res.data.bio;
     });
@@ -80,16 +82,15 @@ class accountEdit extends Component {
   }
 
   render() {
-    sessionStorage.setItem("prevURL", this.url);
     var viewportSize = window.screen.width, mobileNavBottom;
 
     if(viewportSize < 768){
-      mobileNavBottom = this.props.loggedin ? <Bottomnav displayName={this.props.displayName}/> : null;
+      mobileNavBottom = this.context.loginUser.status ? <Bottomnav favoritesLink={(favoriteValue) => {this.props.favhandle(favoriteValue)}}/> : null;
     }
 
     return (
       <>
-        <Navbar loggedin={this.props.loggedin} displayName={this.props.displayName}/>
+        <Navbar favClick={this.props.favhandle}/>
         <Container>
           <Alert className="bioError" variant="success">{this.state.error}</Alert>
           <InputGroup className="inputSettings">
@@ -105,5 +106,5 @@ class accountEdit extends Component {
     );
   }
 }
-
+accountEdit.contextType = LoginContext;
 export default accountEdit;

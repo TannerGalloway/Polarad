@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import "../../css/accountInfo.css";
+import LoginContext from "../../../loginContext";
 import { Container, Row, Col, Image} from "react-bootstrap";
-import Desktopview from "../account/desktopView";
-import Mobileview from "../account/mobileView";
-import MobileNav from "../nav/accountNavbar";
+import Desktopview from "./desktopView"
+import Mobileview from "./mobileView";
+import MobileNav from "../nav/mobileNavbar";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -18,6 +19,7 @@ class accountInfo extends Component {
     super(props);
     this._isMounted = false;
     this.favClick = false;
+    this.displayname = "";
     this.state = {
       posts: 0,
       followers: 0,
@@ -26,6 +28,7 @@ class accountInfo extends Component {
       postsActive: true,
       bookmarkActive: false,
       taggedActive: false,
+      viewuserpage: false
     };
   }
 
@@ -42,10 +45,23 @@ class accountInfo extends Component {
 
     // check if user is in database
     Axios.get(`/validUser/${userpagename}`).then((res) => {
-        if(!res){
+        if(res.data === ""){
           window.location.pathname = "/404";
+        }else{
+          this.displayname = userpagename;
         }
     });
+    
+    // get loggedin user
+    Axios.get("/userSession").then((loggeduser) => {
+      if(this._isMounted){
+        if(userpagename === loggeduser.data.userSession.user){
+          this.setState({viewuserpage: true});
+        }else{
+          this.setState({viewuserpage: false});
+        }
+      }
+    }).catch((err) => {console.log(err.response)});
 
     // get user bio
     Axios.get(`/bio/${userpagename}`).then((res) => {
@@ -57,24 +73,6 @@ class accountInfo extends Component {
         }
       }
     });
-
-    // check if account menu buttons have been clicked from a user editing page.
-    if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` && sessionStorage.getItem("userMenuClicked")){
-      sessionStorage.removeItem("prevURL");
-      sessionStorage.removeItem("userMenuClicked");
-    }
-    else if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit` && sessionStorage.getItem("userMenuClicked")){
-      sessionStorage.removeItem("prevURL");
-      sessionStorage.removeItem("userMenuClicked");
-    }
-    else if(sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/settings` || sessionStorage.getItem("prevURL") === `/profile/${this.props.displayName}/edit`){
-      this.favClick = !this.favClick;
-      this.favsClickedOtherPage(this.favClick);
-      setTimeout(() => {
-        sessionStorage.removeItem("prevURL");
-        sessionStorage.removeItem("userMenuClicked");
-      }, 250);
-    }
   }
   
   toggleIcon = (event) => {
@@ -88,7 +86,7 @@ class accountInfo extends Component {
       break;
 
       case "bookmarkIcon":
-        if(!this.props.loggedin){
+        if(!this.context.loginUser.status){
           window.location.pathname = "/login";
         }
         if(this.state.bookmarkActive){
@@ -104,7 +102,7 @@ class accountInfo extends Component {
        break;
 
       case "taggedIcon":
-        if(!this.props.loggedin){
+        if(!this.context.loginUser.status){
           window.location.pathname = "/login";
         }
         if(this.state.taggedActive){
@@ -124,90 +122,86 @@ class accountInfo extends Component {
     }
   }
  
-  favsClickedOtherPage = (favoriteValue) => {   
-      this.props.favClickAccountInfo(favoriteValue);
-  }
-
   componentWillUnmount() {
     this._isMounted = false;
   }
   
   render() {
-    const {
+    var {
       posts,
       followers,
       following,
       bio
     } = this.state;
-    var {loggedin, displayName, favoritesPage} = this.props;
+    var {favClickReturn} = this.props;
     var accountView, mobileNavBottom, favoritesPageContent,
       viewportSize = window.screen.width;
-      if(viewportSize > 768){
-        accountView = (
-          <Desktopview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio} />
-        );
-      }else{
-        accountView = (
-          <Mobileview loggedin={loggedin} displayName={displayName} posts={posts} followers={followers} following={following} bio={bio}/>
-        );
-          mobileNavBottom = loggedin ? <MobileNav displayName={displayName} favoritesLink={this.favsClickedOtherPage} favoritesLinkReturn={favoritesPage}/> : null;
-      }
+    if(viewportSize > 768){
+      accountView = (
+          <Desktopview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={this.state.viewuserpage} />
+      );
+    }else{
+      accountView = (
+          <Mobileview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={this.state.viewuserpage} />
+      );
+        mobileNavBottom = this.context.loginUser.status ? <MobileNav favoritesLink={(favoriteValue) => {this.props.favClick(favoriteValue)}} favoritesLinkReturn={favClickReturn} /> : null;
+    }
 
-      if(!favoritesPage){
-        var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
-        var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
-        var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
+    if(!favClickReturn){
+      var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
+      var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
+      var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
 
-        favoritesPageContent = 
-      (
-        <Row id="accountIcons">
-          <Col>
-            <Image
-              id="postsIcon"
-              src={postsIcon}
-              onClick={this.toggleIcon}
-            />
-            <h6 className="iconTitle">POSTS</h6>
-          </Col>
-          <Col>
-          <Image
-            id="bookmarkIcon"
-            src={bookmarkIcon}
-            onClick={this.toggleIcon}
-          />
-          <h6 className="iconTitle">BOOKMARKED</h6>
-        </Col>
+      favoritesPageContent = 
+    (
+      <Row id="accountIcons">
         <Col>
           <Image
-            id="taggedIcon"
-            src={taggedIcon}
+            id="postsIcon"
+            src={postsIcon}
             onClick={this.toggleIcon}
           />
-          <h6 className="iconTitle">TAGGED</h6>
+          <h6 className="iconTitle">POSTS</h6>
         </Col>
-      </Row>
-      )
-      }
+        <Col>
+        <Image
+          id="bookmarkIcon"
+          src={bookmarkIcon}
+          onClick={this.toggleIcon}
+        />
+        <h6 className="iconTitle">BOOKMARKED</h6>
+      </Col>
+      <Col>
+        <Image
+          id="taggedIcon"
+          src={taggedIcon}
+          onClick={this.toggleIcon}
+        />
+        <h6 className="iconTitle">TAGGED</h6>
+      </Col>
+    </Row>
+    )
+    }
 
-    return (
-      <>
-      <Container>
-        <Row>
-          <Col xs={3}>
-            <Image
-              id="profilepic"
-              src="https://via.placeholder.com/120"
-              roundedCircle
-            />
-          </Col>
-            {accountView}
-        </Row>
-        {favoritesPageContent}
-      </Container>
-      {mobileNavBottom}
-      </>
-    );
+  return (
+    <>
+    <Container>
+      <Row>
+        <Col xs={3}>
+          <Image
+            id="profilepic"
+            src="https://via.placeholder.com/120"
+            roundedCircle
+          />
+        </Col>
+          {accountView}
+      </Row>
+      {favoritesPageContent}
+    </Container>
+    {mobileNavBottom}
+    </>
+  );
   }
 }
-
+accountInfo.contextType = LoginContext;
 export default accountInfo;
