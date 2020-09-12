@@ -28,7 +28,7 @@ class accountInfo extends Component {
       postsActive: true,
       bookmarkActive: false,
       taggedActive: false,
-      viewuserpage: false
+      nonLoggeduserView: false
     };
   }
 
@@ -56,9 +56,9 @@ class accountInfo extends Component {
     Axios.get("/userSession").then((loggeduser) => {
       if(this._isMounted){
         if(userpagename === loggeduser.data.userSession.user){
-          this.setState({viewuserpage: true});
+          this.setState({nonLoggeduserView: true});
         }else{
-          this.setState({viewuserpage: false});
+          this.setState({nonLoggeduserView: false});
         }
       }
     }).catch((err) => {console.log(err.response)});
@@ -73,6 +73,20 @@ class accountInfo extends Component {
         }
       }
     });
+
+    // set following count
+    Axios.get("/following").then((res) => {
+      if(this._isMounted){
+        this.setState({following: res.data.following.length});
+      }
+     });
+
+     // set followers count
+     Axios.get("/followers").then((res) => {
+      if(this._isMounted){
+        this.setState({followers: res.data});
+      }
+     });
   }
   
   toggleIcon = (event) => {
@@ -117,7 +131,6 @@ class accountInfo extends Component {
       break;
 
       default:
-
       break;
     }
   }
@@ -131,18 +144,19 @@ class accountInfo extends Component {
       posts,
       followers,
       following,
-      bio
+      bio,
+      nonLoggeduserView
     } = this.state;
     var {favClickReturn} = this.props;
     var accountView, mobileNavBottom, favoritesPageContent,
       viewportSize = window.screen.width;
     if(viewportSize > 768){
       accountView = (
-          <Desktopview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={this.state.viewuserpage} />
+          <Desktopview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={nonLoggeduserView} />
       );
     }else{
       accountView = (
-          <Mobileview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={this.state.viewuserpage} />
+          <Mobileview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={nonLoggeduserView} />
       );
         mobileNavBottom = this.context.loginUser.status ? <MobileNav favoritesLink={(favoriteValue) => {this.props.favClick(favoriteValue)}} favoritesLinkReturn={favClickReturn} /> : null;
     }

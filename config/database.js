@@ -16,7 +16,8 @@ const UserSchema = mongoose.Schema({
     username: String,
     password: String,
     bio: String,
-    loggedin: Boolean
+    loggedin: Boolean,
+    following: [String]
 });
 
 // export schema and db connection

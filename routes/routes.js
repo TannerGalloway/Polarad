@@ -22,7 +22,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
                     username: username,
                     password: genhash(password),
                     bio: "",
-                    login: false
+                    loggedin: false
                 });
     
                 user.save();
@@ -134,6 +134,38 @@ const genhash = require("../utils/passwordUtils").genpassword;
         User.find({"username": {"$regex": req.params.user, "$options": "i"}}).then((user) => {
             var userSearch = user.map((userdata, index ) => {return user[index].username});
             res.send(userSearch);
+        });
+    });
+
+    // follow user
+    router.post("/AddFollowing", (req, res) => {
+        User.findOneAndUpdate({username: req.body.username}, {$addToSet: {following: req.body.newFollowing}}).then(() => {
+            res.send("Following");
+        });
+    });
+
+    // unfollow user
+    router.post("/RemoveFollowing", (req, res) => {
+        User.findOneAndUpdate({username: req.body.username}, {$pull: {following: req.body.UpdateFollowing}}).then(() => {
+            res.send("Unfollowed");
+        });
+    });
+
+    // get how many people the user is following
+    router.get("/following", (req, res, next) => {
+        var query = User.findOne({username: req.cookies.userSession.user}).select("following -_id");
+        query.exec((err, usersfollowing) => {
+            if (err) return next(err);
+            res.send(usersfollowing);
+        });
+    });
+
+    // get followers
+    router.get("/followers", (req, res, next) => {
+        var aggregateQuery =  User.aggregate([{$match:{following:{$all:[req.cookies.userSession.user]}}}]);
+        aggregateQuery.exec((err, followers) => {
+            if (err) return next(err);
+            res.json(followers.length);
         });
     });
     
