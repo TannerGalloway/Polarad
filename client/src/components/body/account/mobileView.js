@@ -6,12 +6,23 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 
 function MobileView(props) {
-  var { displayName, posts, followers, following, bio, accountpageView } = props;
-  var profileBtn,  followClicked = React.createRef(),  loggedUser = "";
+  var { 
+    displayName, 
+    posts, 
+    followers, 
+    following, 
+    bio, 
+    accountpageView 
+  } = props;
+  var profileBtn,  
+  followClicked = React.createRef(),  
+  loggedUser = "",
+  loggedStatus = false;
 
   useEffect(() => {
-    var followButton = document.getElementsByClassName("nameBtn")[0];
-      Axios.get("/following").then((res) => {
+    if(loggedStatus){
+      var followButton = document.getElementsByClassName("nameBtn")[0];
+      Axios.get(`/following/${loggedUser}`).then((res) => {
        for(var i = 0; i < res.data.following.length; i++){
          if(res.data.following[i] === window.location.pathname.slice(9)){
           followClicked.current = true;
@@ -21,6 +32,7 @@ function MobileView(props) {
         }
        }
       });
+    };
   });
 
   // handle follow buttom click
@@ -50,6 +62,7 @@ function MobileView(props) {
     <LoginContext.Consumer>
       {(logininfo) => {
         loggedUser = logininfo.loginUser.user;
+        loggedStatus = logininfo.loginUser.status;
         if (accountpageView) {
           profileBtn = (
             <Link to={`/profile/${logininfo.loginUser.user}/edit`}>

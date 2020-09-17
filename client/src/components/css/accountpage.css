@@ -1,0 +1,19 @@
+.loadingMessage{
+    display: block;
+    position: fixed;
+    top: 35%;
+    left: 47%;
+    margin-top: -50px;
+    margin-left: -50px;
+}
+
+@media screen and (max-width: 768px){
+    .loadingMessage{
+        display: block;
+        position: fixed;
+        top: 38%;
+        left: 43%;
+        margin-top: -50px;
+        margin-left: -50px;
+    }   
+}

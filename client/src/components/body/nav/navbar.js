@@ -55,7 +55,8 @@ class navbar extends Component {
     }
    else if (searchTerm.target.value !== "") {
       Axios.get(`/userSearch/${searchTerm.target.value}`).then((user) => {
-        if(user.data.length === 0){
+       var searchResults = user.data.filter((value) => {return value !== this.context.loginUser.user});
+        if(searchResults.length === 0){
           this.userSearchError();
         }
         else{
@@ -66,10 +67,10 @@ class navbar extends Component {
             document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[s]);
           }
   
-          for( var i = 0; i < user.data.length; i++){
+          for( var i = 0; i < searchResults.length; i++){
             var userLink = document.createElement("a");
             userLink.className = "row resultsRow";
-            userLink.setAttribute("href", `/profile/${user.data[i]}`);
+            userLink.setAttribute("href", `/profile/${searchResults[i]}`);
   
             var colDivImage = document.createElement("div");
             colDivImage.setAttribute("class", "col");
@@ -84,7 +85,7 @@ class navbar extends Component {
   
             var usernameText = document.createElement("p");
             usernameText.setAttribute("id", "user");
-            usernameText.innerHTML = user.data[i];
+            usernameText.innerHTML = searchResults[i];
 
             colDivImage.appendChild(profileImg);
             colDivUser.appendChild(usernameText);
@@ -92,7 +93,7 @@ class navbar extends Component {
             userLink.appendChild(colDivUser);
             rowContainer.appendChild(userLink);
 
-            if(i !== user.data.length -1){
+            if(i !== searchResults.length -1){
               userLink.style.removeProperty("border-bottom");
             }
 
@@ -209,7 +210,7 @@ class navbar extends Component {
                   <div className="dropdown" ref={this.dropdown}>
                     <ul id="ContentContainer">
                       <li className="dropdownContent">
-                        <Link to={`/profile/${this.context.loginUser.user}`} className="accountDropdown">My Profile</Link>
+                        <a href={`/profile/${this.context.loginUser.user}`} className="accountDropdown">My Profile</a>
                       </li>
                       <li className="dropdownContent">
                         <Link to={`/profile/${this.context.loginUser.user}/settings`} className="accountDropdown">Settings</Link>

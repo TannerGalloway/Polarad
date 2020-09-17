@@ -16,22 +16,24 @@ function DesktopView(props) {
   } = props;
   var profileBtn,  
   followClicked = React.createRef(),
-  loggedUser = "";
+  loggedUser = "",
+  loggedStatus = false;
 
   // check if user is being followed
   useEffect(() => {
-    var followButton = document.getElementsByClassName("nameBtn")[0];
-      Axios.get("/following").then((res) => {
-       for(var i = 0; i < res.data.following.length; i++){
-         if(res.data.following[i] === window.location.pathname.slice(9)){
-          followClicked.current = true;
-          followButton.classList.remove("btn-primary");
-          followButton.classList.add("btn-light");
-          followButton.innerHTML = "✓ Following";
+    if(loggedStatus){
+      var followButton = document.getElementsByClassName("nameBtn")[0];
+      Axios.get(`/following/${loggedUser}`).then((res) => {
+        for(var i = 0; i < res.data.following.length; i++){
+          if(res.data.following[i] === window.location.pathname.slice(9)){
+           followClicked.current = true;
+           followButton.classList.remove("btn-primary");
+           followButton.classList.add("btn-light");
+           followButton.innerHTML = "✓ Following";
+         }
         }
-       }
-      });
-    
+       });
+    }
   });
   
   // hover text following/unfollow
@@ -79,6 +81,7 @@ function DesktopView(props) {
     <LoginContext.Consumer>
       {(logininfo) => {
         loggedUser = logininfo.loginUser.user;
+        loggedStatus = logininfo.loginUser.status;
         if (accountpageView) {
           profileBtn = (
             <Link to={`/profile/${logininfo.loginUser.user}/edit`}>

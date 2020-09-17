@@ -12,7 +12,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
     router.post("/", (req, res) => {
         var username  = req.body.username.replace(/\s/g, "");
         var password = req.body.password.replace(/\s/g, "");
-        User.findOne({username: username}, (err, usernameQuary) => {
+        User.findOne({"username": {"$regex": username, "$options": "i"}}, (err, usernameQuary) => {
             if(err){
                 return handleError(err);
             }
@@ -84,7 +84,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     router.get("/validUser/:user", (req, res) => {
-        User.findOne({username: req.params.user}, (err, usernameQuary) => {
+        User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}, (err, usernameQuary) => {
             if(err){
                 return handleError(err);
             }
@@ -94,7 +94,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
             }
             else{
                 // continue to user profile.
-                res.send(true);
+                res.send(usernameQuary.username);
             }
         });
     });
@@ -152,8 +152,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     // get how many people the user is following
-    router.get("/following", (req, res, next) => {
-        var query = User.findOne({username: req.cookies.userSession.user}).select("following -_id");
+    router.get("/following/:user", (req, res, next) => {
+        var query = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("following -_id");
         query.exec((err, usersfollowing) => {
             if (err) return next(err);
             res.send(usersfollowing);
@@ -161,8 +161,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     // get followers
-    router.get("/followers", (req, res, next) => {
-        var aggregateQuery =  User.aggregate([{$match:{following:{$all:[req.cookies.userSession.user]}}}]);
+    router.get("/followers/:user", (req, res, next) => {
+        var aggregateQuery =  User.aggregate([{$match:{following:{$all:[req.params.user]}}}]);
         aggregateQuery.exec((err, followers) => {
             if (err) return next(err);
             res.json(followers.length);

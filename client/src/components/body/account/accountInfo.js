@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import "../../css/accountInfo.css";
 import LoginContext from "../../../loginContext";
-import { Container, Row, Col, Image} from "react-bootstrap";
+import {Container, Row, Col, Image} from "react-bootstrap";
 import Desktopview from "./desktopView"
 import Mobileview from "./mobileView";
 import MobileNav from "../nav/mobileNavbar";
+import Axios from "axios";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -12,7 +13,6 @@ import bookmarkIconInactive from "../../../Images/bookmark.png";
 import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
-import Axios from "axios";
 
 class accountInfo extends Component {
   constructor(props) {
@@ -34,7 +34,6 @@ class accountInfo extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-
     // get user from url
     var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
     urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
@@ -44,49 +43,51 @@ class accountInfo extends Component {
     }
 
     // check if user is in database
-    Axios.get(`/validUser/${userpagename}`).then((res) => {
-        if(res.data === ""){
-          window.location.pathname = "/404";
-        }else{
-          this.displayname = userpagename;
-        }
-    });
+      Axios.get(`/validUser/${userpagename}`,).then((res) => {
+        if(this._isMounted){
+          if(res.data === ""){
+            window.location.pathname = "/404";
+          }else{
+            this.displayname = res.data;
+          }
+        };
+      });
     
     // get loggedin user
-    Axios.get("/userSession").then((loggeduser) => {
-      if(this._isMounted){
-        if(userpagename === loggeduser.data.userSession.user){
-          this.setState({nonLoggeduserView: true});
-        }else{
-          this.setState({nonLoggeduserView: false});
+      Axios.get("/userSession").then((loggeduser) => {
+        if(this._isMounted){
+          if(userpagename === loggeduser.data.userSession.user){
+            this.setState({nonLoggeduserView: true});
+          }else{
+            this.setState({nonLoggeduserView: false});
+          }
         }
-      }
-    }).catch((err) => {console.log(err.response)});
+      });
 
     // get user bio
-    Axios.get(`/bio/${userpagename}`).then((res) => {
-      if(this._isMounted){
-        if(res.data.bio === undefined){
-          this.setState({bio: ""});
+      Axios.get(`/bio/${userpagename}`).then((res) => {
+        if(this._isMounted){
+          if(res.data.bio === undefined){
+            this.setState({bio: ""});
         }else{
           this.setState({bio: res.data.bio});
+          }
         }
-      }
-    });
+      });
 
     // set following count
-    Axios.get("/following").then((res) => {
-      if(this._isMounted){
-        this.setState({following: res.data.following.length});
-      }
-     });
+      Axios.get(`/following/${userpagename}`).then((res) => {
+        if(this._isMounted){
+          this.setState({following: res.data.following.length});
+        }
+       });
 
      // set followers count
-     Axios.get("/followers").then((res) => {
-      if(this._isMounted){
-        this.setState({followers: res.data});
-      }
-     });
+      Axios.get(`/followers/${userpagename}`).then((res) => {
+        if(this._isMounted){
+          this.setState({followers: res.data});
+        }
+       });
   }
   
   toggleIcon = (event) => {
@@ -137,7 +138,7 @@ class accountInfo extends Component {
  
   componentWillUnmount() {
     this._isMounted = false;
-  }
+ }
   
   render() {
     var {
@@ -197,24 +198,24 @@ class accountInfo extends Component {
     )
     }
 
-  return (
-    <>
-    <Container>
-      <Row>
-        <Col xs={3}>
-          <Image
-            id="profilepic"
-            src="https://via.placeholder.com/120"
-            roundedCircle
-          />
-        </Col>
-          {accountView}
-      </Row>
-      {favoritesPageContent}
-    </Container>
-    {mobileNavBottom}
-    </>
-  );
+      return (
+        <>
+        <Container>
+          <Row>
+            <Col xs={3}>
+              <Image
+                id="profilepic"
+                src="https://via.placeholder.com/120"
+                roundedCircle
+              />
+            </Col>
+              {accountView}
+          </Row>
+          {favoritesPageContent}
+        </Container>
+        {mobileNavBottom}
+        </>
+      );
   }
 }
 accountInfo.contextType = LoginContext;
