@@ -83,6 +83,12 @@ const genhash = require("../utils/passwordUtils").genpassword;
         res.json(req.cookies);
     });
 
+    // reset prevURL Cookie
+    router.get("/ResetPrevURL", (req, res) => {
+        res.cookie("prevURL", "");
+        res.json(req.cookies);
+});
+
     router.get("/validUser/:user", (req, res) => {
         User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}, (err, usernameQuary) => {
             if(err){

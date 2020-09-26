@@ -5,7 +5,46 @@
     width: 100%;
 }
 
-#homeIcon, #searchIcon, #addPhotoIcon, #heartIconBottom, #logoutIcon{
+#homeIcon, #searchIcon, #addPhotoIcon, #heartIconBottom, #logoutIcon, #userIcon{
     padding: 3%;
     margin-left: 3%;
 }
+
+.dropdownContentMobile{
+    background-color: #ffffff; 
+    padding: 8px;
+    text-align: center;
+}
+
+#ContentContainerMobile{
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+.lineMobile{
+    border: 1px solid #d8d8d8;
+    width: 100%;
+    position: relative;
+    left: -1px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.accountDropdownMobile{
+    color: black;
+}
+
+.dropdownMobile{
+    position: absolute;
+    top: -105px; 
+    left: 245px; 
+    width: 160px; 
+    z-index: 2; 
+    border: 1px solid rgba(0, 0, 0, 0.04); 
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14);
+    background: white;
+}
+
+#ContentContainerMobile li {
+    list-style-type: none;
+    }

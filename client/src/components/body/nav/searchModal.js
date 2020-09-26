@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Modal, Form, FormControl, Col, OverlayTrigger, Popover} from "react-bootstrap";
+import LoginContext from "../../../loginContext.js";
 import Axios from "axios";
 import "../../css/modalStyle.css";
 
@@ -44,7 +45,8 @@ class SearchModal extends Component {
       this.userSearchError();
     } else if (searchTerm.target.value !== "") {
       Axios.get(`/userSearch/${searchTerm.target.value}`).then((user) => {
-        if (user.data.length === 0) {
+        var searchResults = user.data.filter((value) => {return value !== this.context.loginUser.user});
+        if (searchResults.length === 0) {
           this.userSearchError();
         } else {
           var rowContainer = document.createElement("div");
@@ -54,10 +56,10 @@ class SearchModal extends Component {
             document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[s]);
           }
 
-          for (var i = 0; i < user.data.length; i++) {
+          for (var i = 0; i < searchResults.length; i++) {
             var userLink = document.createElement("a");
             userLink.className = "row resultsRow";
-            userLink.setAttribute("href", `/profile/${user.data[i]}`);
+            userLink.setAttribute("href", `/profile/${searchResults[i]}`);
 
             var colDivImage = document.createElement("div");
             colDivImage.setAttribute("class", "col");
@@ -72,7 +74,7 @@ class SearchModal extends Component {
 
             var usernameText = document.createElement("p");
             usernameText.setAttribute("id", "user");
-            usernameText.innerHTML = user.data[i];
+            usernameText.innerHTML = searchResults[i];
 
             colDivImage.appendChild(profileImg);
             colDivUser.appendChild(usernameText);
@@ -80,7 +82,7 @@ class SearchModal extends Component {
             userLink.appendChild(colDivUser);
             rowContainer.appendChild(userLink);
 
-            if (i !== user.data.length - 1) {
+            if (i !== searchResults.length - 1) {
               userLink.style.removeProperty("border-bottom");
             }
 
@@ -135,5 +137,5 @@ class SearchModal extends Component {
     );
   }
 }
-
+SearchModal.contextType = LoginContext;
 export default SearchModal;

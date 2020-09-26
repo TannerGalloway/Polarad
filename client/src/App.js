@@ -8,6 +8,7 @@ import Settings from "./components/body/account/accountSettings";
 import Edit from "./components/body/account/accountEdit";
 import NotFound from "./components/body/NotFound/PageNotFound";
 import ProtectedRoute from "./components/body/ProtectedRoute";
+import FollowingFollowers from "./components/body/followingFollowers";
 import Axios from "axios";
 
 class App extends Component {
@@ -40,13 +41,17 @@ componentDidMount(){
     prevUrlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
     pathNamePostion = url.data.prevURL.indexOf("/", 7);
     PrevPathName = url.data.prevURL.slice(pathNamePostion);
-    this.setState({prevURL: PrevPathName});
+    if(pathNamePostion === -1){
+      this.setState({prevURL: ""});
+    }
+    else{
+      this.setState({prevURL: PrevPathName});
+    }
   }).catch((err) => {console.log(err.response)});
 }
 
 handleFavClick = (favValue) => {
   this.setState({favoritesClicked: favValue});
-  
 };
 
   render(){
@@ -60,6 +65,7 @@ handleFavClick = (favValue) => {
             <Route exact path="/profile/:username" component={() => <AccountPage returnfavclick={this.state.favoritesClicked} favhandle={this.handleFavClick}/>}/>
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/settings" component={() => <Settings favhandle={this.handleFavClick}/>}/>
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/edit" component={() => <Edit favhandle={this.handleFavClick}/>}/>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/following" component={() => <FollowingFollowers favhandle={this.handleFavClick} title={"Following"} message={"You have not followed anyone yet!"}/>}/>
             <Route path="*" component={() => <NotFound/>}/>
           </Switch>
         </Router>
