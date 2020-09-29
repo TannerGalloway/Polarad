@@ -33,6 +33,18 @@
     margin-top: 3%;
 }
 
+.btn-primary:active, .btn-primary:focus{
+    border-color: #007bff !important;
+    background-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.btn-light:hover, .btn-light:active, .btn-light:focus{
+    border-color: white !important;
+    background-color: #f8f9fa !important;
+    box-shadow: 0 0 0 0.2rem rgb(#f8f9fa) !important;
+}
+
 .line { 
     border: 1px solid #d8d8d8;
     width: 100%;

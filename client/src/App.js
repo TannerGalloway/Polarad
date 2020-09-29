@@ -66,6 +66,7 @@ handleFavClick = (favValue) => {
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/settings" component={() => <Settings favhandle={this.handleFavClick}/>}/>
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/edit" component={() => <Edit favhandle={this.handleFavClick}/>}/>
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/following" component={() => <FollowingFollowers favhandle={this.handleFavClick} title={"Following"} message={"You have not followed anyone yet!"}/>}/>
+            <ProtectedRoute logininfo={this.state.loginUser} exact path="/profile/:username/followers" component={() => <FollowingFollowers favhandle={this.handleFavClick} title={"Followers"} message={"You have no followers yet!"}/>}/>
             <Route path="*" component={() => <NotFound/>}/>
           </Switch>
         </Router>

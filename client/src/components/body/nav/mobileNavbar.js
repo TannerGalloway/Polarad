@@ -50,7 +50,7 @@ class mobileNavbar extends Component {
             this.homeActive = false;
             this.clickFavorites = !this.clickFavorites;
             this.props.favoritesLink(this.clickFavorites);
-            if(this.url === `/profile/${this.context.loginUser.user}/settings` || this.url === `/profile/${this.context.loginUser.user}/edit` || this.url === `/profile/${this.context.loginUser.user}/following`){
+            if(this.url === `/profile/${this.context.loginUser.user}/settings` || this.url === `/profile/${this.context.loginUser.user}/edit` || this.url === `/profile/${this.context.loginUser.user}/following` || this.url === `/profile/${this.context.loginUser.user}/followers`){
               window.location.pathname = `/profile/${this.context.loginUser.user}`;
             }
           }
@@ -121,6 +121,10 @@ class mobileNavbar extends Component {
           <ul id="ContentContainerMobile">
             <li className="dropdownContentMobile">
               <Link to={`/profile/${this.context.loginUser.user}/following`} className="accountDropdownMobile">Following</Link>
+            </li>
+            <hr className="lineMobile" />
+            <li className="dropdownContentMobile">
+              <Link to={`/profile/${this.context.loginUser.user}/followers`} className="accountDropdownMobile">Followers</Link>
             </li>
             <hr className="lineMobile" />
             <li className="dropdownContentMobile" onClick={this.logout}>Logout</li>

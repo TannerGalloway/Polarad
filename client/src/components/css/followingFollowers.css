@@ -22,11 +22,17 @@
     border-bottom: 1px solid #d8d8d8;
 }
 
-#usernameLink{
+.usernameLink{
     position: relative;
     top: 32px;
     color: black;
+    font-weight: bold;
+    margin-left: 16px;
+}
+
+.usernameLink:hover{
     text-decoration: none;
+    color: black;
 }
 
 .profileImgFollow{
@@ -35,19 +41,33 @@
 }
 
 .followingBtn{
-    margin: 20px;
-    margin-left: 80px;
-    width: 100%;
+    margin: 25%;
+    width: 142%;
+    margin-left: 0%;
     border-style: solid;
     border-color: grey;
     background-color: white;
-    font-weight: bold;
-   
+    font-weight: bold; 
 }
 
-.followingBtn:hover{
-    border-color: grey;
+.followersBtn{
+    margin: 25px;
+    margin-left: 0%;
+    margin-top: 25px;
+    width: 142%;
+    font-weight: bold; 
+}
 
+.followersBtn:hover, .followersBtn:active, .followersBtn:focus{
+    border-color: #007bff !important;
+    background-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.followingBtn:hover, .followingBtn:active, .followingBtn:focus{
+    border-color: grey !important;
+    background-color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
 }
 
 .followBtnCol{
@@ -60,12 +80,6 @@
     text-align: center;
 }
 
-@media screen and (min-width: 992px){
-
-    .followingBtn{
-        margin-left: 30px;
-    }
-}
 
 @media screen and (max-width: 768px){
 
@@ -80,7 +94,12 @@
     }
 
     .followingBtn{
-        margin-left: 0px;
-        margin-top: 30px;
+        margin-right: 0px;
+        margin-top: 25px;
+        width: 100%;
+    }
+
+    .followersBtn{
+        width: 100%;
     }
 }

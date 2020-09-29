@@ -85,7 +85,7 @@ class accountInfo extends Component {
      // set followers count
       Axios.get(`/followers/${userpagename}`).then((res) => {
         if(this._isMounted){
-          this.setState({followers: res.data});
+          this.setState({followers: res.data.length});
         }
        });
   }

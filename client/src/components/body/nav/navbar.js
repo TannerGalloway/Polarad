@@ -218,6 +218,9 @@ class navbar extends Component {
                       <li className="dropdownContent">
                         <Link to={`/profile/${this.context.loginUser.user}/following`} className="accountDropdown">Following</Link>
                       </li>
+                      <li className="dropdownContent">
+                        <Link to={`/profile/${this.context.loginUser.user}/followers`} className="accountDropdown">Followers</Link>
+                      </li>
                       <li onClick={this.logout} className="dropdownContent">Logout</li>
                     </ul>
                   </div>

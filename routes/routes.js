@@ -171,7 +171,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
         var aggregateQuery =  User.aggregate([{$match:{following:{$all:[req.params.user]}}}]);
         aggregateQuery.exec((err, followers) => {
             if (err) return next(err);
-            res.json(followers.length);
+            res.json(followers);
         });
     });
     

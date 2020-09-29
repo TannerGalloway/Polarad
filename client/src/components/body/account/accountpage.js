@@ -36,7 +36,7 @@ class accountpage extends Component {
       userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
     }
 
-    if((this.context.prevURL === `/profile/${this.context.loginUser.user}/settings` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/edit` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/following` && this.context.loginUser.user === userpagename)){
+    if((this.context.prevURL === `/profile/${this.context.loginUser.user}/settings` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/edit` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/following` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/followers` && this.context.loginUser.user === userpagename)){
       if(sessionStorage.getItem("userMenuClicked") !== "true"){
         this.setState({favoritesClicked: true});
       }
