@@ -29,7 +29,7 @@ var sessionMW = session({
   saveUninitialized: false, 
   store: new MongoStore({ mongooseConnection: dbConnection.connection, collection: "sessions", autoRemove: "native" }),
   cookie: {
-    maxAge: 1000 * (60 *60),
+    maxAge: 1000 * (60 * 60),
     httpOnly: false
   },
 });

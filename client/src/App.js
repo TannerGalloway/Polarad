@@ -9,6 +9,7 @@ import Edit from "./components/body/account/accountEdit";
 import NotFound from "./components/body/NotFound/PageNotFound";
 import ProtectedRoute from "./components/body/ProtectedRoute";
 import FollowingFollowers from "./components/body/followingFollowers";
+import SessionModal from "./components/body/expiredSessionModal";
 import Axios from "axios";
 
 class App extends Component {
@@ -36,7 +37,7 @@ componentDidMount(){
   }).catch((err) => {console.log(err.response)});
 
   // sets the previous url the user was at in context.
-  Axios.get("/prevURL").then((url) => {
+  Axios.get("/cookies").then((url) => {
     var prevUrlArr = url.data.prevURL.split(""), slashCount = 0, pathNamePostion, PrevPathName;
     prevUrlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
     pathNamePostion = url.data.prevURL.indexOf("/", 7);
@@ -58,6 +59,7 @@ handleFavClick = (favValue) => {
     return (
       <LoginContext.Provider value={this.state}>
         <>
+        <SessionModal/>
         <Router>
           <Switch>
             <ProtectedRoute logininfo={this.state.loginUser} exact path="/" component={() => <LogSignform message={"Have an account? "} link={"/login"} LinkAction={"Login"} action={"Sign up"}/>}/>
@@ -71,7 +73,7 @@ handleFavClick = (favValue) => {
           </Switch>
         </Router>
         </>
-      </LoginContext.Provider>  
+      </LoginContext.Provider>
     );
   }
 }

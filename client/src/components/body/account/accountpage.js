@@ -17,7 +17,7 @@ class accountpage extends Component {
     };
 
     // loading css
-     this.loadingCss = css`
+    this.loadingCss = css`
       display: block;
       position: fixed;
       top: 25%;
@@ -27,36 +27,66 @@ class accountpage extends Component {
     `;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this._isMounted = true;
-    var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
-    urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
-    if(slashCount === 2){
-      namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
-      userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
+    var urlArr = window.location.pathname.split(""),
+      slashCount = 0,
+      namepostion,
+      userpagename;
+    urlArr.map((index) => {
+      if (index === "/") {
+        slashCount++;
+      }
+      return slashCount;
+    });
+    if (slashCount === 2) {
+      namepostion =
+        window.location.pathname.indexOf(
+          "/",
+          window.location.pathname.indexOf("/") + 1
+        ) + 1;
+      userpagename = window.location.pathname
+        .slice(namepostion, window.location.pathname.length)
+        .replace(/%20/g, " ");
     }
 
-    if((this.context.prevURL === `/profile/${this.context.loginUser.user}/settings` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/edit` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/following` && this.context.loginUser.user === userpagename) || (this.context.prevURL === `/profile/${this.context.loginUser.user}/followers` && this.context.loginUser.user === userpagename)){
-      if(sessionStorage.getItem("userMenuClicked") !== "true"){
-        this.setState({favoritesClicked: true});
+    if (
+      (this.context.prevURL ===
+        `/profile/${this.context.loginUser.user}/settings` &&
+        this.context.loginUser.user === userpagename) ||
+      (this.context.prevURL ===
+        `/profile/${this.context.loginUser.user}/edit` &&
+        this.context.loginUser.user === userpagename) ||
+      (this.context.prevURL ===
+        `/profile/${this.context.loginUser.user}/following` &&
+        this.context.loginUser.user === userpagename) ||
+      (this.context.prevURL ===
+        `/profile/${this.context.loginUser.user}/followers` &&
+        this.context.loginUser.user === userpagename)
+    ) {
+      if (sessionStorage.getItem("userMenuClicked") !== "true") {
+        this.setState({ favoritesClicked: true });
       }
     }
-    
+
     // loading page state update
-    setTimeout(() => {this._isMounted && this.setState({loading: false})}, 3000);
+    setTimeout(() => {
+      this._isMounted && this.setState({ loading: false })}, 3000);
 
     // reset prevUrl Cookie
-    if((this._isMounted)){
-      setTimeout(() => {Axios.get("/ResetPrevURL")}, 1000);
+    if (this._isMounted) {
+      setTimeout(() => {
+        Axios.get("/ResetPrevURL");
+      }, 1000);
     }
-  };
+  }
 
   componentWillUnmount() {
     this._isMounted = false;
- }
+  }
 
   render() {
-    if(this.state.loading){
+    if (this.state.loading) {
       return (
         <>
           <MoonLoader
@@ -67,15 +97,15 @@ class accountpage extends Component {
           />
           <h1 className="loadingMessage">Loading...</h1>
         </>
-      )
-    }
-    else{
+      );
+    } 
+    else {
       return (
         <>
-          <Navbar favClick={(favValue) => {this.setState({favoritesClicked: favValue})}} favClickReturn={this.state.favoritesClicked}/>
-          <Accountinfo favClick={(favValue) => {this.setState({favoritesClicked: favValue})}} favClickReturn={this.state.favoritesClicked}/>
-         </>
-      )
+          <Navbar favClick={(favValue) => {this.setState({ favoritesClicked: favValue });}}favClickReturn={this.state.favoritesClicked}/>
+          <Accountinfo favClick={(favValue) => {this.setState({ favoritesClicked: favValue });}}favClickReturn={this.state.favoritesClicked}/>
+        </>
+      );
     }
   }
 }

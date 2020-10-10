@@ -134,5 +134,4 @@ function DesktopView(props) {
     </LoginContext.Consumer>
   );
 }
-
 export default DesktopView;

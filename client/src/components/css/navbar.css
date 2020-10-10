@@ -7,6 +7,10 @@
     border-bottom: 1px solid rgba(204, 204, 204, 1); 
 }
 
+.btnmenu{
+    margin-top: 14px;
+}
+
 #row{
     width: 100%;
 }

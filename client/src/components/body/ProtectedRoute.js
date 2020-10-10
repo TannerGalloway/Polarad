@@ -6,19 +6,19 @@ function ProtectedRoute ({component: Component, logininfo, ...rest}) {
     return (
       <Route
         {...rest}
-        render={(props) => { 
+        render={(props) => {
               if(props.match.path === "/login" || props.match.path === "/"){
                 if(logininfo === undefined){
                   return <Component {...props} />
                 }else{
-                  if(logininfo.status === true){
+                  if(logininfo.status){
                     return <Redirect to={{pathname: `/profile/${logininfo.user}`}} />
                 }else{
                   return <Component {...props} />
-                }
+                  }
                 }
             }else{
-              if(logininfo.status === true){
+              if(logininfo.status){
                 return <Component {...props} />
               }else{
                 return <Redirect to={{pathname: "/login"}} />

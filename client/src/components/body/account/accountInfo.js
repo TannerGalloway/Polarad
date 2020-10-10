@@ -56,10 +56,12 @@ class accountInfo extends Component {
     // get loggedin user
       Axios.get("/userSession").then((loggeduser) => {
         if(this._isMounted){
-          if(userpagename === loggeduser.data.userSession.user){
-            this.setState({nonLoggeduserView: true});
-          }else{
-            this.setState({nonLoggeduserView: false});
+          if(loggeduser.data.userSession !== undefined){
+            if(userpagename === loggeduser.data.userSession.user){
+              this.setState({nonLoggeduserView: true});
+            }else{
+              this.setState({nonLoggeduserView: false});
+            }
           }
         }
       });

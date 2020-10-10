@@ -72,14 +72,20 @@ const genhash = require("../utils/passwordUtils").genpassword;
         }
     });
 
+     // update cookie for user auth
+     router.get("/updateUserSession", (req, res) => {
+        res.cookie("userSession", {"status": false, "user": ""});
+        res.json(req.cookies);
+    });
+
     // set prevURL Cookie
     router.get("/SetPrevURL", (req, res) => {
                 res.cookie("prevURL", req.headers.referer);
                 res.json(req.cookies);
     });
 
-    // get PrevURL Cookie
-    router.get("/PrevURL", (req, res) => {
+    // get Cookies
+    router.get("/cookies", (req, res) => {
         res.json(req.cookies);
     });
 
@@ -87,7 +93,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
     router.get("/ResetPrevURL", (req, res) => {
         res.cookie("prevURL", "");
         res.json(req.cookies);
-});
+    });
 
     router.get("/validUser/:user", (req, res) => {
         User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}, (err, usernameQuary) => {
