@@ -71,7 +71,7 @@ class accountpage extends Component {
 
     // loading page state update
     setTimeout(() => {
-      this._isMounted && this.setState({ loading: false })}, 3000);
+      this._isMounted && this.setState({ loading: false })}, 775);
 
     // reset prevUrl Cookie
     if (this._isMounted) {
@@ -86,9 +86,9 @@ class accountpage extends Component {
   }
 
   render() {
-    if (this.state.loading) {
       return (
         <>
+        {this.state.loading?<>
           <MoonLoader
             css={this.loadingCss}
             size={65}
@@ -96,17 +96,13 @@ class accountpage extends Component {
             loading={this.state.loading}
           />
           <h1 className="loadingMessage">Loading...</h1>
-        </>
-      );
-    } 
-    else {
-      return (
+        </>:
         <>
           <Navbar favClick={(favValue) => {this.setState({ favoritesClicked: favValue });}}favClickReturn={this.state.favoritesClicked}/>
           <Accountinfo favClick={(favValue) => {this.setState({ favoritesClicked: favValue });}}favClickReturn={this.state.favoritesClicked}/>
+        </>}
         </>
       );
-    }
   }
 }
 accountpage.contextType = LoginContext;

@@ -19,7 +19,7 @@ class accountInfo extends Component {
     super(props);
     this._isMounted = false;
     this.favClick = false;
-    this.displayname = "";
+    this.displayname = this.getuser();
     this.state = {
       posts: 0,
       followers: 0,
@@ -34,30 +34,21 @@ class accountInfo extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    // get user from url
-    var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
-    urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
-    if(slashCount === 2){
-      namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
-      userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
-    }
 
     // check if user is in database
-      Axios.get(`/validUser/${userpagename}`,).then((res) => {
+      Axios.get(`/validUser/${this.getuser()}`,).then((res) => {
         if(this._isMounted){
           if(res.data === ""){
             window.location.pathname = "/404";
-          }else{
-            this.displayname = res.data;
           }
         };
-      });
-    
+      })
+
     // get loggedin user
       Axios.get("/userSession").then((loggeduser) => {
         if(this._isMounted){
           if(loggeduser.data.userSession !== undefined){
-            if(userpagename === loggeduser.data.userSession.user){
+            if(this.getuser() === loggeduser.data.userSession.user){
               this.setState({nonLoggeduserView: true});
             }else{
               this.setState({nonLoggeduserView: false});
@@ -67,7 +58,7 @@ class accountInfo extends Component {
       });
 
     // get user bio
-      Axios.get(`/bio/${userpagename}`).then((res) => {
+      Axios.get(`/bio/${this.getuser()}`).then((res) => {
         if(this._isMounted){
           if(res.data.bio === undefined){
             this.setState({bio: ""});
@@ -78,14 +69,14 @@ class accountInfo extends Component {
       });
 
     // set following count
-      Axios.get(`/following/${userpagename}`).then((res) => {
+      Axios.get(`/following/${this.getuser()}`).then((res) => {
         if(this._isMounted){
           this.setState({following: res.data.following.length});
         }
        });
 
      // set followers count
-      Axios.get(`/followers/${userpagename}`).then((res) => {
+      Axios.get(`/followers/${this.getuser()}`).then((res) => {
         if(this._isMounted){
           this.setState({followers: res.data.length});
         }
@@ -141,6 +132,18 @@ class accountInfo extends Component {
   componentWillUnmount() {
     this._isMounted = false;
  }
+
+ getuser = (()=>{
+  var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
+  urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
+  if(slashCount === 2){
+    namepostion = window.location.pathname.indexOf("/", window.location.pathname.indexOf("/") + 1) + 1;
+    userpagename = window.location.pathname.slice(namepostion, window.location.pathname.length).replace(/%20/g, " ");
+  }
+  return userpagename.toLowerCase().split(" ").map(function(user) {
+    return (user.charAt(0).toUpperCase() + user.slice(1));
+  }).join(" ");
+ });
   
   render() {
     var {
