@@ -4,6 +4,7 @@ import Navbar from "./nav/navbar";
 import Bottomnav from "../body/nav/mobileNavbar";
 import LoginContext from "../../loginContext";
 import "../css/followingFollowers.css";
+import BasicProfilePic from "../../Images/generic-profile-avatar.png";
 import Axios from "axios";
 
 function Followingfollowers(props) {
@@ -41,7 +42,7 @@ function Followingfollowers(props) {
       document.getElementById("followMessage").remove();
       for (var i = 0; i < UserDataArray.length; i++) {
 
-        // dynamicaly create the following/followers elements.
+        // create the following/followers elements.
         var followingUserRow = document.createElement("div");
         var followingUserCol = document.createElement("div");
         var usernameCol = document.createElement("a");
@@ -55,15 +56,15 @@ function Followingfollowers(props) {
         usernameCol.classList = "bold card-body";
 
         followingProfileImg.classList = "rounded-circle profileImgFollow";
-        followingProfileImg.setAttribute("src", "https://via.placeholder.com/48");
+        followingProfileImg.setAttribute("src", UserDataArray[i].profilePic === null ? BasicProfilePic: UserDataArray[i].profilePic);
         usernameCol.classList = "usernameLink";
         followBtn.setAttribute("id", i);
-        followingUserRow.setAttribute("id", `user${i}`);
+        followingUserRow.setAttribute("id", `user${[i]}`);
 
         if(window.location.pathname === `/profile/${loggedUser}/following`){
           followBtn.classList = "followingBtn btn btn-light";
-          usernameCol.setAttribute("href", `/profile/${UserDataArray[i]}`);
-          usernameCol.innerHTML = UserDataArray[i];
+          usernameCol.setAttribute("href", `/profile/${UserDataArray[i].username}`);
+          usernameCol.innerHTML = UserDataArray[i].username;
           followBtn.addEventListener("mouseenter", followHover);
           followBtn.addEventListener("mouseleave", followHover);
           followBtn.addEventListener("click", unfollowClick);
@@ -77,7 +78,7 @@ function Followingfollowers(props) {
         }
         else if(window.location.pathname === `/profile/${loggedUser}/followers`){
           for (var j = 0; j < followingArray.length; j++){
-            if(followersArray[i].username === followingArray[j]){
+            if(followersArray[i].username === followingArray[j].username){
               followBtn.classList = "followingBtn btn btn-light";
               followBtn.innerHTML = "Following";
               followBtn.addEventListener("mouseenter", followHover);

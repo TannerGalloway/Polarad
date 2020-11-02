@@ -3,13 +3,14 @@ import "../../css/navbar.css";
 import {Navbar, Button, Form, FormControl, Row, Col, Image, OverlayTrigger, Popover} from "react-bootstrap";
 import LoginContext from "../../../loginContext";
 import {Link} from "react-router-dom";
+import Axios from "axios";
 
 import Logo from "../../../Images/Polarad.png";
+import BasicProfilePic from "../../../Images/generic-profile-avatar.png";
 import HeartInactive from "../../../Images/heart.png";
 import HeartActive from "../../../Images/heart_active.png";
 import User from "../../../Images/usericon.png";
 import Gear from "../../../Images/settingsicon.png";
-import Axios from "axios";
 
 class navbar extends Component {
   constructor(props) {
@@ -17,10 +18,10 @@ class navbar extends Component {
     this.url = window.location.pathname.replace(/%20/g, " ");
     this.favoritesActive = false;
     this.dropdown = React.createRef();
-    this.state = { dropdownOpen: false};
+    this.state = {dropdownOpen: false};
   }
 
-  componentDidMount() {
+  componentDidMount() { 
     document.addEventListener("mousedown", this.handleClickOutsideUser);
     document.addEventListener("mousedown", this.handleClickOutsideSearch);
     setTimeout(() => {sessionStorage.setItem("userMenuClicked", false);}, 1000);
@@ -47,7 +48,7 @@ class navbar extends Component {
       document.getElementsByClassName("popover-body")[0].appendChild(searchError);
 
   };
-
+  
   // searchbar search/results function
   userSearch = (searchTerm) => {
     if(searchTerm.target.value === ""){
@@ -55,8 +56,7 @@ class navbar extends Component {
     }
    else if (searchTerm.target.value !== "") {
       Axios.get(`/userSearch/${searchTerm.target.value}`).then((user) => {
-       var searchResults = user.data.filter((value) => {return value !== this.context.loginUser.user});
-        if(searchResults.length === 0){
+        if(user.data.userSearch.length === 0){
           this.userSearchError();
         }
         else{
@@ -67,10 +67,10 @@ class navbar extends Component {
             document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[s]);
           }
   
-          for( var i = 0; i < searchResults.length; i++){
+          for( var i = 0; i < user.data.userSearch.length; i++){
             var userLink = document.createElement("a");
             userLink.className = "row resultsRow";
-            userLink.setAttribute("href", `/profile/${searchResults[i]}`);
+            userLink.setAttribute("href", `/profile/${user.data.userSearch[i].userInfo.username}`);
   
             var colDivImage = document.createElement("div");
             colDivImage.setAttribute("class", "col");
@@ -80,12 +80,12 @@ class navbar extends Component {
   
             var profileImg =  document.createElement("img");
             profileImg.setAttribute("id", "searchPic");
-            profileImg.setAttribute("src", "https://via.placeholder.com/32");
+            profileImg.setAttribute("src", user.data.userSearch[i].userInfo.profilePic ? user.data.userSearch[i].userInfo.profilePic : BasicProfilePic);
             profileImg.setAttribute("class", "rounded-circle");
   
             var usernameText = document.createElement("p");
             usernameText.setAttribute("id", "user");
-            usernameText.innerHTML = searchResults[i];
+            usernameText.innerHTML = user.data.userSearch[i].userInfo.username;
 
             colDivImage.appendChild(profileImg);
             colDivUser.appendChild(usernameText);
@@ -93,7 +93,7 @@ class navbar extends Component {
             userLink.appendChild(colDivUser);
             rowContainer.appendChild(userLink);
 
-            if(i !== searchResults.length -1){
+            if(i !== user.data.userSearch.length -1){
               userLink.style.removeProperty("border-bottom");
             }
 

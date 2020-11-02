@@ -18,7 +18,6 @@ function ExpiredSessionModal() {
           Axios.get("/userSession").then((session) => {
             if(session.data.userSession.status){
               Axios.get("/updateUserSession");
-              console.log("expired");
               setmodal_show(true);
             }
           }).catch((err) => {console.log(err.response)});
@@ -35,7 +34,7 @@ function ExpiredSessionModal() {
 
     return (
         <>
-          <Modal show={modal_show} onHide={() => {window.location.pathname = "/login"}} animation={false}>
+          <Modal show={modal_show} animation={false} backdrop="static" keyboard={false}>
             <Modal.Header>
               <Modal.Title>Session Expired!</Modal.Title>
             </Modal.Header>

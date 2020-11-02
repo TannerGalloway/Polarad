@@ -118,8 +118,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     router.get("/bio/:user", (req, res, next) => {
-        var query = User.findOne({username: req.params.user}).select("bio");
-        query.exec((err, userBio) => {
+        var bioQuery = User.findOne({username: req.params.user}).select("bio");
+        bioQuery.exec((err, userBio) => {
             if (err) return next(err);
             res.send(userBio);
         });
@@ -144,21 +144,42 @@ const genhash = require("../utils/passwordUtils").genpassword;
 
     router.get("/userSearch/:user", (req, res) =>{
         User.find({"username": {"$regex": req.params.user, "$options": "i"}}).then((user) => {
-            var userSearch = user.map((userdata, index ) => {return user[index].username});
-            res.send(userSearch);
+            var userSearch = user.map((userdata, index ) => {
+                if(user[index].username !== req.cookies.userSession.user){
+                    return {
+                        userInfo: {
+                            username: user[index].username,
+                            profilePic: user[index].profilePic
+                        }
+                    }
+                }});
+                var noDataIndex = userSearch.indexOf(undefined);
+                if (noDataIndex > -1) {
+                    userSearch.splice(noDataIndex, 1);
+                  };
+            res.send({userSearch});
         });
     });
 
     // follow user
-    router.post("/AddFollowing", (req, res) => {
-        User.findOneAndUpdate({username: req.body.username}, {$addToSet: {following: req.body.newFollowing}}).then(() => {
-            res.send("Following");
+    router.post("/AddFollowing", (req, res, next) => {
+        var followedUserdataObj = {
+            username: req.body.newFollowing,
+            profilePic: null
+        }; 
+        var UserProfilePic = User.findOne({"username": {"$regex": req.body.newFollowing, "$options": "i"}}).select("profilePic -_id");
+        UserProfilePic.exec((err, profilePicData) => {
+            if (err) return next(err);
+            followedUserdataObj.profilePic = profilePicData.profilePic;
+            User.findOneAndUpdate({username: req.body.username}, {$addToSet: {following: followedUserdataObj}}).then(() => {
+                res.send("Following");
+            });
         });
     });
 
     // unfollow user
     router.post("/RemoveFollowing", (req, res) => {
-        User.findOneAndUpdate({username: req.body.username}, {$pull: {following: req.body.UpdateFollowing}}).then(() => {
+        User.findOneAndUpdate({username: req.body.username}, {$pull: {following: {username: req.body.UpdateFollowing}}}).then(() => {
             res.send("Unfollowed");
         });
     });
@@ -173,11 +194,33 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     // get followers
-    router.get("/followers/:user", (req, res, next) => {
-        var aggregateQuery =  User.aggregate([{$match:{following:{$all:[req.params.user]}}}]);
-        aggregateQuery.exec((err, followers) => {
+    router.get("/followers/:user", (req, res, next) => { 
+        var aggregateQuery =  User.aggregate([{$match: {following: {$elemMatch: {$and: [{username: req.params.user}]}}}}]);
+        aggregateQuery.exec((err, followersData) => {
             if (err) return next(err);
-            res.json(followers);
+            var followersInfo = followersData.map(({username, profilePic}) => {
+                if(profilePic === undefined){
+                    profilePic = null
+                }
+                return {username, profilePic};
+            });
+            res.send(followersInfo);
+        });
+    });
+
+    // update profile pic
+    router.post("/updateProfilePic", (req, res) => {
+        User.findOneAndUpdate({username: req.body.username}, {profilePic: req.body.profilePic}).then(() => {
+            res.send(false);
+        });
+    });
+
+    // get user's profile pic
+    router.get("/ProfilePic/:user", (req, res, next) => {
+        var ProfilePicQuery = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("profilePic -_id");
+        ProfilePicQuery.exec((err, profilePic) => {
+            if (err) return next(err);
+            res.send(profilePic);
         });
     });
     

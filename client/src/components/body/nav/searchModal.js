@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Modal, Form, FormControl, Col, OverlayTrigger, Popover} from "react-bootstrap";
 import LoginContext from "../../../loginContext.js";
+import BasicProfilePic from "../../../Images/generic-profile-avatar.png";
 import Axios from "axios";
 import "../../css/modalStyle.css";
 
@@ -39,42 +40,42 @@ class SearchModal extends Component {
     document.getElementsByClassName("popover-body")[0].appendChild(searchError);
   };
 
-  // searchbar search/results function
   userSearch = (searchTerm) => {
-    if (searchTerm.target.value === "") {
+    if(searchTerm.target.value === ""){
       this.userSearchError();
-    } else if (searchTerm.target.value !== "") {
+    }
+   else if (searchTerm.target.value !== "") {
       Axios.get(`/userSearch/${searchTerm.target.value}`).then((user) => {
-        var searchResults = user.data.filter((value) => {return value !== this.context.loginUser.user});
-        if (searchResults.length === 0) {
+        if(user.data.userSearch.length === 0){
           this.userSearchError();
-        } else {
+        }
+        else{
           var rowContainer = document.createElement("div");
           rowContainer.setAttribute("class", "resultsContainer");
-
-          for (var s = 0; s < document.getElementsByClassName("popover-body")[0].childNodes.length; s++) {
+          
+          for(var s = 0; s < document.getElementsByClassName("popover-body")[0].childNodes.length; s++){
             document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[s]);
           }
-
-          for (var i = 0; i < searchResults.length; i++) {
+  
+          for( var i = 0; i < user.data.userSearch.length; i++){
             var userLink = document.createElement("a");
             userLink.className = "row resultsRow";
-            userLink.setAttribute("href", `/profile/${searchResults[i]}`);
-
+            userLink.setAttribute("href", `/profile/${user.data.userSearch[i].userInfo.username}`);
+  
             var colDivImage = document.createElement("div");
             colDivImage.setAttribute("class", "col");
-
+            
             var colDivUser = document.createElement("div");
             colDivUser.setAttribute("class", "col");
-
+  
             var profileImg = document.createElement("img");
             profileImg.setAttribute("id", "searchPic");
-            profileImg.setAttribute("src", "https://via.placeholder.com/32");
+            profileImg.setAttribute("src", user.data.userSearch[i].userInfo.profilePic ? user.data.userSearch[i].userInfo.profilePic : BasicProfilePic);
             profileImg.setAttribute("class", "rounded-circle");
-
+  
             var usernameText = document.createElement("p");
             usernameText.setAttribute("id", "user");
-            usernameText.innerHTML = searchResults[i];
+            usernameText.innerHTML = user.data.userSearch[i].userInfo.username;
 
             colDivImage.appendChild(profileImg);
             colDivUser.appendChild(usernameText);
@@ -82,7 +83,7 @@ class SearchModal extends Component {
             userLink.appendChild(colDivUser);
             rowContainer.appendChild(userLink);
 
-            if (i !== searchResults.length - 1) {
+            if(i !== user.data.userSearch.length -1){
               userLink.style.removeProperty("border-bottom");
             }
 

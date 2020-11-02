@@ -18,7 +18,7 @@ class mobileNavbar extends Component {
     this.homeActive = false;
     this.url = window.location.pathname.replace(/%20/g, " ");
     this.dropdown = React.createRef();
-    this.state = { dropdownOpen: false};
+    this.state = {dropdownOpen: false};
   }
 
   componentDidMount() {

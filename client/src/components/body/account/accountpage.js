@@ -71,7 +71,7 @@ class accountpage extends Component {
 
     // loading page state update
     setTimeout(() => {
-      this._isMounted && this.setState({ loading: false })}, 775);
+      this._isMounted && this.setState({ loading: false })}, 1000);
 
     // reset prevUrl Cookie
     if (this._isMounted) {

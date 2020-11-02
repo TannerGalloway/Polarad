@@ -38,6 +38,8 @@
 .profileImgFollow{
     padding: 20px;
     margin-left: 25px;
+    height: 105px;
+    width: 105px;
 }
 
 .followingBtn{
@@ -95,7 +97,7 @@
 
     .followingBtn{
         margin-right: 0px;
-        margin-top: 25px;
+        margin-top: 30px;
         width: 100%;
     }
 

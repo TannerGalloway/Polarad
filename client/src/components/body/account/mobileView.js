@@ -24,7 +24,7 @@ function MobileView(props) {
       var followButton = document.getElementsByClassName("nameBtn")[0];
       Axios.get(`/following/${loggedUser}`).then((res) => {
        for(var i = 0; i < res.data.following.length; i++){
-         if(res.data.following[i] === window.location.pathname.slice(9)){
+         if(res.data.following[i].username === window.location.pathname.slice(9)){
           followClicked.current = true;
           followButton.classList.remove("btn-primary");
           followButton.classList.add("btn-light");
