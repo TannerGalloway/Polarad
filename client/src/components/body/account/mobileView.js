@@ -93,8 +93,10 @@ function MobileView(props) {
           <>
             <Col>
               <div id="nameBtnCol">
-                <p id="displayname">{`${displayName}`}</p>
-                {profileBtn}
+                  <p id="displayname">{`${displayName}`}</p>
+                <Col>
+                  {profileBtn}
+                </Col>
                 <h6 id="biotext">{`${bio}`}</h6>
               </div>
             </Col>

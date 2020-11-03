@@ -16,6 +16,7 @@
     margin-top: 3%;
     list-style-type: none;
     padding: 0;
+    width: 500px;
     
 }
 
@@ -57,7 +58,7 @@
 
     .nameBtn{
         left: 7%;
-        width: 50%;
+        width: 25%;
     }
 }
 
@@ -77,5 +78,6 @@
 
     .nameBtn{
         margin-top: 5%;
+        width: 50%;
     }
 }

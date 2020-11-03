@@ -290,35 +290,35 @@ profilePicUpload = () => {
       var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
       var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
 
-      favoritesPageContent = 
-    (
-      <Row id="accountIcons">
-        <Col>
+        favoritesPageContent = 
+      (
+        <Row>
+          <Col className="accountIcons">
+            <Image
+              id="postsIcon"
+              src={postsIcon}
+              onClick={this.toggleIcon}
+            />
+            <h6 className="iconTitle">POSTS</h6>
+          </Col>
+          <Col className="accountIcons">
           <Image
-            id="postsIcon"
-            src={postsIcon}
+            id="bookmarkIcon"
+            src={bookmarkIcon}
             onClick={this.toggleIcon}
           />
-          <h6 className="iconTitle">POSTS</h6>
+          <h6 className="iconTitle">BOOKMARKED</h6>
         </Col>
-        <Col>
-        <Image
-          id="bookmarkIcon"
-          src={bookmarkIcon}
-          onClick={this.toggleIcon}
-        />
-        <h6 className="iconTitle">BOOKMARKED</h6>
-      </Col>
-      <Col>
-        <Image
-          id="taggedIcon"
-          src={taggedIcon}
-          onClick={this.toggleIcon}
-        />
-        <h6 className="iconTitle">TAGGED</h6>
-      </Col>
-    </Row>
-    )
+        <Col className="accountIcons">
+          <Image
+            id="taggedIcon"
+            src={taggedIcon}
+            onClick={this.toggleIcon}
+          />
+          <h6 className="iconTitle">TAGGED</h6>
+        </Col>
+      </Row>
+      )
     }
 
       return (

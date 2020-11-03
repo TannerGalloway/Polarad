@@ -122,11 +122,9 @@ class mobileNavbar extends Component {
             <li className="dropdownContentMobile">
               <Link to={`/profile/${this.context.loginUser.user}/following`} className="accountDropdownMobile">Following</Link>
             </li>
-            <hr className="lineMobile" />
             <li className="dropdownContentMobile">
               <Link to={`/profile/${this.context.loginUser.user}/followers`} className="accountDropdownMobile">Followers</Link>
             </li>
-            <hr className="lineMobile" />
             <li className="dropdownContentMobile" onClick={this.logout}>Logout</li>
           </ul>
         </div>

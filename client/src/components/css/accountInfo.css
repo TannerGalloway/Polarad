@@ -20,6 +20,11 @@
       transition: opacity 0.25s;
   }
 
+  .accountIcons{
+      padding-left: 10%;
+      padding-right: 0%;
+  }
+
   #profile-container {
     position: relative;
     width: 150px;
@@ -69,6 +74,16 @@
 
 #postsIcon, #bookmarkIcon, #taggedIcon{
     cursor: pointer;
+}
+
+@media screen and (max-width: 992px){
+    #profile-container{
+        margin-left: 10%;
+    }
+
+    #nameBtnCol{
+        padding-left: 10%;
+    }
 }
     
 @media screen and (min-width: 768px){
