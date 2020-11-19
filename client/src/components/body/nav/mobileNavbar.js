@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "../../css/mobileNavbar.css";
 import LoginContext from "../../../loginContext";
 import SearchModal from "../nav/searchModal";
+import NewPostModal from "../nav/newPostModal";
 import HomeInactive from "../../../Images/home.png";
 import HomeActive from "../../../Images/home_active.png";
-import AddPhoto from "../../../Images/addphoto.png";
 import HeartInactive from "../../../Images/heart.png";
 import HeartActive from "../../../Images/heart_active.png";
 import User from "../../../Images/usericon.png";
@@ -146,13 +146,7 @@ class mobileNavbar extends Component {
 
           <SearchModal/>
 
-          <img
-            id="addPhotoIcon"
-            alt="AddPhoto"
-            src={AddPhoto}
-            width="60"
-            height="60"
-          />
+          <NewPostModal/>
 
           <img
             id="heartIconBottom"

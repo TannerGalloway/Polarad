@@ -77,7 +77,9 @@
     }
 
     .nameBtn{
+        position: relative;
         margin-top: 5%;
         width: 50%;
+        left: 8%;
     }
 }

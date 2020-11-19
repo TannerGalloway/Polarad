@@ -113,7 +113,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
 
     router.post("/updatePassword", (req, res) => {
         User.findOneAndUpdate({username: req.body.username}, {password: genhash(req.body.Password)}).then(() => {
-            res.send("Password Update Successful");
+            res.send("Password Update Successful.");
         });
     });
 
@@ -127,7 +127,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
 
     router.post("/updateBio", (req, res) => {
         User.findOneAndUpdate({username: req.body.username}, {bio: req.body.newBio}).then(() => {
-            res.send("Bio Update Successful");
+            res.send("Bio Update Successful.");
         });
     });
     
@@ -209,8 +209,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
     });
 
     // update profile pic
-    router.post("/updateProfilePic", (req, res) => {
-        User.findOneAndUpdate({username: req.body.username}, {profilePic: req.body.profilePic}).then(() => {
+    router.post("/updateProfilePic/:user", (req, res) => {
+        User.findOneAndUpdate({username: req.params.user}, {profilePic: req.body.profilePic}).then(() => {
             res.send(false);
         });
     });
@@ -221,6 +221,17 @@ const genhash = require("../utils/passwordUtils").genpassword;
         ProfilePicQuery.exec((err, profilePic) => {
             if (err) return next(err);
             res.send(profilePic);
+        });
+    });
+
+    router.post("/AddNewPost/:user", (req, res) => {
+        var userNewPostdataObj = {
+            PostImg: req.body.PostPhoto,
+            comments: []
+        }; 
+
+        User.findOneAndUpdate({username: req.params.user}, {$push: {posts: userNewPostdataObj}}).then(() => {
+            res.send("New Post Added");
         });
     });
     

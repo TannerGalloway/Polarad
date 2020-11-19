@@ -29,8 +29,8 @@
 
 .dropdownMobile{
     position: absolute;
-    bottom: 67px;
-    right: 10px; 
+    bottom: 65px;
+    right: 5px; 
     width: 160px; 
     z-index: 2; 
     overflow: hidden;

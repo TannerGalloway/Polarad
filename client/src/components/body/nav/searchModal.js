@@ -10,7 +10,6 @@ import Search from "../../../Images/search.png";
 class SearchModal extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       show: false,
     };

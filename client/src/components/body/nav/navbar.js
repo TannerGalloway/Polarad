@@ -240,7 +240,7 @@ class navbar extends Component {
             );
             displayNameStyle = (
               <Col>
-                <h4 id="navdisplayName">{this.context.loginUser.user}</h4>
+                <h4 id="navMobileText">Profile</h4>
               </Col>
             );
             settingsicon = (

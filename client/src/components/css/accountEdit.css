@@ -1,20 +1,114 @@
-.bioError{
+.Error{
     display: none;
-    position: relative;
-    top: 75px;
     text-align: center;
 }
 
-@media screen and (min-width: 768px){
-    .bioError{
-        margin-left: 315px;
-        width: 400px;
+.edit{
+    margin-top: 10%;
+    width: 400px;
+}
+
+.bioSubmit{
+    margin-top: 10%;
+}
+
+.custom-file-input {
+    color: transparent;
+    user-select: none;
+}
+
+  .custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.fileUplaodForm{
+    margin: 40px 0px 0px 40px;
+}
+
+.fileUplaodFormMobile{
+    display: inline;
+    margin-top: 40px;
+}
+
+.mobileInputModal{
+    margin: 40px 0px 0px 110px;
+}
+
+.postPreviewHidden{
+    display: none;
+}
+
+#postinputdesktop{
+    max-width: 245px;
+    margin: 0px 0px 45px 45px;
+}
+
+#postinputmobile{
+    max-width: 245px;
+    margin: 0px 0px 45px 6px;
+}
+
+.newpost {
+    color: #64676c;
+    display: inline-block;
+    background: #edf0f5;
+    border: 1px solid #edf0f5;
+    border-radius: 23px;
+    padding: 45px;
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .custom-file-input:focus {
+    outline: none;
+  }
+  
+  #bioTextArea{
+      height: 123px;
+  }
+
+
+  .fileSubmit{
+    display: none;
+    position: relative;
+    left: 7%;
+    width: 47%;
+  }
+
+  .fileSubmitMobile{
+    display: none;
+    position: relative;
+    left: 2%;
+    width: 65%;
+  }
+
+  .postPreview{
+      border-radius: 5%;
+  }
+
+@media screen and (max-width: 992px){
+    .bioSubmit{
+        width: 275px;
+        margin-left: -35px;
     }
     
 }
 
-@media screen and (max-width: 768px){
-    .bioError{
-        width: 370px;
+@media screen and (min-width: 768px){
+    .bioSubmit{
+        width: 300px;
+        margin-left: 0px;
+        margin-top: 3%;
     }
+}
+
+@media screen and (max-width: 1200px){
+    .fileSubmit{
+        left: 10%;
+        width: 53%;
+      } 
 }

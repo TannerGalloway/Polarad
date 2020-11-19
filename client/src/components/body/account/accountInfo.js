@@ -210,8 +210,7 @@ profilePicUpload = () => {
   document.getElementsByClassName("saveChangesBtn")[0].remove();
   document.getElementById("discardChangesBtn").disabled = true;
   document.getElementById("saveChangesBtnLoading").disabled = true;
-  Axios.post("/updateProfilePic", {
-      username: this.getuser(),
+  Axios.post(`/updateProfilePic/${this.getUser()}`, {
       profilePic: this.state.preview
     }).then((res) => {
       this.setState({loading: res.data});
