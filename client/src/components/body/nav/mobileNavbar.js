@@ -16,12 +16,34 @@ class mobileNavbar extends Component {
     super(props);
     this.clickFavorites = false;
     this.homeActive = false;
+    this.prevURLArr = document.referrer.split("");
+    this.urlSlashCount = 0;
+    this.urlSlashindexStart = 0;
+    this.currentUrl = this.getPathName(window.location.pathname.lastIndexOf("/"), window.location.pathname);
+    this.PrevPathName = "";
+    this.viewotherProfile = false;
     this.url = window.location.pathname.replace(/%20/g, " ");
     this.dropdown = React.createRef();
     this.state = {dropdownOpen: false};
   }
 
   componentDidMount() {
+
+     // get prevUrl
+     this.prevURLArr.forEach((item, index) => {
+      if (item === "/") {
+        this.urlSlashCount++;
+        this.urlSlashindexStart = index
+      if(this.urlSlashCount >= 3 ){
+       this.PrevPathName = this.getPathName(this.urlSlashindexStart, document.referrer);
+      }
+    }});
+
+    // get current Url
+    if((this.currentUrl !== "/Jake") && (this.currentUrl !== this.PrevPathName)){
+      this.viewotherProfile = !this.viewotherProfile;
+    }
+
     document.addEventListener("mousedown", this.handleClickOutsideUser);
     setTimeout(() => {sessionStorage.setItem("userMenuClicked", false);}, 1000);
   }
@@ -29,6 +51,12 @@ class mobileNavbar extends Component {
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutsideUser);
   }
+
+  getPathName = (urlSlashindexStart, URL) => {
+    var UrlPostion = URL.indexOf("/", urlSlashindexStart),
+    PrevUrl = URL.slice(UrlPostion);
+    return PrevUrl;
+  };
 
   toggleIcon = (event) => {
     switch(event.target.id){
@@ -41,16 +69,11 @@ class mobileNavbar extends Component {
       break;
 
       case "heartIconBottom":
-          if(this.clickFavorites){
-            this.homeActive = true;
-              this.clickFavorites = !this.clickFavorites;
-              this.props.favoritesLink(this.clickFavorites);
-          }
-          else{
-            this.homeActive = false;
-            this.clickFavorites = !this.clickFavorites;
-            this.props.favoritesLink(this.clickFavorites);
-            if(this.url === `/profile/${this.context.loginUser.user}/settings` || this.url === `/profile/${this.context.loginUser.user}/edit` || this.url === `/profile/${this.context.loginUser.user}/following` || this.url === `/profile/${this.context.loginUser.user}/followers`){
+        this.homeActive = true;
+        this.clickFavorites = !this.clickFavorites;
+        this.props.favoritesLink(this.clickFavorites);  
+        if(this.clickFavorites){
+            if(this.currentUrl !== "/Jake"){
               window.location.pathname = `/profile/${this.context.loginUser.user}`;
             }
           }

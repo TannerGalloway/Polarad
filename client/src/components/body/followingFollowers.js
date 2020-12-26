@@ -15,7 +15,6 @@ function Followingfollowers(props) {
   var [favoritesClicked, setFavoritesClicked] = useState(false);
 
   useEffect(() => {
-    Axios.get("/SetPrevURL");
     if(window.location.pathname === `/profile/${loggedUser}/following`){
       Axios.get(`/following/${loggedUser}`).then((followingUserRes) => {
         followDesign(followingUserRes.data.following);

@@ -10,6 +10,7 @@ import BasicProfilePic from "../../../Images/generic-profile-avatar.png";
 import { PulseLoader } from "react-spinners";
 import { css } from "@emotion/core";
 import Axios from "axios";
+import Posts from "./userPost";
 
 import postsIconInactive from "../../../Images/posts.png";
 import postsIconActive from "../../../Images/posts_active.png";
@@ -23,7 +24,7 @@ class accountInfo extends Component {
     super(props);
     this._isMounted = false;
     this.favClick = false;
-    this.displayname = this.getuser();
+    this.displayname = this.getUser();
     this.overlay = null;
     this.state = {
       posts: 0,
@@ -37,7 +38,8 @@ class accountInfo extends Component {
       modalShow: false,
       preview: null,
       profilePicSrc: BasicProfilePic,
-      loading: false
+      loading: false,
+      favorites: 0
     }
 
     // loading css
@@ -48,9 +50,9 @@ class accountInfo extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-
+    
     // check if user is in database
-      Axios.get(`/validUser/${this.getuser()}`,).then((res) => {
+      Axios.get(`/validUser/${this.getUser()}`,).then((res) => {
         if(this._isMounted){
           if(res.data === ""){
             window.location.pathname = "/404";
@@ -62,7 +64,7 @@ class accountInfo extends Component {
       Axios.get("/userSession").then((loggeduser) => {
         if(this._isMounted){
           if(loggeduser.data.userSession !== undefined){
-            if(this.getuser() === loggeduser.data.userSession.user){
+            if(this.getUser() === loggeduser.data.userSession.user){
               this.setState({nonLoggeduserView: true});
             }else{
               this.setState({nonLoggeduserView: false});
@@ -72,15 +74,34 @@ class accountInfo extends Component {
       });
 
       // get profile Pic
-      Axios.get(`/ProfilePic/${this.getuser()}`).then((res) => {
+      Axios.get(`/ProfilePic/${this.getUser()}`).then((res) => {
         if(this._isMounted){
           if(res.data.profilePic !== undefined)
           this.setState({profilePicSrc: res.data.profilePic});
         }
       });
 
-    // get user bio
-      Axios.get(`/bio/${this.getuser()}`).then((res) => {
+      // get user post count
+      Axios.get(`/posts/${this.getUser()}`).then((res) => {
+        this.setState({posts: res.data.posts.length});
+    });
+
+    // set following count
+      Axios.get(`/following/${this.getUser()}`).then((res) => {
+        if(this._isMounted){
+          this.setState({following: res.data.following.length});
+        }
+       });
+
+    //  set followers count
+      Axios.get(`/followers/${this.getUser()}`).then((res) => {
+        if(this._isMounted){
+          this.setState({followers: res.data.length});
+        }
+       });
+
+       // get user bio
+      Axios.get(`/bio/${this.getUser()}`).then((res) => {
         if(this._isMounted){
           if(res.data.bio === undefined){
             this.setState({bio: ""});
@@ -90,19 +111,12 @@ class accountInfo extends Component {
         }
       });
 
-    // set following count
-      Axios.get(`/following/${this.getuser()}`).then((res) => {
-        if(this._isMounted){
-          this.setState({following: res.data.following.length});
-        }
-       });
-
-    //  set followers count
-      Axios.get(`/followers/${this.getuser()}`).then((res) => {
-        if(this._isMounted){
-          this.setState({followers: res.data.length});
-        }
-       });
+      // get user favorites
+      if(this.context.loginUser.status){
+        Axios.get(`/Favorites/${this.context.loginUser.user}`).then((res) => {
+          this.setState({favorites: res.data.favorites.length});
+        });
+      }
   }
 
   toggleIcon = (event) => {
@@ -182,7 +196,7 @@ class accountInfo extends Component {
    }
    
    // get profile Pic
-   Axios.get(`/ProfilePic/${this.getuser()}`).then((res) => {
+   Axios.get(`/ProfilePic/${this.getUser()}`).then((res) => {
     if(this._isMounted){
       if(res.data.profilePic !== undefined)
       this.setState({profilePicSrc: res.data.profilePic});
@@ -218,7 +232,7 @@ profilePicUpload = () => {
     });
 };
 
- getuser = () =>{
+ getUser = () =>{
   var urlArr = window.location.pathname.split(""), slashCount = 0, namepostion, userpagename;
   urlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
   if(slashCount === 2){
@@ -291,7 +305,7 @@ profilePicUpload = () => {
 
         favoritesPageContent = 
       (
-        <Row>
+        <Row className="postsRow">
           <Col className="accountIcons">
             <Image
               id="postsIcon"
@@ -316,8 +330,21 @@ profilePicUpload = () => {
           />
           <h6 className="iconTitle">TAGGED</h6>
         </Col>
+        <Posts/>
       </Row>
       )
+    }else{
+      if(this.state.favorites <= 0){
+        if(this.getUser() === this.context.loginUser.user){
+          favoritesPageContent = (
+            <p className="NoFavsMessage">You haven't favorited any posts yet!</p>
+          );
+        }
+      }else{
+        favoritesPageContent = (
+            <Posts favoritesView={this.props.favClickReturn}/>
+        );
+      }
     }
 
       return (
@@ -345,7 +372,7 @@ profilePicUpload = () => {
                   onCrop={this.editCrop}
                   onClose={this.editClose}
                   imageWidth={profilePicSize}
-                /> : <h4 id="picEditorText">Can't Edit While Uploading Image.</h4>}
+                /> : <h4 className="AlignText">Can't Edit While Uploading Image.</h4>}
                 </Col>
                 <Col id="previewCol">
                 </Col>

@@ -5,12 +5,14 @@ import Navbar from "../nav/navbar";
 import Accountinfo from "../account/accountInfo";
 import { css } from "@emotion/core";
 import { MoonLoader } from "react-spinners";
-import Axios from "axios";
 
 class accountpage extends Component {
   constructor(props) {
     super(props);
     this._isMounted = false;
+    this.pathNamePostion = "";
+    this.PrevPathName = "";
+    this.viewotherProfile = false;
     this.state = {
       favoritesClicked: false,
       loading: true
@@ -29,57 +31,49 @@ class accountpage extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    var urlArr = window.location.pathname.split(""),
+    var prevURLArr = document.referrer.split(""),
       slashCount = 0,
-      namepostion,
-      userpagename;
-    urlArr.map((index) => {
-      if (index === "/") {
-        slashCount++;
-      }
-      return slashCount;
-    });
-    if (slashCount === 2) {
-      namepostion =
-        window.location.pathname.indexOf(
-          "/",
-          window.location.pathname.indexOf("/") + 1
-        ) + 1;
-      userpagename = window.location.pathname
-        .slice(namepostion, window.location.pathname.length)
-        .replace(/%20/g, " ");
-    }
+      slashindexStart = 0,
+      currentUrl = this.getPathName(7, window.location.pathname);
 
-    if (
-      (this.context.prevURL ===
-        `/profile/${this.context.loginUser.user}/settings` &&
-        this.context.loginUser.user === userpagename) ||
-      (this.context.prevURL ===
-        `/profile/${this.context.loginUser.user}/edit` &&
-        this.context.loginUser.user === userpagename) ||
-      (this.context.prevURL ===
-        `/profile/${this.context.loginUser.user}/following` &&
-        this.context.loginUser.user === userpagename) ||
-      (this.context.prevURL ===
-        `/profile/${this.context.loginUser.user}/followers` &&
-        this.context.loginUser.user === userpagename)
-    ) {
-      if (sessionStorage.getItem("userMenuClicked") !== "true") {
-        this.setState({ favoritesClicked: true });
+      // get prevUrl
+      prevURLArr.forEach((item, index) => {
+        if (item === "/") {
+          slashCount++;
+          slashindexStart = index
+        if(slashCount >= 3 ){
+         this.PrevPathName = this.getPathName(slashindexStart, document.referrer);
+        }
+      }});
+
+      // get current Url
+      if((currentUrl !== "/Jake") && (currentUrl !== this.PrevPathName)){
+        this.viewotherProfile = !this.viewotherProfile;
       }
-    }
+
+      // check what url user is at and display active favorites button properly.
+      if(!this.viewotherProfile){
+        if(this.PrevPathName.search(/(Jake|\/login)/g) === -1){
+          if(this.context.loginUser.status){
+          if (sessionStorage.getItem("userMenuClicked") !== "true") {
+              this.setState({ favoritesClicked: true });
+            }
+          }
+        }
+      }else{
+        this.setState({ favoritesClicked: false });
+      }
 
     // loading page state update
     setTimeout(() => {
       this._isMounted && this.setState({ loading: false })}, 1000);
-
-    // reset prevUrl Cookie
-    if (this._isMounted) {
-      setTimeout(() => {
-        Axios.get("/ResetPrevURL");
-      }, 1000);
-    }
   }
+
+  getPathName = (urlSlashindexStart, URL) => {
+    this.pathNamePostion = URL.indexOf("/", urlSlashindexStart);
+    this.PrevPathName = URL.slice(this.pathNamePostion);
+    return this.PrevPathName;
+  };
 
   componentWillUnmount() {
     this._isMounted = false;

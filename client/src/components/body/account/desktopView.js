@@ -56,7 +56,12 @@ function DesktopView(props) {
 
   // handle follow buttom click
   function followclick(event) {
-    followClicked.current = !followClicked.current;
+    var followButton = document.getElementsByClassName("nameBtn")[0];
+    if(followButton.classList.contains("btn-primary")){
+      followClicked.current = true;
+    }else{
+      followClicked.current = false;
+    }
       if(followClicked.current){
         event.target.classList.remove("btn-primary");
         event.target.classList.add("btn-light");

@@ -77,24 +77,6 @@ const genhash = require("../utils/passwordUtils").genpassword;
         res.cookie("userSession", {"status": false, "user": ""});
         res.json(req.cookies);
     });
-
-    // set prevURL Cookie
-    router.get("/SetPrevURL", (req, res) => {
-                res.cookie("prevURL", req.headers.referer);
-                res.json(req.cookies);
-    });
-
-    // get Cookies
-    router.get("/cookies", (req, res) => {
-        res.json(req.cookies);
-    });
-
-    // reset prevURL Cookie
-    router.get("/ResetPrevURL", (req, res) => {
-        res.cookie("prevURL", "");
-        res.json(req.cookies);
-    });
-
     router.get("/validUser/:user", (req, res) => {
         User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}, (err, usernameQuary) => {
             if(err){
@@ -226,12 +208,53 @@ const genhash = require("../utils/passwordUtils").genpassword;
 
     router.post("/AddNewPost/:user", (req, res) => {
         var userNewPostdataObj = {
+            postID: req.body.postID,
             PostImg: req.body.PostPhoto,
             comments: []
-        }; 
+        };
 
         User.findOneAndUpdate({username: req.params.user}, {$push: {posts: userNewPostdataObj}}).then(() => {
             res.send("New Post Added");
+        });
+    });
+
+    // get user's posts
+    router.get("/posts/:user", (req, res, next) => {
+        var query = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");
+        query.exec((err, usersPosts) => {
+            if (err) return next(err);
+            res.send(usersPosts);
+        });
+    });
+
+    // add post to favorites
+    router.post("/FavoritePost/:user", (req, res) => {
+        var query = User.findOne({username: {"$regex": req.body.loginUser, "$options": "i"}}).select("posts -_id");
+        query.exec((err, usersPosts) => {
+            if (err) return next(err);
+            usersPosts.posts.forEach((post) => {
+                if(post.postID === req.body.postID){
+                    User.findOneAndUpdate({username:  req.params.user}, {$push: {favorites: post}}).then(() => {
+                        res.send("New Favorite Added");
+                    });
+                }
+            });
+        });
+    });
+
+    // get user's favorites
+    router.get("/Favorites/:user", (req, res, next) => {
+        var FavoritesQuery = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("favorites -_id");
+        FavoritesQuery.exec((err, favoritesArr) => {
+            if (err) return next(err);
+            res.send(favoritesArr);
+        });
+    });
+
+    // unfavorite post
+    router.post("/RemoveFavorite/:user", (req, res) => {
+        User.findOneAndUpdate({username: req.params.user}, {$pull: {favorites: {postID: req.body.postID}}}).then(() => {
+            res.send("Unfollowed");
         });
     });
     

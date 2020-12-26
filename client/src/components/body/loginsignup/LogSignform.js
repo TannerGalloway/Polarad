@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Form, Button, Alert, Container, Row, Col, Popover, OverlayTrigger} from 'react-bootstrap';
 import {Link} from "react-router-dom";
-import axios from "axios";
+import Axios from "axios";
 import "../../css/LogSignform.css";
 
 import homephone from "../../../Images/phone_photos/homescreen_phones.png";
@@ -30,7 +30,7 @@ class LogSignform extends Component {
         }
         else {
             // send data to server await responce for success or fail.
-                axios.post(window.location.pathname, {
+                Axios.post(window.location.pathname, {
                     username: this.state.username,
                     password: this.state.password
                 }).then((res) => {
@@ -169,5 +169,4 @@ class LogSignform extends Component {
             )
     }
 }
-
 export default LogSignform;

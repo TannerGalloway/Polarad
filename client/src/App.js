@@ -20,8 +20,7 @@ class App extends Component {
         status: null,
         user: ""
       },
-      favoritesClicked: false,
-      prevURL: ""
+      favoritesClicked: false
     };
   }
 
@@ -31,23 +30,8 @@ componentDidMount(){
     if(!session.data.userSession.status){
         document.cookie = "connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "userSession=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        document.cookie = "prevURL=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       }
         this.setState({loginUser: session.data.userSession});
-  }).catch((err) => {console.log(err.response)});
-
-  // sets the previous url the user was at in context.
-  Axios.get("/cookies").then((url) => {
-    var prevUrlArr = url.data.prevURL.split(""), slashCount = 0, pathNamePostion, PrevPathName;
-    prevUrlArr.map((index) => {if(index === "/"){slashCount++} return slashCount});
-    pathNamePostion = url.data.prevURL.indexOf("/", 7);
-    PrevPathName = url.data.prevURL.slice(pathNamePostion);
-    if(pathNamePostion === -1){
-      this.setState({prevURL: ""});
-    }
-    else{
-      this.setState({prevURL: PrevPathName});
-    }
   }).catch((err) => {console.log(err.response)});
 }
 
@@ -77,5 +61,4 @@ handleFavClick = (favValue) => {
     );
   }
 }
-
 export default App;

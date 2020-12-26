@@ -17,8 +17,6 @@ class accountEdit extends Component {
   
 
   componentDidMount(){
-    Axios.get("/SetPrevURL");
-    
     Axios.get(`/bio/${this.getUser()}`).then((res) => {
        document.querySelector("#bioTextArea").value = res.data.bio;
     });
@@ -120,10 +118,12 @@ class accountEdit extends Component {
   };
 
   newPostUpload = () => {
-    this.setState({loading: true});
+    Axios.get(`/posts/${this.getUser()}`).then((res) => {
+      this.setState({loading: true});
     document.getElementsByClassName("fileSubmit")[0].disabled = true;
     Axios.post(`/AddNewPost/${this.getUser()}`, {
-      PostPhoto: this.state.NewPostImage
+      PostPhoto: this.state.NewPostImage,
+      postID: this.getUser() + res.data.posts.length
     }).then(() => {
       this.setState({loading: false})
       document.getElementsByClassName("postPreview")[0].classList.add("postPreviewHidden");
@@ -133,6 +133,7 @@ class accountEdit extends Component {
       this.msgStyle("success");
       document.querySelector(".Error").innerHTML = "Post Upload Successful";
     });
+  });
   };
 
   render() {

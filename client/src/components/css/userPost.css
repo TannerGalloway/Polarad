@@ -1,0 +1,265 @@
+.imageModelHeader{
+    width: 100%;
+}
+
+.imageModelfooter{
+    width: 50%;
+}
+
+.modelImageBtns{
+    padding-right: 0%;
+}
+
+.modelShareBtn{
+    padding-left: 0%;
+}
+
+.UserPostsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-left: 5%;
+}
+
+.userPost{
+    margin: 5% 2% 0% 2%;
+    height: 200px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.postModelUser{
+    display: flex;
+    position: relative;
+    right: 25%;
+}
+
+#modelfollowbtn{
+    color: #0095f6;
+    cursor: pointer; 
+}
+
+.modelInfo{
+    margin: 15% 0% 0% 32%;
+    font-weight: bold;
+}
+
+#modalProfilePic, .userCommentProfilePic{
+    border-radius: 50%;
+}
+
+#profilePicCol{
+    padding-right: 0%;
+}
+
+#userPostInfoCol{
+    padding-left: 0%;
+}
+
+#modalProfilePic{
+    height: 48px;
+    width: 48px;
+    margin: 7% 0% 0% 3%;
+}
+
+.userCommentProfilePic{
+    height: 32px;
+    width: 32px;
+}
+
+.comment{
+    display: inline-block;
+}
+
+.userCommentProfilePic{
+    margin-right: 5%;
+}
+
+.commentLoginLink:hover{
+    text-decoration: none;
+}
+
+.ellipse{
+    background-color: #6e6e6e;
+    position: relative;
+    right: 0px;
+    height: 10px;
+    width: 14px;
+    border-radius: 50%;
+    margin: 8%;
+}
+
+#ellipseCol{
+    position: relative;
+    left: 3%;
+    padding-right: 0%;
+}
+
+.ellipseContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 4% 14% 0% 50%;
+    margin-top: 15%;
+}
+
+.postModalline{
+    position: relative;
+    right: 15px;
+    width: 104%;
+}
+
+.commentSection{
+    height: 264px;
+}
+
+.commentInput{
+    margin: 2%;
+}
+
+.size{
+    height: 48px;
+    width: 48px;
+}
+
+#modalFavoriteBtn{
+    padding: 4%;
+    cursor: pointer;
+}
+
+.imagebuttons{
+    display: flex;
+    flex-direction: row;
+}
+
+#modalBookmarkBtn{
+    position: relative;
+    left: 200px;
+    padding: 5%;
+}
+
+.bookmark{
+    position: absolute;
+    top: 15%;
+    right: -7%;
+    height: 35px;
+    width: 28px;
+}
+
+.Color{
+    color: #6c6c6c;
+}
+
+#imageDate{
+    color: #adadad;
+    font-size: 12px;
+}
+
+#CommentTextBox{
+    position: relative;
+    top: 24px;
+    right: 15px;
+    width: 104%;
+    height: calc(24px + 7.6px + 17px);
+}
+
+#userModalBody{
+    padding: 0px;
+}
+
+.imageInfo{
+    margin-left: 5%;
+}
+
+.userPostCol{
+    padding-right: 0%;
+}
+
+
+@media screen and (max-width: 991px){
+
+    .ellipseContainer{
+        margin-top: 10%;
+        position: relative;
+        left: 15%;
+    }
+
+    .userModelHeader{
+        margin: 2% 0% 2% 5%; 
+    }
+
+    #modalFavoriteBtn {
+        position: relative;
+        left: 35%;
+        padding: 10%;
+    }
+
+    #modalBookmarkBtn {
+        left: 300px;
+    }
+
+    #modalProfilePic{
+        margin: 7% 0% 5% 27%;
+    }
+
+    #userPostImage{
+        width: 498px;
+    }
+}
+
+@media screen and (max-width: 993px){
+
+    #modalBookmarkBtn{
+        left: 310px;
+    }
+}
+
+
+@media screen and (max-width: 550px){
+ 
+    #modalBookmarkBtn{
+        left: 303px;
+    }
+}
+
+@media screen and (max-width: 505px){
+  
+    #modalBookmarkBtn{
+        left: 240px;
+    }
+}
+
+@media screen and (max-width: 450px){
+    #modalBookmarkBtn{
+        left: 205px;
+    }
+}
+
+@media screen and (max-width: 410px){
+    .ellipseContainer{
+        margin-top: 15%;
+    }
+
+    #modalBookmarkBtn{
+        left: 140px;
+    }
+}
+
+@media screen and (max-width: 385px){
+    .ellipseContainer{
+        margin-top: 20%;
+    }
+}
+
+@media screen and (max-width: 370px){
+    #modalBookmarkBtn{
+        left: 150px;
+    }
+}
+
+@media screen and (max-width: 360px){
+    
+    #modalBookmarkBtn{
+        left: 105px;
+    }
+}

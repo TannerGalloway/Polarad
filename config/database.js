@@ -19,7 +19,8 @@ const UserSchema = mongoose.Schema({
     loggedin: Boolean,
     following: [Object],
     profilePic: String,
-    posts: [Object]
+    posts: [Object],
+    favorites: [Object]
 });
 
 // export schema and db connection

@@ -17,7 +17,6 @@ class settingsEdit extends Component {
 };
 
 componentDidMount(){
-  Axios.get("/SetPrevURL");
 };
 
   // update password
