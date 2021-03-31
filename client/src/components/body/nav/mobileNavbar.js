@@ -40,7 +40,7 @@ class mobileNavbar extends Component {
     }});
 
     // get current Url
-    if((this.currentUrl !== "/Jake") && (this.currentUrl !== this.PrevPathName)){
+    if((this.currentUrl !== this.PrevPathName)){
       this.viewotherProfile = !this.viewotherProfile;
     }
 
@@ -73,9 +73,7 @@ class mobileNavbar extends Component {
         this.clickFavorites = !this.clickFavorites;
         this.props.favoritesLink(this.clickFavorites);  
         if(this.clickFavorites){
-            if(this.currentUrl !== "/Jake"){
               window.location.pathname = `/profile/${this.context.loginUser.user}`;
-            }
           }
        break;
       

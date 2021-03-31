@@ -17,19 +17,19 @@ function Followingfollowers(props) {
   useEffect(() => {
     if(window.location.pathname === `/profile/${loggedUser}/following`){
       Axios.get(`/following/${loggedUser}`).then((followingUserRes) => {
-        followDesign(followingUserRes.data.following);
+        followDesignCheck(followingUserRes.data.following);
       });
     }
     else if(window.location.pathname === `/profile/${loggedUser}/followers`){
       Axios.get(`/followers/${loggedUser}`).then((userFollowersRes) => {
         Axios.get(`/following/${loggedUser}`).then((userfollowingRes) => {
-          followDesign(userfollowingRes.data.following, userFollowersRes.data);
+          followDesignCheck(userfollowingRes.data.following, userFollowersRes.data);
          });
        });
     }
   });
 
-  function followDesign(followingArray, followersArray){
+  function followDesignCheck(followingArray, followersArray){
     var UrlDataArray = window.location.pathname.substring(window.location.pathname.lastIndexOf("/")+1) + "Array";
     if(UrlDataArray === "followingArray"){
       UserDataArray = followingArray;
@@ -38,78 +38,86 @@ function Followingfollowers(props) {
       UserDataArray = followersArray;
     }
     if (UserDataArray.length > 0) {
-      document.getElementById("followMessage").remove();
-      for (var i = 0; i < UserDataArray.length; i++) {
+      if(document.getElementById("followMessage")){
+        document.getElementById("followMessage").remove();
+        followDesign(UserDataArray, followingArray, followersArray);
+      }else if(document.getElementById("user0") === null){
+        followDesign(UserDataArray, followingArray, followersArray);
+      }
+    }
+  };
 
-        // create the following/followers elements.
-        var followingUserRow = document.createElement("div");
-        var followingUserCol = document.createElement("div");
-        var usernameCol = document.createElement("a");
-        var followBtnCol = document.createElement("div");
-        var followingProfileImgCol = document.createElement("div");
-        var followingProfileImg = document.createElement("img");
-        var followBtn = document.createElement("button");
+  function followDesign(UserDataArray, followingArray, followersArray){
+    for (var i = 0; i < UserDataArray.length; i++) {
 
-        followingUserRow.classList = "row userRow";
-        followBtnCol.classList = "followBtnCol";
-        usernameCol.classList = "bold card-body";
+      // create the following/followers elements.
+      var followingUserRow = document.createElement("div");
+      var followingUserCol = document.createElement("div");
+      var usernameCol = document.createElement("a");
+      var followBtnCol = document.createElement("div");
+      var followingProfileImgCol = document.createElement("div");
+      var followingProfileImg = document.createElement("img");
+      var followBtn = document.createElement("button");
 
-        followingProfileImg.classList = "rounded-circle profileImgFollow";
-        followingProfileImg.setAttribute("src", UserDataArray[i].profilePic === null ? BasicProfilePic: UserDataArray[i].profilePic);
-        usernameCol.classList = "usernameLink";
-        followBtn.setAttribute("id", i);
-        followingUserRow.setAttribute("id", `user${[i]}`);
+      followingUserRow.classList = "row userRow";
+      followBtnCol.classList = "followBtnCol";
+      usernameCol.classList = "bold card-body";
 
-        if(window.location.pathname === `/profile/${loggedUser}/following`){
-          followBtn.classList = "followingBtn btn btn-light";
-          usernameCol.setAttribute("href", `/profile/${UserDataArray[i].username}`);
-          usernameCol.innerHTML = UserDataArray[i].username;
-          followBtn.addEventListener("mouseenter", followHover);
-          followBtn.addEventListener("mouseleave", followHover);
-          followBtn.addEventListener("click", unfollowClick);
+      followingProfileImg.classList = "rounded-circle profileImgFollow";
+      followingProfileImg.setAttribute("src", UserDataArray[i].profilePic === null ? BasicProfilePic: UserDataArray[i].profilePic);
+      usernameCol.classList = "usernameLink";
+      followBtn.setAttribute("id", i);
+      followingUserRow.setAttribute("id", `user${[i]}`);
 
-          if(viewportSize < 768){
-            followBtn.innerHTML = "Unfollow";
+      if(window.location.pathname === `/profile/${loggedUser}/following`){
+        followBtn.classList = "followingBtn btn btn-light";
+        usernameCol.setAttribute("href", `/profile/${UserDataArray[i].username}`);
+        usernameCol.innerHTML = UserDataArray[i].username;
+        followBtn.addEventListener("mouseenter", followHover);
+        followBtn.addEventListener("mouseleave", followHover);
+        followBtn.addEventListener("click", unfollowClick);
+
+        if(viewportSize < 768){
+          followBtn.innerHTML = "Unfollow";
+        }
+        else{
+          followBtn.innerHTML = "Following";
+        }
+      }
+      else if(window.location.pathname === `/profile/${loggedUser}/followers`){
+        for (var j = 0; j < followingArray.length; j++){
+          if(followersArray[i].username === followingArray[j].username){
+            followBtn.classList = "followingBtn btn btn-light";
+            followBtn.innerHTML = "Following";
+            followBtn.addEventListener("mouseenter", followHover);
+            followBtn.addEventListener("mouseleave", followHover);
+            followBtn.addEventListener("click", unfollowClick);
           }
           else{
-            followBtn.innerHTML = "Following";
-          }
-        }
-        else if(window.location.pathname === `/profile/${loggedUser}/followers`){
-          for (var j = 0; j < followingArray.length; j++){
-            if(followersArray[i].username === followingArray[j].username){
-              followBtn.classList = "followingBtn btn btn-light";
-              followBtn.innerHTML = "Following";
-              followBtn.addEventListener("mouseenter", followHover);
-              followBtn.addEventListener("mouseleave", followHover);
-              followBtn.addEventListener("click", unfollowClick);
-            }
-            else{
-              followBtn.classList = "followersBtn btn btn-primary";
-              followBtn.innerHTML = "Follow";
-              followBtn.addEventListener("click", followclick);
-            }
-          }
-          if(followingArray.length === 0){
             followBtn.classList = "followersBtn btn btn-primary";
             followBtn.innerHTML = "Follow";
             followBtn.addEventListener("click", followclick);
           }
-          usernameCol.setAttribute("href", `/profile/${UserDataArray[i].username}`);
-          usernameCol.innerHTML = UserDataArray[i].username;
         }
-
-        followBtnCol.appendChild(followBtn);
-        followingUserCol.appendChild(usernameCol);
-        followingProfileImgCol.appendChild(followingProfileImg);
-
-        followingUserRow.appendChild(followingProfileImgCol);
-        followingUserRow.appendChild(followingUserCol);
-        followingUserRow.appendChild(followBtnCol);
-
-        document.getElementsByClassName("card")[0].appendChild(followingUserRow);
+        if(followingArray.length === 0){
+          followBtn.classList = "followersBtn btn btn-primary";
+          followBtn.innerHTML = "Follow";
+          followBtn.addEventListener("click", followclick);
+        }
+        usernameCol.setAttribute("href", `/profile/${UserDataArray[i].username}`);
+        usernameCol.innerHTML = UserDataArray[i].username;
       }
-    }
+
+      followBtnCol.appendChild(followBtn);
+      followingUserCol.appendChild(usernameCol);
+      followingProfileImgCol.appendChild(followingProfileImg);
+
+      followingUserRow.appendChild(followingProfileImgCol);
+      followingUserRow.appendChild(followingUserCol);
+      followingUserRow.appendChild(followBtnCol);
+
+      document.getElementsByClassName("card")[0].appendChild(followingUserRow);
+    } 
   };
 
   // hover text following/unfollow

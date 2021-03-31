@@ -45,15 +45,16 @@ class accountpage extends Component {
          this.PrevPathName = this.getPathName(slashindexStart, document.referrer);
         }
       }});
-
       // get current Url
-      if((currentUrl !== "/Jake") && (currentUrl !== this.PrevPathName)){
+      if((currentUrl === this.PrevPathName)){
+        this.viewotherProfile = true;
+      }
+      else if((currentUrl !== this.PrevPathName)){
         this.viewotherProfile = !this.viewotherProfile;
       }
-
       // check what url user is at and display active favorites button properly.
       if(!this.viewotherProfile){
-        if(this.PrevPathName.search(/(Jake|\/login)/g) === -1){
+        if(this.PrevPathName.search(/(\/login)/g) === -1){
           if(this.context.loginUser.status){
           if (sessionStorage.getItem("userMenuClicked") !== "true") {
               this.setState({ favoritesClicked: true });
@@ -82,7 +83,8 @@ class accountpage extends Component {
   render() {
       return (
         <>
-        {this.state.loading?<>
+        {this.state.loading?
+        <>
           <MoonLoader
             css={this.loadingCss}
             size={65}

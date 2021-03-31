@@ -8,6 +8,7 @@ const cookieParams = {
 const User = require("../config/database").model;
 const passport = require("passport");
 const genhash = require("../utils/passwordUtils").genpassword;
+var currentUser = "";
 
     router.post("/", (req, res) => {
         var username  = req.body.username.replace(/\s/g, "");
@@ -52,6 +53,7 @@ const genhash = require("../utils/passwordUtils").genpassword;
             req.logIn(user, function(err) {
                 if (err) { return next(err); }
                 User.findOneAndUpdate({username: req.user.username}, {loggedin: true}).then(() => {
+                    currentUser = req.user.username;
                     res.cookie("userSession", {"status": true, "user": req.user.username});
                     res.send(req.user.username);
                 });
@@ -63,8 +65,10 @@ const genhash = require("../utils/passwordUtils").genpassword;
     router.get("/userSession", (req, res) => {
         if(!req.user){
             req.session.destroy(() => {
-                res.cookie("userSession", {"status": false, "user": ""});
-                res.json(req.cookies);
+                User.findOneAndUpdate({username: currentUser}, {loggedin: false}).then(() => {
+                    res.cookie("userSession", {"status": false, "user": ""});
+                    res.json(req.cookies);
+                });
             });
         }
            else{
@@ -74,8 +78,8 @@ const genhash = require("../utils/passwordUtils").genpassword;
 
      // update cookie for user auth
      router.get("/updateUserSession", (req, res) => {
-        res.cookie("userSession", {"status": false, "user": ""});
-        res.json(req.cookies);
+            res.cookie("userSession", {"status": false, "user": ""});
+            res.json(req.cookies);
     });
     router.get("/validUser/:user", (req, res) => {
         User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}, (err, usernameQuary) => {

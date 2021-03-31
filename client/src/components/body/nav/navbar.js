@@ -34,19 +34,20 @@ class navbar extends Component {
 
   // searchbar error
   userSearchError = () => {
-    for(var e = 0; e < document.getElementsByClassName("popover-body")[0].childNodes.length; e++){
-      document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[e]);
-    }
-      var searchError = document.createElement("div");
-      searchError.className = "row resultsRow";
+    setTimeout(() => {
+      for(var e = 0; e < document.getElementsByClassName("popover-body")[0].childNodes.length; e++){
+        document.getElementsByClassName("popover-body")[0].removeChild(document.getElementsByClassName("popover-body")[0].childNodes[e]);
+      }
+        var searchError = document.createElement("div");
+        searchError.className = "row resultsRow";
 
-      var errorMessage = document.createElement("p");
-      errorMessage.setAttribute("id", "userError");
-      errorMessage.innerHTML = "No results found.";
+        var errorMessage = document.createElement("p");
+        errorMessage.setAttribute("id", "userError");
+        errorMessage.innerHTML = "No results found.";
 
-      searchError.appendChild(errorMessage);
-      document.getElementsByClassName("popover-body")[0].appendChild(searchError);
-
+        searchError.appendChild(errorMessage);
+        document.getElementsByClassName("popover-body")[0].appendChild(searchError);
+    }, 100);
   };
   
   // searchbar search/results function
@@ -193,6 +194,7 @@ class navbar extends Component {
                       type="text"
                       placeholder="Search"
                       onChange={this.userSearch}
+                      onFocus={this.userSearch}
                       className="mr-sm-2, searchbar"
                     />
                   </Form>

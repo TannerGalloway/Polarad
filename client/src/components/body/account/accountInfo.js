@@ -38,7 +38,8 @@ class accountInfo extends Component {
       modalShow: false,
       preview: null,
       profilePicSrc: BasicProfilePic,
-      loading: false,
+      UploadLoading: false,
+      postsLoading: false,
       favorites: 0
     }
 
@@ -220,14 +221,14 @@ editCrop = (preview) => {
 
 // profile pic upload function
 profilePicUpload = () => {
-  this.setState({loading: true});
+  this.setState({UploadLoading: true});
   document.getElementsByClassName("saveChangesBtn")[0].remove();
   document.getElementById("discardChangesBtn").disabled = true;
   document.getElementById("saveChangesBtnLoading").disabled = true;
   Axios.post(`/updateProfilePic/${this.getUser()}`, {
       profilePic: this.state.preview
     }).then((res) => {
-      this.setState({loading: res.data});
+      this.setState({UploadLoading: res.data});
       this.modalClose();
     });
 };
@@ -279,7 +280,7 @@ profilePicUpload = () => {
     }
     
     if(this.state.preview !== null){
-      if(!this.state.loading && document.getElementsByClassName("saveChangesBtn").length !== 0){
+      if(!this.state.UploadLoading && document.getElementsByClassName("saveChangesBtn").length !== 0){
         document.getElementsByClassName("saveChangesBtn")[0].disabled = false;
       }
       if(!document.getElementById("cropPreview")){
@@ -291,18 +292,17 @@ profilePicUpload = () => {
           document.querySelector("#previewCol").appendChild(preview);
         }
       }else{
-        if(!this.state.loading && document.getElementsByClassName("saveChangesBtn").length !== 0){
+        if(!this.state.UploadLoading && document.getElementsByClassName("saveChangesBtn").length !== 0){
           document.getElementById("cropPreview").src = this.state.preview;
           document.getElementsByClassName("saveChangesBtn")[0].disabled = false;
         }
       }
     }
 
-    if(!favClickReturn){
+    if(!favClickReturn){ 
       var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
       var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
       var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
-
         favoritesPageContent = 
       (
         <Row className="postsRow">
@@ -365,7 +365,7 @@ profilePicUpload = () => {
             </Modal.Header>
             <Modal.Body id="modalBody">
                 <Col id="editCol">
-                {!this.state.loading ? 
+                {!this.state.UploadLoading ? 
                 <Avatar
                   width={0}
                   height={0}
@@ -382,13 +382,13 @@ profilePicUpload = () => {
                 <Button id="discardChangesBtn" variant="secondary" onClick={this.modalClose}>Discard Changes</Button>
               </Col>
               <Col id="changesBtnCol">
-                {this.state.loading ? <Button id="saveChangesBtnLoading" variant="primary">
+                {this.state.UploadLoading ? <Button id="saveChangesBtnLoading" variant="primary">
                   {
                     <PulseLoader
                       css={this.loadingCss}
                       size={15}
                       color={"#4A90E2"}
-                      loading={this.state.loading}
+                      loading={this.state.UploadLoading}
                     />
                   }
                 </Button> : null}

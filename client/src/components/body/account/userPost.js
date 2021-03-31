@@ -200,7 +200,7 @@ class UserPost extends Component {
           var post = document.createElement("img");
           post.setAttribute("class", "userPost");
           post.setAttribute("id", PostArray[i].postID);
-          post.setAttribute("src", "https://via.placeholder.com/200");
+          post.setAttribute("src", PostArray[i].PostImg);
           post.setAttribute("alt", "userPost");
           post.addEventListener("click", this.handleShow);
           document.getElementsByClassName("UserPostsContainer")[0].appendChild(post);
