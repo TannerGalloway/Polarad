@@ -111,6 +111,7 @@
 
 .commentSection{
     height: 264px;
+    overflow-y: auto;
 }
 
 .commentInput{
@@ -175,6 +176,10 @@
     padding-right: 0%;
 }
 
+#userPostImage{
+    width: 400px;
+    height: 580px;
+}
 
 @media screen and (max-width: 991px){
 

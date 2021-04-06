@@ -134,7 +134,8 @@ class accountInfo extends Component {
         if(!this.context.loginUser.status){
           window.location.pathname = "/login";
         }
-        if(this.state.bookmarkActive){
+        // prevents icon from being toggled on or off if click again
+        else if(this.state.bookmarkActive){
           this.setState(({postsActive: false}));
           this.setState(({taggedActive: false}));
         }
@@ -150,7 +151,8 @@ class accountInfo extends Component {
         if(!this.context.loginUser.status){
           window.location.pathname = "/login";
         }
-        if(this.state.taggedActive){
+         // prevents icon from being toggled on or off if click again
+        else if(this.state.taggedActive){
           this.setState(({postsActive: false}));
           this.setState(({bookmarkActive: false}));
         }
@@ -254,8 +256,10 @@ profilePicUpload = () => {
       nonLoggeduserView
     } = this.state;
     var {favClickReturn} = this.props;
-    var accountView, mobileNavBottom, favoritesPageContent, profilePicSize,
-      viewportSize = window.screen.width;
+    var accountView, mobileNavBottom, postPageContent, profilePicSize, viewportSize = window.screen.width;
+    var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
+    var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
+    var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
     if(viewportSize > 768){
       profilePicSize = 150;
       accountView = (
@@ -298,12 +302,41 @@ profilePicUpload = () => {
         }
       }
     }
-
-    if(!favClickReturn){ 
-      var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
-      var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
-      var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
-        favoritesPageContent = 
+    if((this.state.bookmarkActive && !favClickReturn) || (this.state.taggedActive && !favClickReturn)){
+      postPageContent = 
+      (
+        <Row className="postsRow">
+          <Col className="accountIcons">
+            <Image
+              id="postsIcon"
+              src={postsIcon}
+              onClick={this.toggleIcon}
+            />
+            <h6 className="iconTitle">POSTS</h6>
+          </Col>
+          <Col className="accountIcons">
+          <Image
+            id="bookmarkIcon"
+            src={bookmarkIcon}
+            onClick={this.toggleIcon}
+          />
+          <h6 className="iconTitle">BOOKMARKED</h6>
+        </Col>
+        <Col className="accountIcons">
+          <Image
+            id="taggedIcon"
+            src={taggedIcon}
+            onClick={this.toggleIcon}
+          />
+          <h6 className="iconTitle">TAGGED</h6>
+        </Col>
+        <div className="container"> 
+          <p className="EmptyContent">Feature Coming Soon!</p>
+        </div>
+      </Row>
+      )
+    } else if(!favClickReturn){ 
+        postPageContent = 
       (
         <Row className="postsRow">
           <Col className="accountIcons">
@@ -336,12 +369,12 @@ profilePicUpload = () => {
     }else{
       if(this.state.favorites <= 0){
         if(this.getUser() === this.context.loginUser.user){
-          favoritesPageContent = (
-            <p className="NoFavsMessage">You haven't favorited any posts yet!</p>
+          postPageContent = (
+            <p className="EmptyContent">You haven't favorited any posts yet!</p>
           );
         }
       }else{
-        favoritesPageContent = (
+        postPageContent = (
             <Posts favoritesView={this.props.favClickReturn}/>
         );
       }
@@ -405,7 +438,7 @@ profilePicUpload = () => {
             </Col>
               {accountView}
           </Row>
-          {favoritesPageContent}
+          {postPageContent}
         </Container>
         {mobileNavBottom}
         </>

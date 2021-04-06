@@ -214,6 +214,8 @@ var currentUser = "";
         var userNewPostdataObj = {
             postID: req.body.postID,
             PostImg: req.body.PostPhoto,
+            Likes: 0,
+            UploadDate: Date(),
             comments: []
         };
 
@@ -228,6 +230,19 @@ var currentUser = "";
         query.exec((err, usersPosts) => {
             if (err) return next(err);
             res.send(usersPosts);
+        });
+    });
+
+    // get Upload date on post
+    router.get("/UploadDate/:user/:postID", (req, res, next) => {
+        var UploadDate = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");
+        UploadDate.exec((err, postsArr) => {
+            if (err) return next(err);
+            postsArr.posts.forEach((post) => {
+                if(post.postID === req.params.postID){
+                    res.json(post.UploadDate);
+                }
+            });
         });
     });
 
@@ -255,10 +270,37 @@ var currentUser = "";
         });
     });
 
+    // get Number of Likes on post
+    router.get("/Likes/:user/:postID", (req, res, next) => {
+        var Likes = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");
+        Likes.exec((err, postsArr) => {
+            if (err) return next(err);
+            postsArr.posts.forEach((post) => {
+                if(post.postID === req.params.postID){
+                    res.json(post.Likes);
+                }
+            });
+        });
+    });
+
     // unfavorite post
     router.post("/RemoveFavorite/:user", (req, res) => {
         User.findOneAndUpdate({username: req.params.user}, {$pull: {favorites: {postID: req.body.postID}}}).then(() => {
             res.send("Unfollowed");
+        });
+    });
+
+    // update number of likes a post has
+    router.post("/UpdateLikes/:postID", (req, res) => {
+        User.updateOne({"posts.postID": req.params.postID}, {"$set": {"posts.$.Likes": req.body.NewLikes}}).then(() => res.send("Likes Updated"));
+    });
+
+
+    router.get("/UserInfo/:user", (req, res, next) => {
+        var UserInfo = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}});
+        UserInfo.exec((err, userdata) => {
+            if (err) return next(err);
+            res.send(userdata);
         });
     });
     

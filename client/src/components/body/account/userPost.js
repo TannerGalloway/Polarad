@@ -17,6 +17,9 @@ class UserPost extends Component {
     window.addEventListener("resize", this.imageModelViewportsize);
     this.postID = "";
     this.FollowStatus = "";
+    this.clickedImage = "";
+    this.likes = 0;
+    this.uploadDate = "";
     this.state = {
       imageModellayout: null,
       show: false,
@@ -53,8 +56,10 @@ class UserPost extends Component {
 
   handleShow = (event) => {
     this.postID = event.target.id;
+    this.clickedImage = event.target.src;
+    if(this.context.loginUser.status){
 
-      // get favorites of logged in user
+       // get favorites of logged in user
     Axios.get(`/Favorites/${this.context.loginUser.user}`).then((res) => {
       for(var i = 0; i < res.data.favorites.length; i++){
         if(this.postID === res.data.favorites[i].postID){
@@ -64,7 +69,20 @@ class UserPost extends Component {
         }
       }
      });
-  
+
+    // get the amount of likes on selected post
+     Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+      this.likes = res.data;
+      this.imageModelViewportsize();
+     });
+
+     // get upload date of the selected post
+     Axios.get(`/UploadDate/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+      this.uploadDate = res.data.substring(3, 15);
+      this.imageModelViewportsize();
+     });
+    }
+
     // get profile pic of post user
     Axios.get(`/ProfilePic/${this.getPostUser()}`).then((res) => {
       if(res.data.profilePic !== undefined){
@@ -75,6 +93,11 @@ class UserPost extends Component {
         this.setState({profilePic: BasicProfilePic});
         this.imageModelViewportsize();
       }
+
+      // get likes on the currently viewed post
+      Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+        this.likes = res.data;
+      });
   });
   
 
@@ -140,38 +163,52 @@ class UserPost extends Component {
   };
 
   favBtnClick = () => {
-    if(this.context.loginUser.status){
-      if(this.state.favBtnActive){
-        Axios.post(`/RemoveFavorite/${this.context.loginUser.user}`, {
-          postID: this.postID
-        }).then(() => {
-          this.setState({numofFavs: this.state.numofFavs - 1}, () => {
-            if(this.props.favoritesView === true){
-              document.getElementById(this.postID).remove();
-                if(this.state.numofFavs === 0 ){
-                  var favsEmptymessage = document.createElement("p");
-                  favsEmptymessage.classList.add("NoFavsMessage");
-                  favsEmptymessage.innerHTML = "You haven't favorited any posts yet!";
-                  document.getElementsByClassName("container")[0].appendChild(favsEmptymessage);
-                }
-              this.handleClose();
-            }
+      if(this.context.loginUser.status){
+        if(this.state.favBtnActive){
+          Axios.post(`/RemoveFavorite/${this.context.loginUser.user}`, {
+            postID: this.postID
+          }).then(() => {
+            this.setState({numofFavs: this.state.numofFavs - 1}, () => {
+              if(this.props.favoritesView === true){
+                document.getElementById(this.postID).remove();
+                  if(this.state.numofFavs === 0 ){
+                    var favsEmptymessage = document.createElement("p");
+                    favsEmptymessage.classList.add("NoFavsMessage");
+                    favsEmptymessage.innerHTML = "You haven't favorited any posts yet!";
+                    document.getElementsByClassName("container")[0].appendChild(favsEmptymessage);
+                  }
+                this.handleClose();
+              }
+            });
+            Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+              Axios.post(`/UpdateLikes/${this.postID}`, {
+                NewLikes: res.data - 1
+              });
+            });
+            this.likes -= 1;
+            this.imageModelViewportsize();
           });
+        }else{
+          
+           Axios.post(`/FavoritePost/${this.context.loginUser.user}`, {
+            loginUser: this.getCurrentUser(),
+            postID: this.postID
+          }).then(() => {
+            Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+              Axios.post(`/UpdateLikes/${this.postID}`, {
+                NewLikes: res.data + 1
+              });
+            });
+            this.likes += 1;
+            this.imageModelViewportsize();
+          });
+        }
+        this.setState({favBtnActive:  !this.state.favBtnActive},() => {
+          document.getElementById("modalFavoriteBtn").setAttribute("src", this.state.favBtnActive ? heartActive : heartInactive);
         });
       }else{
-         Axios.post(`/FavoritePost/${this.context.loginUser.user}`, {
-          loginUser: this.getCurrentUser(),
-          postID: this.postID
-        }).then((res) => {
-          console.log(res.data);
-        });
+        window.location.pathname = "/login";
       }
-      this.setState({favBtnActive:  !this.state.favBtnActive},() => {
-        document.getElementById("modalFavoriteBtn").setAttribute("src", this.state.favBtnActive ? heartActive : heartInactive);
-      });
-    }else{
-      window.location.pathname = "/login";
-    }
   };
 
   // get the name of the profile the user is looking at
@@ -238,7 +275,7 @@ class UserPost extends Component {
           this.imageModelDesign = (
               <Row>
                 <Col className="userPostCol">
-                  <img  id="userPostImage" src="https://via.placeholder.com/400x580" alt="userPost"/>
+                  <img  id="userPostImage" src={this.clickedImage} alt="userPost"/>
                 </Col>
                 <Col>
                   <Row className="userinfoImage imageModelHeader">
@@ -285,8 +322,8 @@ class UserPost extends Component {
                     </Row>
                     <Row>
                       <div className="imageInfo">
-                        <p className="Color"><strong># likes</strong></p>
-                        <p id="imageDate">date</p>
+                        <p className="Color"><strong>{this.likes} likes</strong></p>
+                        <p id="imageDate">{this.uploadDate}</p>
                       </div>
                     </Row>
                     {this.commentInput}
@@ -315,7 +352,7 @@ class UserPost extends Component {
               </Col>
               </Row>
               <Col>
-                <img id="userPostImage" src="https://via.placeholder.com/400x580" alt="userPost"/>
+                <img id="userPostImage" src={this.clickedImage} alt="userPost"/>
                 </Col>
                 <Row className="imageModelfooter">
                   <Col className="modelImageBtns">
@@ -334,8 +371,8 @@ class UserPost extends Component {
                   </Col>
                 </Row> 
                   <div className="imageInfo">
-                    <p id="likes"><strong># likes</strong></p>
-                    <p id="imageDate">date</p>
+                    <p id="likes"><strong>{this.likes} likes</strong></p>
+                    <p id="imageDate">{this.uploadDate}</p>
                   </div>
             </Row>
           );
