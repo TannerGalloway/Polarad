@@ -23,7 +23,7 @@ class accountInfo extends Component {
   constructor(props) {
     super(props);
     this._isMounted = false;
-    this.favClick = false;
+    this.favClick = this.props.favClickReturn;
     this.displayname = this.getUser();
     this.overlay = null;
     this.state = {
@@ -172,6 +172,16 @@ class accountInfo extends Component {
     this._isMounted = false;
  }
 
+// shows the current user their favorited posts
+  showfavorites = () => {
+    if(sessionStorage.getItem("favbtnClicked") === "true"){
+      this.favClick = true;
+    }else{
+      this.favClick = false;
+    }
+    this.forceUpdate();
+  };
+
 // shows the profile pic upload modal
  modalShow = () => {
    this.setState({modalShow: true})
@@ -255,11 +265,11 @@ profilePicUpload = () => {
       bio,
       nonLoggeduserView
     } = this.state;
-    var {favClickReturn} = this.props;
     var accountView, mobileNavBottom, postPageContent, profilePicSize, viewportSize = window.screen.width;
     var postsIcon = this.state.postsActive ? postsIconActive : postsIconInactive;
     var bookmarkIcon = this.state.bookmarkActive ? bookmarkIconActive : bookmarkIconInactive;
     var taggedIcon = this.state.taggedActive ? taggedIconActive : taggedIconInactive;
+
     if(viewportSize > 768){
       profilePicSize = 150;
       accountView = (
@@ -270,7 +280,16 @@ profilePicUpload = () => {
       accountView = (
           <Mobileview displayName={this.displayname} posts={posts} followers={followers} following={following} bio={bio} accountpageView={nonLoggeduserView} />
       );
-        mobileNavBottom = this.context.loginUser.status ? <MobileNav favoritesLink={(favoriteValue) => {this.props.favClick(favoriteValue)}} favoritesLinkReturn={favClickReturn} /> : null;
+        mobileNavBottom = this.context.loginUser.status ? <MobileNav favoriteClicked={(favValue) => {
+          this.favClick = favValue;
+          this.forceUpdate();
+        }}/> : null;
+    }
+
+    if(sessionStorage.getItem("favbtnClicked") === "true"){
+      this.favClick = true;
+    }else{
+      this.favClick = false;
     }
 
     if(this.state.nonLoggeduserView){
@@ -302,7 +321,7 @@ profilePicUpload = () => {
         }
       }
     }
-    if((this.state.bookmarkActive && !favClickReturn) || (this.state.taggedActive && !favClickReturn)){
+    if((this.state.bookmarkActive && !this.favClick) || (this.state.taggedActive && !this.favClick)){
       postPageContent = 
       (
         <Row className="postsRow">
@@ -335,7 +354,7 @@ profilePicUpload = () => {
         </div>
       </Row>
       )
-    } else if(!favClickReturn){ 
+    } else if(!this.favClick){ 
         postPageContent = 
       (
         <Row className="postsRow">
@@ -375,7 +394,7 @@ profilePicUpload = () => {
         }
       }else{
         postPageContent = (
-            <Posts favoritesView={this.props.favClickReturn}/>
+            <Posts favoritesView={this.favClick}/>
         );
       }
     }

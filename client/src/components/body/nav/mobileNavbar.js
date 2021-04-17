@@ -16,34 +16,12 @@ class mobileNavbar extends Component {
     super(props);
     this.clickFavorites = false;
     this.homeActive = false;
-    this.prevURLArr = document.referrer.split("");
-    this.urlSlashCount = 0;
-    this.urlSlashindexStart = 0;
-    this.currentUrl = this.getPathName(window.location.pathname.lastIndexOf("/"), window.location.pathname);
-    this.PrevPathName = "";
-    this.viewotherProfile = false;
     this.url = window.location.pathname.replace(/%20/g, " ");
     this.dropdown = React.createRef();
     this.state = {dropdownOpen: false};
   }
 
   componentDidMount() {
-
-     // get prevUrl
-     this.prevURLArr.forEach((item, index) => {
-      if (item === "/") {
-        this.urlSlashCount++;
-        this.urlSlashindexStart = index
-      if(this.urlSlashCount >= 3 ){
-       this.PrevPathName = this.getPathName(this.urlSlashindexStart, document.referrer);
-      }
-    }});
-
-    // get current Url
-    if((this.currentUrl !== this.PrevPathName)){
-      this.viewotherProfile = !this.viewotherProfile;
-    }
-
     document.addEventListener("mousedown", this.handleClickOutsideUser);
     setTimeout(() => {sessionStorage.setItem("userMenuClicked", false);}, 1000);
   }
@@ -51,12 +29,6 @@ class mobileNavbar extends Component {
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutsideUser);
   }
-
-  getPathName = (urlSlashindexStart, URL) => {
-    var UrlPostion = URL.indexOf("/", urlSlashindexStart),
-    PrevUrl = URL.slice(UrlPostion);
-    return PrevUrl;
-  };
 
   toggleIcon = (event) => {
     switch(event.target.id){
@@ -69,12 +41,13 @@ class mobileNavbar extends Component {
       break;
 
       case "heartIconBottom":
-        this.homeActive = true;
         this.clickFavorites = !this.clickFavorites;
-        this.props.favoritesLink(this.clickFavorites);  
-        if(this.clickFavorites){
-              window.location.pathname = `/profile/${this.context.loginUser.user}`;
-          }
+        sessionStorage.setItem("favbtnClicked", this.clickFavorites);
+        if(this.url !== `/profile/${this.context.loginUser.user}`){
+          window.location.pathname = `/profile/${this.context.loginUser.user}`;  
+        }
+        this.props.favoriteClicked(this.clickFavorites);
+        this.forceUpdate();
        break;
       
       default:
@@ -113,11 +86,12 @@ class mobileNavbar extends Component {
 
   render() {
     var navmenu;
+
     if(this.url !== `/profile/${this.context.loginUser.user}`){
       this.homeActive = false;
     
     }
-    else if(this.props.favoritesLinkReturn){
+    else if(sessionStorage.getItem("favbtnClicked") === "true"){
       this.clickFavorites = true;
       this.homeActive = false;
     }

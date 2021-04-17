@@ -25,6 +25,9 @@ class navbar extends Component {
     document.addEventListener("mousedown", this.handleClickOutsideUser);
     document.addEventListener("mousedown", this.handleClickOutsideSearch);
     setTimeout(() => {sessionStorage.setItem("userMenuClicked", false);}, 1000);
+    if(this.url !== `/profile/${this.context.loginUser.user}`){
+      sessionStorage.setItem("favbtnClicked", false); 
+    }
   }
 
   componentWillUnmount() {
@@ -142,10 +145,12 @@ class navbar extends Component {
   // user clicked on favorites button
   favoritesClick = () => {
     this.favoritesActive = !this.favoritesActive;
-    this.props.favClick(this.favoritesActive);
+    sessionStorage.setItem("favbtnClicked", this.favoritesActive);
     if(this.url !== `/profile/${this.context.loginUser.user}`){
       window.location.pathname = `/profile/${this.context.loginUser.user}`;  
     }
+    this.props.favClick(this.favoritesActive);
+    this.forceUpdate();
   };
 
   render() {
@@ -157,8 +162,12 @@ class navbar extends Component {
             viewportSize = window.screen.width,
             logo;
 
-          var { favClickReturn } = this.props;
-          this.favoritesActive = favClickReturn;
+            if(sessionStorage.getItem("favbtnClicked") === "true"){
+              this.favoritesActive = true;
+            }else{
+              this.favoritesActive = false;
+            }
+
           var Heart = this.favoritesActive ? HeartActive : HeartInactive;
 
           if (viewportSize > 768) {
