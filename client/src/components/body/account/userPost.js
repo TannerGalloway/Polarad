@@ -55,8 +55,8 @@ class UserPost extends Component {
   }
 
   handleShow = (event) => {
-    this.postID = event.target.id;
-    this.clickedImage = event.target.src;
+    this.postID = document.getElementsByClassName(event.target.classList[2])[0].classList[1];
+    this.clickedImage = document.getElementsByClassName(event.target.classList[2])[0].src
     if(this.context.loginUser.status){
 
        // get favorites of logged in user
@@ -76,6 +76,11 @@ class UserPost extends Component {
       this.imageModelViewportsize();
      });
 
+     // get the amount of comments on selected post
+     Axios.get(`/NumOfComments/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+      this.comments = res.data;
+     });
+
      // get upload date of the selected post
      Axios.get(`/UploadDate/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
       this.uploadDate = res.data.substring(3, 15);
@@ -93,11 +98,6 @@ class UserPost extends Component {
         this.setState({profilePic: BasicProfilePic});
         this.imageModelViewportsize();
       }
-
-      // get likes on the currently viewed post
-      Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
-        this.likes = res.data;
-      });
   });
   
 
@@ -134,10 +134,69 @@ class UserPost extends Component {
       
       document.getElementsByClassName("postUsername")[0].innerHTML = this.getPostUser();
     }));
+
+    if(window.innerWidth >= 992){
+      // add new comment
+      Axios.get(`/ProfilePic/${this.context.loginUser.user}`).then((res) => {
+        document.getElementById("CommentTextBox").addEventListener("keydown", (event) => {
+          if(event.key === "Enter"){
+            Axios.post(`/AddComment/${this.postID}`, {
+              comment: document.getElementById("CommentTextBox").value,
+              user: this.context.loginUser.user,
+              profilePic: res.data.profilePic
+            }).then(() => {
+              Axios.get(`/Comments/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+                this.updateComments(res.data.length - 1, res);
+              });
+            });
+            document.getElementById("CommentTextBox").value = "";
+          }
+        });
+      });
+    }
+
+    // show comments of the current viewed post
+    Axios.get(`/Comments/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+      this.updateComments(0, res);
+    });
+  };
+  
+  updateComments = (commentAmount, responce) => {
+    for (var i = commentAmount; i < responce.data.length; i++){
+      var commentDiv = document.createElement("div");
+      var commentProfilePic = document.createElement("img");
+      var comment = document.createElement("p");
+      var commentUser = document.createElement("span");
+
+      commentUser.setAttribute("class", "bold");
+      comment.setAttribute("class", "comment");
+      commentProfilePic.setAttribute("class", "userCommentProfilePic");
+      commentProfilePic.setAttribute("alt", "userProfilePic");
+      commentProfilePic.setAttribute("src", responce.data[i].profilePic);
+      commentUser.textContent = responce.data[i].user + " ";
+      comment.textContent = responce.data[i].comment;
+
+      
+      commentDiv.appendChild(commentProfilePic);
+      comment.prepend(commentUser);
+      commentDiv.appendChild(comment);
+
+      document.getElementsByClassName("commentSection")[0].appendChild(commentDiv);
+    }
   };
 
   handleClose = () => {
-    this.setState({ show: false });
+    if(document.getElementsByClassName("UserPostsContainer").length >= 1){
+
+      var postsContainer = document.getElementsByClassName("UserPostsContainer")[0];
+      while (postsContainer.firstChild) {
+        postsContainer.removeChild(postsContainer.lastChild);
+      }
+      Axios.get(`/posts/${this.getCurrentUser()}`).then((res) => {
+        this.displayPosts(res.data.posts);
+        this.setState({ show: false });
+      });
+    }
   };
 
    // get the name of the user of the post that is being viewed.
@@ -233,14 +292,33 @@ class UserPost extends Component {
             document.getElementsByClassName("NoFavsMessage")[0].style.display = "none";
           }
         }
+        
         for(var i = 0; i < PostArray.length; i++){
-          var post = document.createElement("img");
-          post.setAttribute("class", "userPost");
-          post.setAttribute("id", PostArray[i].postID);
-          post.setAttribute("src", PostArray[i].PostImg);
-          post.setAttribute("alt", "userPost");
-          post.addEventListener("click", this.handleShow);
-          document.getElementsByClassName("UserPostsContainer")[0].appendChild(post);
+          var postDiv = document.createElement("div");
+          var overlay = document.createElement("div");
+          var overlayLikes = document.createElement("span");
+          var overlayComments = document.createElement("span");
+          var postImg = document.createElement("img");
+
+          postDiv.setAttribute("class", "post");
+          overlay.setAttribute("class", `overlay overlayFade ${PostArray[i].postID}`);
+          overlayLikes.setAttribute("class", "fas fa-heart fa-lg");
+          overlayComments.setAttribute("class", "fas fa-comment fa-lg");
+          
+          overlayLikes.innerHTML = (` ${PostArray[i].Likes}`);
+          overlayComments.innerHTML = (` ${PostArray[i].comments.length}`);
+
+          postImg.setAttribute("class", `userPost ${PostArray[i].postID}`);
+          postImg.setAttribute("src", PostArray[i].PostImg);
+          postImg.setAttribute("alt", "userPost");
+
+          overlay.addEventListener("click", this.handleShow);
+
+          overlay.appendChild(overlayLikes);
+          overlay.appendChild(overlayComments);
+          postDiv.appendChild(postImg);
+          postDiv.appendChild(overlay);
+          document.getElementsByClassName("UserPostsContainer")[0].appendChild(postDiv);
         }
       };
 
@@ -298,18 +376,6 @@ class UserPost extends Component {
                   </Row>
                     <hr className="postModalline"></hr>
                     <div className="commentSection">
-                      <div>
-                        <img src="https://via.placeholder.com/32" className="userCommentProfilePic" alt="userProfilePic"/>
-                        <p className="comment">Jason.RedWing: Nice Pic!!!</p>
-                      </div>
-                      <div>
-                        <img src="https://via.placeholder.com/32" className="userCommentProfilePic" alt="userProfilePic"/>
-                        <p className="comment">EmpororDresh: Fam thats lit!</p>
-                      </div>
-                      <div>
-                        <img src="https://via.placeholder.com/32" className="userCommentProfilePic" alt="userProfilePic"/>
-                        <p className="comment">Sk8torBoi: Love it!</p>
-                      </div>
                     </div>
                     <hr className="postModalline"></hr>
                     <Row>

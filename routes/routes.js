@@ -283,6 +283,19 @@ var currentUser = "";
         });
     });
 
+    // get Number of Likes on a post
+    router.get("/NumOfComments/:user/:postID", (req, res, next) => {
+        var Comments = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");
+        Comments.exec((err, postsArr) => {
+            if (err) return next(err);
+            postsArr.posts.forEach((post) => {
+                if(post.postID === req.params.postID){
+                    res.json(post.comments.length);
+                }
+            });
+        });
+    });
+
     // unfavorite post
     router.post("/RemoveFavorite/:user", (req, res) => {
         User.findOneAndUpdate({username: req.params.user}, {$pull: {favorites: {postID: req.body.postID}}}).then(() => {
@@ -301,6 +314,27 @@ var currentUser = "";
         UserInfo.exec((err, userdata) => {
             if (err) return next(err);
             res.send(userdata);
+        });
+    });
+
+    router.post("/AddComment/:postID", (req, res) => {
+        var CommentdataObj = {
+            comment: req.body.comment,
+            user: req.body.user,
+            profilePic: req.body.profilePic
+        };
+        User.updateOne({"posts.postID": req.params.postID}, {$addToSet: {"posts.$.comments": CommentdataObj}}).then(() => res.send("Added Comment"));
+    });
+
+    router.get("/Comments/:user/:postID", (req, res, next) => {
+        var Comments = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");
+        Comments.exec((err, postsArr) => {
+            if (err) return next(err);
+            postsArr.posts.forEach((post) => {
+                if(post.postID === req.params.postID){
+                    res.json(post.comments);
+                }
+            });
         });
     });
     
