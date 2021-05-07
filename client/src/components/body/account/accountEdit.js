@@ -75,7 +75,7 @@ class accountEdit extends Component {
 
   displayMsg = () => {
     document.querySelector(".Error").style.display = "block";
-    setTimeout(() => {this.resetError()}, 2300);
+    setTimeout(() => {this.resetError()}, 1500);
 };
 
   resetError = () => {
@@ -94,7 +94,7 @@ class accountEdit extends Component {
 
     if(filetype === "image"){
       if(file.size  < 50000){
-        if(document.getElementById("postinputdesktop").classList.contains("postPreviewHidden")){
+        if(document.getElementById("postinputdesktop").classList.contains("postPreviewHidden")){ 
           document.getElementsByClassName("postPreviewHidden")[0].classList.add("postPreview");
           document.getElementsByClassName("postPreviewHidden")[0].classList.remove("postPreviewHidden");
           document.getElementsByClassName("postPreview")[0].setAttribute("src", file.base64);
@@ -104,6 +104,7 @@ class accountEdit extends Component {
         else{
           document.getElementsByClassName("postPreview")[0].setAttribute("src", file.base64);
           document.querySelector(".fileSubmit").style.display = "block";
+          this.setState({NewPostImage: file.base64});
         }
       }else{
         document.getElementById("filePostInput").value = "";

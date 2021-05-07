@@ -233,6 +233,13 @@ var currentUser = "";
         });
     });
 
+    // remove user post
+    router.post("/RemovePost", (req, res) => {
+        User.findOneAndUpdate({"username": {"$regex": req.body.user, "$options": "i"}}, {$pull: {posts: {postID: req.body.postID}}}).then(() => {
+            res.send(true);
+        });
+    });
+
     // get Upload date on post
     router.get("/UploadDate/:user/:postID", (req, res, next) => {
         var UploadDate = User.findOne({"username": {"$regex": req.params.user, "$options": "i"}}).select("posts -_id");

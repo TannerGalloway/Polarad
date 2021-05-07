@@ -18,6 +18,8 @@ import bookmarkIconInactive from "../../../Images/bookmark.png";
 import bookmarkIconActive from "../../../Images/bookmark_active.png";
 import taggedIconInactive from "../../../Images/tagged.png";
 import taggedIconActive from "../../../Images/tagged_active.png";
+import cameraIcon  from "../../../Images/camera.png";
+import heartIcon  from "../../../Images/heart.png";
 
 class accountInfo extends Component {
   constructor(props) {
@@ -118,6 +120,11 @@ class accountInfo extends Component {
           this.setState({favorites: res.data.favorites.length});
         });
       }
+      
+      // get the number of posts a user has
+      Axios.get(`/posts/${this.getUser()}`).then((res) => {
+        this.setState({posts:  res.data.posts.length});
+      });
   }
 
   toggleIcon = (event) => {
@@ -354,7 +361,7 @@ profilePicUpload = () => {
         </div>
       </Row>
       )
-    } else if(!this.favClick){ 
+    }else if(!this.favClick){ 
         postPageContent = 
       (
         <Row className="postsRow">
@@ -382,14 +389,28 @@ profilePicUpload = () => {
           />
           <h6 className="iconTitle">TAGGED</h6>
         </Col>
-        <Posts/>
+            <div className="container" id="EmptyMessage">{this.state.posts <= 0 ? 
+            <>
+              <Image
+                id="EmptyContentIcon"
+                src={cameraIcon}
+              />
+              <p className="EmptyContent">No Posts Yet!</p>
+            </>: null}</div> 
+            <Posts postsUpdate={(postValue) => {this.setState({posts: postValue})}}/>
       </Row>
       )
     }else{
       if(this.state.favorites <= 0){
         if(this.getUser() === this.context.loginUser.user){
           postPageContent = (
-            <p className="EmptyContent">You haven't favorited any posts yet!</p>
+            <>
+              <Image
+                id="EmptyContentIcon"
+                src={heartIcon}
+              />
+              <p className="EmptyContent">No Favorited Posts!</p>
+            </>
           );
         }
       }else{

@@ -55,11 +55,14 @@ class UserPost extends Component {
   }
 
   handleShow = (event) => {
-    this.postID = document.getElementsByClassName(event.target.classList[2])[0].classList[1];
-    this.clickedImage = document.getElementsByClassName(event.target.classList[2])[0].src
+    this.postID = document.getElementsByClassName(event.target.classList[2])[0].classList[1];         
+    if(this.postID === "fa-heart"){
+      this.postID = document.getElementsByClassName(event.target.classList[2])[0].parentElement.classList[2];
+    }
+    this.clickedImage = document.getElementsByClassName(this.postID)[0].src;
     if(this.context.loginUser.status){
 
-       // get favorites of logged in user
+    // get favorites of logged in user
     Axios.get(`/Favorites/${this.context.loginUser.user}`).then((res) => {
       for(var i = 0; i < res.data.favorites.length; i++){
         if(this.postID === res.data.favorites[i].postID){
@@ -69,8 +72,8 @@ class UserPost extends Component {
         }
       }
      });
-
-    // get the amount of likes on selected post
+    }
+     // get the amount of likes on selected post
      Axios.get(`/Likes/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
       this.likes = res.data;
       this.imageModelViewportsize();
@@ -86,7 +89,6 @@ class UserPost extends Component {
       this.uploadDate = res.data.substring(3, 15);
       this.imageModelViewportsize();
      });
-    }
 
     // get profile pic of post user
     Axios.get(`/ProfilePic/${this.getPostUser()}`).then((res) => {
@@ -137,22 +139,24 @@ class UserPost extends Component {
 
     if(window.innerWidth >= 992){
       // add new comment
-      Axios.get(`/ProfilePic/${this.context.loginUser.user}`).then((res) => {
-        document.getElementById("CommentTextBox").addEventListener("keydown", (event) => {
-          if(event.key === "Enter"){
-            Axios.post(`/AddComment/${this.postID}`, {
-              comment: document.getElementById("CommentTextBox").value,
-              user: this.context.loginUser.user,
-              profilePic: res.data.profilePic
-            }).then(() => {
-              Axios.get(`/Comments/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
-                this.updateComments(res.data.length - 1, res);
+      if(this.context.loginUser.status){
+        Axios.get(`/ProfilePic/${this.context.loginUser.user}`).then((res) => {
+          document.getElementById("CommentTextBox").addEventListener("keydown", (event) => {
+            if(event.key === "Enter"){
+              Axios.post(`/AddComment/${this.postID}`, {
+                comment: document.getElementById("CommentTextBox").value,
+                user: this.context.loginUser.user,
+                profilePic: res.data.profilePic
+              }).then(() => {
+                Axios.get(`/Comments/${this.postID.replace(/\d+/g, "")}/${this.postID}`).then((res) => {
+                  this.updateComments(res.data.length - 1, res);
+                });
               });
-            });
-            document.getElementById("CommentTextBox").value = "";
-          }
+              document.getElementById("CommentTextBox").value = "";
+            }
+          });
         });
-      });
+      }
     }
 
     // show comments of the current viewed post
@@ -219,6 +223,20 @@ class UserPost extends Component {
     }else{
       window.location.pathname = "/login";
     }
+  };
+
+  removePost = () => {
+    Axios.post("/RemovePost", {
+      user: this.context.loginUser.user,
+      postID: this.postID,
+    }).then((res) => {
+      if(res.data === true){
+        Axios.get(`/posts/${this.getCurrentUser()}`).then((res) => {
+          this.props.postsUpdate(res.data.posts.length);
+          this.handleClose();
+        });
+      }
+    })
   };
 
   favBtnClick = () => {
@@ -366,12 +384,8 @@ class UserPost extends Component {
                         <p id="modelfollowbtn" className="modelInfo" onClick={this.followBtnClick}>{this.FollowStatus}</p>
                       </div>
                     </Col>
-                    <Col id="ellipseCol">
-                      <div className="ellipseContainer userModelHeader">
-                        <div className="ellipse"></div>
-                        <div className="ellipse"></div>
-                        <div className="ellipse"></div>
-                      </div>
+                    <Col id="postRemoveCol">
+                        {this.context.loginUser.status && (this.context.loginUser.user === this.getCurrentUser()) ? <span className="fas fa-times fa-lg" onClick={this.removePost}></span> : null}
                     </Col>
                   </Row>
                     <hr className="postModalline"></hr>
@@ -409,13 +423,9 @@ class UserPost extends Component {
                 <p id="modelfollowbtn" className="modelInfo" onClick={this.followBtnClick}>{this.FollowStatus}</p>
               </div>
               </Col>
-              <Col>
-                <div className="ellipseContainer">
-                  <div className="ellipse"></div>
-                  <div className="ellipse"></div>
-                  <div className="ellipse"></div>
-                </div>
-              </Col>
+                <Col id="postRemoveCol">
+                  {this.context.loginUser.status && (this.context.loginUser.user === this.getCurrentUser()) ? <span className="fas fa-times fa-lg" onClick={this.removePost}></span> : null}
+                </Col>
               </Row>
               <Col>
                 <img id="userPostImage" src={this.clickedImage} alt="userPost"/>
